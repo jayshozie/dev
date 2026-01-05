@@ -311,15 +311,36 @@ return {
             -----------------------
             -- ltex-plus (LaTeX)
             -----------------------
-            vim.lsp.config["ltex-ls-plus"] = {
-                cmd = { "ltex-ls" },
-                filetypes = { "tex", "markdown", "md" },
+            -- vim.lsp.config["ltex-ls-plus"] = {
+            --     cmd = { "ltex-ls-plus" },
+            --     filetypes = { "tex", "markdown", "md" },
+            --     on_attach = on_attach,
+            --     capabilities = capabilities,
+            -- }
+            -- if vim.fn.executable("ltex-ls-plus") == 1 then
+            --     vim.lsp.enable("ltex-ls-plus")
+            -- end
+
+            ----------------------
+            -- texlax (LaTeX)
+            ----------------------
+            vim.lsp.config["texlab"] = {
+                cmd = { "texlab", "run" },
                 on_attach = on_attach,
                 capabilities = capabilities,
+
+                settings = {
+                    texlab = {
+                        build = {
+                            onSave = true,
+                        },
+                    },
+                },
             }
-            if vim.fn.executable("ltex-ls") == 1 then
-                vim.lsp.enable("ltex-ls-plus")
+            if vim.fn.executable("texlab") == 1 then
+                vim.lsp.enable("texlab")
             end
+
 
             -----------------------
             -- markdown-oxide (Markdown)

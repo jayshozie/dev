@@ -31,8 +31,24 @@ alias ali='nvim ~/.bash_aliases'
 alias gitconf='nvim ~/.gitconfig'
 
 # easier access to stuff i'm constantly working on
-alias proj='cd ~/projects/'
+alias project='cd ~/projects/c-mastery-projects/jayshell'
 alias scri='cd ~/scripts && nvim ~/scripts'
+
+# my very own weather scrip
+alias weather='~/scripts/weather/weather.sh'
 
 # waha-tui, to stay on the latest version
 alias wp='waha-tui'
+
+# batcat => cat
+alias bat='batcat'
+
+# i usually sleep while my workstation is on, so i have an alias to shut it down
+# automatically after 90 minutes
+alias sleep='sudo shutdown +90'
+# here if i change my mind
+alias unsleep='sudo shutdown -c'
+
+# i usually close my workstation via terminal mostly, and got annoyed at always
+# writing the whole command
+alias sp='sudo poweroff'

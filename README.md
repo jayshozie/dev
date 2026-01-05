@@ -23,7 +23,7 @@ corresponds to a package:
 - **git**: Git user config and signing keys
 - **alacritty**: Terminal emulator configuration
 
-## Installation (Distro Hopping)
+## Installation
 
 1. **Clone the repo:**
    ```bash
