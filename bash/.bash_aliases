@@ -14,6 +14,9 @@ alias rm='rm -i'
 alias mv='mv -i'
 alias cp='cp -i'
 
+# easier readability
+alias df='df -h'
+
 # automatically enable METU VPN because via-cli is trash
 alias metuvpn='~/scripts/metuvpn.sh'
 
