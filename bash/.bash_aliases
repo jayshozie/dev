@@ -33,6 +33,8 @@ alias gitconf='nvim ~/.gitconfig'
 # easier access to stuff i'm constantly working on
 alias project='cd ~/projects/c-mastery-projects/jayshell'
 alias scri='cd ~/scripts && nvim ~/scripts'
+alias docs='cd ~/Documents'
+alias downs='cd ~/Downloads'
 
 # my very own weather scrip
 alias weather='~/scripts/weather/weather.sh'
