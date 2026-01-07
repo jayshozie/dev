@@ -2,6 +2,7 @@
 
 # tmux plugins
 tmux/.config/tmux/plugins
+tmux/.config/tmux/resurrect
 
 # utilities
 utils/
