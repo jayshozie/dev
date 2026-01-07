@@ -56,4 +56,4 @@ alias unsleep='sudo shutdown -c'
 
 # i usually close my workstation via terminal mostly, and got annoyed at always
 # writing the whole command
-alias sp='sudo poweroff'
+alias die='systemctl poweroff'
