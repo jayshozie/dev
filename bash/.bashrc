@@ -111,6 +111,8 @@ if ! shopt -oq posix; then
   fi
 fi
 
+export EDITOR=nvim
+
 eval "$(starship init bash)"
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
