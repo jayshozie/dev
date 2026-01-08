@@ -120,7 +120,7 @@ vim.keymap.set('n', '<leader>s', [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><
 -- )
 
 -- Opens ~/.config/nvim 
-vim.keymap.set('n', '<leader>vpp', '<cmd>e ~/.config/nvim/<CR>');
+vim.keymap.set('n', '<leader>vpp', '<cmd>e ~/dotfiles/nvim/.config/nvim/<CR>');
 -- I use this more than I'd like to admit.
 
 -- Helps a lot when rewriting the config.
@@ -128,6 +128,11 @@ vim.keymap.set('n', '<leader><leader>', function()
     vim.cmd('so')
 end)
 
+vim.keymap.set('n', '<C-x>', function()
+    local filename = vim.fn.expand('%:p')
+    local command = 'chmod +x ' .. filename
+    os.execute(command)
+end)
 
 
 

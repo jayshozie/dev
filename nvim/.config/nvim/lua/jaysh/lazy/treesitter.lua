@@ -49,5 +49,11 @@ return {
     },
     config = function(_, opts)
         require("nvim-treesitter.configs").setup(opts)
+        vim.api.nvim_create_autocmd({'BufNewFile', 'BufRead'}, {
+            pattern = {"*.service"},
+            callback = function()
+                vim.cmd("set filetype=ini")
+            end,
+        })
     end,
 }
