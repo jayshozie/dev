@@ -53,7 +53,7 @@ vim.g.localleader = ' '
 -- I use this a lot, help a lot too.
 vim.keymap.set('n', '<leader>pv', vim.cmd.Ex)
 -- I hate using Ctrl for that, and got used to this to switch windows.
-vim.keymap.set('n', '<leader>w', '<C-w>')
+-- vim.keymap.set('n', '<leader>w', '<C-w>')
 
 -- Thanks a lot Primeagen. These are amazing.
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
@@ -129,9 +129,32 @@ vim.keymap.set('n', '<leader><leader>', function()
 end)
 
 vim.keymap.set('n', '<C-x>', function()
-    local filename = vim.fn.expand('%:p')
-    local command = 'chmod +x ' .. filename
-    os.execute(command)
+    local file_path = vim.fn.expand('%:p')
+    local file_stat = vim.uv.fs_stat(file_path)
+
+    if not file_state then
+        print("File doesn't exist yet.")
+        return
+    end
+
+    local mode = file_stat.mode
+    local is_executable = bit.band(mode, 64) ~= 0
+
+    local command = ""
+    local msg = ""
+
+    if is_executable then
+        command = "chmod -x " .. file_path
+        msg = "Removed executable permisison."
+    else
+        command = "chmod +x " .. file_path
+        msg = "Added executable permisison."
+    end
+
+    print(mode_and_user_execute)
+    -- local command = 'chmod +x ' .. file_path
+    -- os.execute(command)
+    -- print(msg)
 end)
 
 
