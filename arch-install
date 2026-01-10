@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+./run bash
+./run tmux
+./run alacritty
+./run neovim
+./run dev

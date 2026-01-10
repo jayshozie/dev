@@ -1,0 +1,112 @@
+#!/usr/bin/env bash
+
+CLR_RED='\033[0;31m'
+CLR_GRN='\033[0;32m'
+CLR_WHT='\e[37m'
+CLR_RST='\033[0m'
+CLR_BLK='\e[30m'
+CLR_RED='\e[31m'
+CLR_GRN='\e[32m'
+CLR_YLW='\e[33m'
+CLR_BLU='\e[34m'
+CLR_MGA='\e[35m'
+CLR_CYN='\e[36m'
+CLR_WHT='\e[37m'
+CLR_RST='\e[0m'
+
+# prime you don't have to write DEV_ENV=$(pwd) every time you run the script...
+export DEV_ROOT=$(cd "$(dirname "$0")" && pwd)
+
+ARG1=$1
+ARG2=$2
+# echo $ARG1
+# echo $ARG2
+
+usage() {
+    echo -e "${CLR_YLW}./run - A script that will only work for me lol"
+    echo -e "${CLR_MGA}usage: ./run [--sim] PROGRAM"
+    echo -e ''
+    echo -e "${CLR_RED}[IMPORTANT] This script does not support multiple PROGRAM arguments."
+    # echo -e "${CLR_RST}"
+    echo -e "${CLR_GRN}"
+    echo -e 'Examples:'
+    echo -e './run --sim nvim'
+    echo -e './run tmux'
+    echo -e "${CLR_RST}"
+    echo -e ''
+}
+
+if [[ $# -gt 2 ]]; then
+    echo -e "${CLR_RED}"
+    echo -e '[ERROR] Too many arguments.'
+    echo -e "${CLR_RST}"
+    usage
+    exit 1
+fi
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Debian-based Distros' Installation Script
+
+# Builds neovim from source to make sure it's v0.11.0+
+
+# make sure everything is up-to-date
+# sudo apt update
+# sudo apt upgrade
+# 
+# # make sure git and stow is installed
+# sudo apt install git make tmux alacritty stow
+# 
+# if [[ $? -eq 0 ]]; then
+#     # bash
+#     if [[ -f $HOME/.bashrc ]]; then
+#         mv $HOME/.bashrc $HOME/.bashrc.bak
+#         echo "[INFO] Default .bashrc moved to $HOME/.bashrc.bak"
+#     fi
+#     if [[ -f $HOME/.bash_aliases ]]; then
+#         mv $HOME/.bash_aliases $HOME/.bash_aliases.bak
+#         echo "[INFO] Default .bash_aliases moved to $HOME/.bash_aliases.bak"
+#     fi
+# 
+#     # git
+#     if [[ -f $HOME/.gitconfig ]]; then
+#         mv $HOME/.gitconfig $HOME/.gitconfig.bak
+#         echo "[INFO] Default .gitconfig moved to $HOME/.gitconfig.bak"
+#     fi
+# 
+#     # neovim
+#     if [[ -d $HOME/.config/nvim ]]; then
+#         mv $HOME/.config/nvim $HOME/nvim.bak
+#         echo "[INFO] Default .config/nvim moved to $HOME/nvim.bak"
+#     fi
+# 
+#     # alacritty
+#     if [[ -d $HOME/.config/alacritty ]]; then
+#         mv $HOME/.config/alacritty $HOME/alacritty.bak
+#         echo "[INFO] Default .config/alacritty moved to $HOME/alacritty.bak"
+#     fi
+# 
+#     # tmux
+#     if [[ -d $HOME/.tmux.conf ]]; then
+#         mv $HOME/.tmux.conf $HOME/.tmux.conf.bak
+#         echo "[INFO] Default .tmux.conf moved to $HOME/.tmux.conf.bak"
+#     fi
+#     if [[ -d $HOME/.config/tmux ]]; then
+#         mv $HOME/.config/tmux $HOME/tmux.bak
+#         echo "[INFO] Default .config/tmux moved to $HOME/tmux.bak"
+#     fi
+# else
+#     echo "[ERROR] Something went wrong with the installation of the programs."
+#     echo "[INFO] Please check the installation, then re-run this script."
+# fi
+# 

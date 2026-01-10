@@ -12,6 +12,31 @@ decorations = "None"
 dynamic_padding = true
 dimensions = { columns = 0, lines = 0 }
 
+[[keyboard.bindings]]
+key = "Key1"
+mods = "Control"
+chars = "\u001b[27;5;49~"
+
+[[keyboard.bindings]]
+key = "Key2"
+mods = "Control"
+chars = "\u001b[27;5;50~"
+
+[[keyboard.bindings]]
+key = "Key3"
+mods = "Control"
+chars = "\u001b[27;5;51~"
+
+[[keyboard.bindings]]
+key = "Key4"
+mods = "Control"
+chars = "\u001b[27;5;52~"
+
+[[keyboard.bindings]]
+key = "Key5"
+mods = "Control"
+chars = "\u001b[27;5;53~"
+
 [scrolling]
 history = 100000
 

@@ -17,16 +17,16 @@ return {
         config = function()
             vim.lsp.set_log_level("warn")
 
-            ---------------------------------------------------------
-            -- GENERAL DIAGNOSTICS
-            ---------------------------------------------------------
+            -------------------------
+            -- GENERAL DIAGNOSTICS --
+            -------------------------
             vim.diagnostic.config({
                 virtual_text = true,
             })
 
-            ---------------------------------------------------------
-            -- ON_ATTACH (your original keymaps preserved)
-            ---------------------------------------------------------
+            ---------------
+            -- ON_ATTACH --
+            ---------------
             local on_attach = function(client, bufnr)
                 local opts = { noremap = true, silent = true, buffer = bufnr }
 
@@ -50,8 +50,6 @@ return {
 
                 if client.server_capabilities.referencesProvider then
                     vim.keymap.set("n", "<leader>r", function()
-                        local telescope = require('telescope.builtin')
-
                         -- Custom function to make the results cleaner and shorter
                         -- by removing the spaces after the last colonsn and
                         -- before the actual line itself, without using vim.uri_to_fname
@@ -79,7 +77,7 @@ return {
                             return entry
                         end
 
-                        telescope.lsp_references({
+                        require('telescope.builtin').lsp_references({
                             -- 1. Use the 'dropdown' theme for a better small-window experience
                             theme = "dropdown",
 
@@ -225,14 +223,13 @@ return {
                 }),
             })
 
-            ---------------------------------------------------------
-            -- LSP SERVERS (without Mason)
-            -- using ONLY vim.lsp.config + vim.lsp.enable
-            ---------------------------------------------------------
+            -----------------
+            -- LSP SERVERS --
+            -----------------
 
-            -----------------------
-            -- Lua LS (Lua)
-            -----------------------
+            ------------------
+            -- Lua LS (Lua) --
+            ------------------
             vim.lsp.config.lua_ls = {
                 cmd = { "lua-language-server" },
                 filetypes = { "lua" },
@@ -245,7 +242,9 @@ return {
                     },
                 },
             }
-            vim.lsp.enable("lua_ls")
+            if vim.fn.executable("lua_ls") == 1 then
+                vim.lsp.enable("lua_ls")
+            end
 
             -----------------------
             -- clangd (C/C++, ObjC, ObjC++)
@@ -261,7 +260,9 @@ return {
                 on_attach = on_attach,
                 capabilities = capabilities,
             }
-            vim.lsp.enable("clangd")
+            if vim.fn.executable("clangd") == 1 then
+                vim.lsp.enable("clangd")
+            end
 
             -----------------------
             -- vtsls (TS/JS)
@@ -279,7 +280,9 @@ return {
                 on_attach = on_attach,
                 capabilities = capabilities,
             }
-            vim.lsp.enable("vtsls")
+            if vim.fn.executable("vtsls") == 1 then
+                vim.lsp.enable("vtsls")
+            end
 
             -----------------------
             -- Bash LS (Bash)
@@ -295,18 +298,43 @@ return {
                     },
                 },
             }
-            vim.lsp.enable("bashls")
+            if vim.fn.executable("bashls") == 1 then
+                vim.lsp.enable("bashls")
+            end
 
             -----------------------
             -- Marksman (Markdown)
             -----------------------
-            vim.lsp.config.marksman = {
-                cmd = { "marksman", "server" },
-                filetypes = { "markdown", "md" },
+            -- vim.lsp.config.marksman = {
+            --     cmd = { "marksman", "server" },
+            --     filetypes = { "markdown", "md" },
+            --     on_attach = on_attach,
+            --     capabilities = capabilities,
+            -- }
+            -- vim.lsp.enable("marksman")
+
+            -----------------------
+            -- Harper (Grammar-Checker)
+            -----------------------
+            vim.lsp.config['harper-ls'] = {
+                cmd = { "harper-ls", "--stdio" },
                 on_attach = on_attach,
-                capabilities = capabilities,
+                capabilites = capabilities,
+                filetypes = {
+                    "tex",
+                    "markdown",
+                    "md",
+                    "plaintex",
+                    "gitcommit",
+                    "",
+                    "",
+                },
+                settings = {
+                },
             }
-            vim.lsp.enable("marksman")
+            if vim.fn.executable("harper-ls") == 1 then
+                vim.lsp.enable("harper-ls")
+            end
 
             -----------------------
             -- ltex-plus (LaTeX)
@@ -345,14 +373,22 @@ return {
             -----------------------
             -- markdown-oxide (Markdown)
             -----------------------
-            vim.lsp.config["markdown-oxide"] = {
-                cmd = { "markdown-oxide" },
-                filetypes = { "md" },
-                on_attach = on_attach,
-                capabilities = capabilities,
-                root_markers = { ".git" },
-            }
-            vim.lsp.enable("markdown-oxide")
+            -- vim.lsp.config["markdown-oxide"] = {
+            --     cmd = { "markdown-oxide" },
+            --     filetypes = { "markdown", "md" },
+            --     -- capabilities = capabilities,
+            --     capabilities = capabilities,
+            --     settings = {
+            --         workspace = {
+            --             didChangeWatchedFiles = {
+            --                 dynamicRegistration = true,
+            --             },
+            --         },
+            --     },
+            --     on_attach = on_attach,
+            --     root_markers = { ".git" },
+            -- }
+            -- vim.lsp.enable("markdown-oxide")
 
             -----------------------
             -- Pyright (Python)
