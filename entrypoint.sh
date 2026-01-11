@@ -14,7 +14,6 @@ if [ -d "$SOURCE_SSH" ] && [ "$(ls -A $SOURCE_SSH)" ]; then
     chown -R jaysh:jaysh "$TARGET_SSH"
     chmod 700 "$TARGET_SSH"
     chmod 600 "$TARGET_SSH/"*
-    # Optional: public keys readable
     find "$TARGET_SSH" -name "*.pub" -exec chmod 644 {} \;
 fi
 
@@ -26,9 +25,6 @@ if [ -d "$SOURCE_GPG" ] && [ "$(ls -A $SOURCE_GPG)" ]; then
     chmod 700 "$TARGET_GPG"
     chmod 600 "$TARGET_GPG/"*
 fi
-
-# give jaysh ownership
-chown -R jaysh:jaysh /home/jaysh/dotfiles
 
 # switch user
 echo "--- Dropping privileges to jaysh ---"

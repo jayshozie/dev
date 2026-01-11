@@ -127,12 +127,15 @@ fi
 # this works, for example string becomes v0.16.1
 git checkout v"${ALACRITTY_VERSION}"
 
-if [[ $(alacritty --version | grep $ALACRITTY_VERSION) ]]; then
-    VER_SAME=true
+if [[ command -v alacritty ]]; then
+    if [[ $(alacritty --version | grep $ALACRITTY_VERSION) ]]; then
+        VER_SAME=true
+    else
+        VER_SAME=false
+    fi
 else
     VER_SAME=false
 fi
-
 if [[ $VER_SAME == true ]]; then
     echo -e "${CLR_RED}"
     echo "[RUNS/DEV] Alacritty version $ALACRITTY_VERSION exists, and built before."
