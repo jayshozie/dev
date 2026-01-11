@@ -16,6 +16,7 @@ USER jaysh
 WORKDIR /home/jaysh
 
 ARG CACHE_DATE=noncacheable
+RUN [ ! -d "/home/jaysh/dotfiles" ] || rm -rf /home/jaysh/dotfiles
 RUN git clone https://github.com/jayshozie/dotfiles.git
 
 WORKDIR /home/jaysh/dotfiles
