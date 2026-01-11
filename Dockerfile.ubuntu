@@ -5,20 +5,23 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     git \
     vim \
+    curl \
+    wget \
     && rm -rf /var/lib/apt/lists/*
 
 RUN useradd -ms /bin/bash jaysh && \
-    echo "jaysh:0000" | chpasswd && \
+    echo "jaysh:huhu" | chpasswd && \
     usermod -aG sudo jaysh
 
-USER jaysh
-
 WORKDIR /home/jaysh
-
-ARG CACHE_DATE=noncacheable
-RUN [ ! -d "/home/jaysh/dotfiles" ] || rm -rf /home/jaysh/dotfiles
-RUN git clone https://github.com/jayshozie/dotfiles.git
+RUN mkdir -p dotfiles .ssh .gnupg
 
 WORKDIR /home/jaysh/dotfiles
+COPY . .
 
-RUN git checkout dev
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+# entrypoint.sh runs as root, then entrypoint.sh changes user to jaysh
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+CMD ["/bin/bash"]
