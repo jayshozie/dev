@@ -4,6 +4,7 @@ RUN apt-get update && apt-get install -y \
     sudo \
     build-essential \
     git \
+    vim \
     && rm -rf /var/lib/apt/lists/*
 
 RUN useradd -ms /bin/bash jaysh && \
@@ -14,6 +15,7 @@ USER jaysh
 
 WORKDIR /home/jaysh
 
+ARG CACHE_DATE=noncacheable
 RUN git clone https://github.com/jayshozie/dotfiles.git
 
 WORKDIR /home/jaysh/dotfiles

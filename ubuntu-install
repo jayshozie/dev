@@ -52,7 +52,7 @@ if [[ $? -eq 0 ]]; then
     fi
 
     # CLONES_DIR
-    mkdir -p $CLONES_DIR
+    mkdir -p $HOME/clones
 else
     echo "[ERROR] Something went wrong with the installation of the programs."
     echo "[INFO] Please check the installation, then re-run this script."
