@@ -6,9 +6,10 @@ CLR_RST='\033[0m'
 
 # rm -rf the default
 if [[ -d $XDG_CONFIG_HOME/autostart ]]; then
-    echo -e "${CLR_RED}[RUNS/AUTOSTART] WARNING : $XDG_CONFIG_HOME/autostart EXISTS."
-    echo -e "${CLR_RED}[RUNS/AUTOSTART] THIS WILL REMOVE THE FILES IN IT."
-    read -r "${CLR_RED}[RUNS/AUTOSTART] DID YOU BACK THEM UP? (y/N)" answer
+    echo -e "${CLR_RED}"
+    echo -e "[RUNS/AUTOSTART] WARNING : $XDG_CONFIG_HOME/autostart EXISTS."
+    echo -e "[RUNS/AUTOSTART] THIS WILL REMOVE THE FILES IN IT."
+    read -r "[RUNS/AUTOSTART] DID YOU BACK THEM UP? (y/N)" answer
     if [[ $answer == "y" ]]; then
         echo -e "${CLR_RST}[RUNS/AUTOSTART] Good for you."
         sleep 2
