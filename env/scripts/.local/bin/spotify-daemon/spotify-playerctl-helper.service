@@ -1,0 +1,11 @@
+[Unit]
+Description=Spotify Test Script
+After=gnome-session.target
+
+[Service]
+Type=simple
+ExecStart=/home/USER/spotify-playerctl-helper/daemon.sh
+Restart=on-failure
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,214 @@
+#!/usr/bin/env bash
+
+echo
+OPTS_MSG='Please select an option from the menu below:'
+TODOS_DIR="$HOME/.config/TODO"
+TODO_FILE="$TODOS_DIR/TODO.txt"
+
+check_structure() {
+    if [[ ! -d $TODOS_DIR ]]; then
+        echo "No config director ($TODOS_DIR), would you like to create it?"
+        select opt in Yes No; do
+            case $opt in
+                Yes)
+                    clear
+                    echo "Creating $TODOS_DIR ..."
+                    mkdir $TODOS_DIR
+                    touch $TODO_FILE
+                    echo 'Done.'
+                    break
+                    ;;
+                No)
+                    echo 'OK.'
+                    exit
+                    ;;
+                *)
+                    echo 'How did you manage that??'
+                    exit
+                    ;;
+            esac
+        done
+        if [[ ! -f $TODO_FILE ]]; then
+            touch $TODO_FILE
+            break
+        fi
+    fi
+}
+
+id_generator() {
+    if [[ ! -s $TODO_FILE ]]; then
+        NEXT_ID=1
+    else
+        LAST_ID=$(tail -n 1 $TODO_FILE | cut -d'.' -f1)
+        NEXT_ID=$((LAST_ID + 1))
+    fi
+}
+
+get_todo_id() {
+    TODO_ID=$(echo $1 | cut -d'.' -f1)
+}
+
+add_todo() {
+    local TODO_TEXT="$1"
+    local DEADLINE="$2"
+    if [[ -n $DEADLINE ]]; then
+        echo "$NEXT_ID. $TODO_TEXT | @due: $DEADLINE" >> $TODO_FILE
+    else
+        echo "$NEXT_ID. $TODO_TEXT" >> $TODO_FILE
+    fi
+    echo "Added TODO with ID $NEXT_ID."
+}
+
+add() {
+    id_generator
+    echo 'Enter TODO:'
+    read -r TODO_TEXT
+    if [[ -z $TODO_TEXT ]]; then
+        echo 'TODO text cannot be empty.'
+        return
+    fi
+    echo
+    echo 'Would you like to specify a deadline?'
+    select opt in Yes No; do
+        case $opt in
+            Yes)
+                echo
+                echo 'Enter deadline (YYYY-MM-DD):'
+                read -r DEADLINE
+                clear
+                add_todo "$TODO_TEXT" "$DEADLINE"
+                break
+                ;;
+            No)
+                clear
+                add_todo "$TODO_TEXT" ""
+                break
+                ;;
+            *)
+                clear
+                echo 'Invalid option.'
+                ;;
+        esac
+    done
+}
+
+view() {
+    mapfile -t TODOS < <(cat $TODO_FILE)
+}
+
+edit() {
+    OPTS=('Change TODO Message' 'Change Deadline' 'Delete TODO' 'Change Selection' 'Main Menu')
+    echo 'Choose a TODO (ID) to edit:'
+    select TODO in "${TODOS[@]}"; do
+        if [[ -n $TODO ]]; then
+            echo
+            echo "Selected: $TODO"
+            get_todo_id "$TODO"
+            echo
+            echo 'Please select an option from the menu below:'
+            select opt in "${OPTS[@]}"; do
+                case $opt in
+                    'Change TODO Message')
+                        echo
+                        echo 'Enter new TODO message:'
+                        read -r NEW_TODO_TEXT
+                        # obliterates the deadline
+                        # sed -i "${TODO_ID}s/.*/$TODO_ID. $NEW_TODO_TEXT/" $TODO_FILE
+                        # format msg | @due: deadline
+                        if grep -qE "^${TODO_ID}\..*@due:" $TODO_FILE; then
+                            DEADLINE_TEXT=$(grep -E "^${TODO_ID}\..*@due:" $TODO_FILE | sed -E "s/^${TODO_ID}\..*(@due: .*)/\1/")
+                            sed -i "${TODO_ID}s/.*/$TODO_ID. $NEW_TODO_TEXT | $DEADLINE_TEXT/" $TODO_FILE
+                        else
+                            sed -i "${TODO_ID}s/.*/$TODO_ID. $NEW_TODO_TEXT/" $TODO_FILE
+                        fi
+                        clear
+                        echo 'TODO message updated.'
+                        break
+                        ;;
+                    'Change Deadline')
+                        echo 'Enter new deadline (YYYY-MM-DD):'
+                        read -r NEW_DEADLINE
+                        # if deadline exists, delete TODO create new
+                        # else append
+                        # format
+                        # msg | @due: NEW_DEADLINE
+                        if grep -qE "^${TODO_ID}\..*@due:" $TODO_FILE; then
+                            sed -i "${TODO_ID}s/@due: .*/@due: $NEW_DEADLINE/" $TODO_FILE
+                        else
+                            sed -i "${TODO_ID}s/$/ | @due: $NEW_DEADLINE/" $TODO_FILE
+                        fi
+                        clear
+                        echo "Deadline of $TODO updated."
+                        break
+                        ;;
+                    'Delete TODO')
+                        sed -i "${TODO_ID}d" $TODO_FILE
+                        clear
+                        echo "Deleted TODO with ID $TODO_ID."
+                        break
+                        ;;
+                    'Change Selection')
+                        clear
+                        edit
+                        break
+                        ;;
+                    'Main Menu')
+                        clear
+                        return
+                        ;;
+                    *)
+                        echo 'Invalid option.'
+                        ;;
+                esac
+            done
+        else
+            echo 'Invalid TODO selection.'
+        fi
+        break
+    done
+}
+
+################################################################################
+#                                                                              #
+#                              M A I N   L O O P                               #
+#                                                                              #
+################################################################################
+clear
+while true; do
+    check_structure
+    view
+    echo
+    echo $OPTS_MSG
+    echo 
+    if [[ ${#TODOS[@]} -ne 0 ]]; then
+        echo 'TODOs'
+        for TODO in "${TODOS[@]}"; do
+            echo "$TODO"
+        done
+        echo
+    fi
+    select opt in Add Edit Exit; do
+        case $opt in
+            Add)
+                clear
+                add
+                break
+                ;;
+            Edit)
+                clear
+                edit
+                break
+                ;;
+            Exit)
+                echo $MSG_GOODBYE
+                break
+                ;;
+            *)
+                ;;
+        esac
+    done
+    if [[ $opt == 'Exit' ]]; then
+        clear
+        break
+    fi
+done
