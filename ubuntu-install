@@ -9,7 +9,7 @@ sudo apt update -y
 sudo apt upgrade -y
 
 # make sure everything is installed except neovim
-sudo apt install -y git make tmux alacritty stow
+sudo apt install -y git make tmux alacritty stow gh-cli gpg
 
 # check default config files, back them up and remove them.
 if [[ $? -eq 0 ]]; then
