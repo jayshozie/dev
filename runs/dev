@@ -38,10 +38,11 @@ fi
 # update this regularly
 git checkout "$NEOVIM_VERSION"
 
-if [[ $(nvim --version | grep $NEOVIM_VERSION) ]]; then
-    VER_SAME=true
-else
-    VER_SAME=false
+VER_SAME=false
+if command -v nvim &> /dev/null; then
+    if [[ $(nvim --version | grep $NEOVIM_VERSION) ]]; then
+        VER_SAME=true
+    fi
 fi
 
 if [[ $VER_SAME == true ]]; then
@@ -79,10 +80,11 @@ fi
 # update this regularly
 git checkout "$TMUX_VERSION"
 
-if [[ $(tmux -V | grep $TMUX_VERSION) ]]; then
-    VER_SAME=true
-else
-    VER_SAME=false
+VER_SAME=false
+if command -v tmux &> /dev/null; then
+    if [[ $(tmux -V | grep $TMUX_VERSION) ]]; then
+        VER_SAME=true
+    fi
 fi
 
 if [[ $VER_SAME == true ]]; then
@@ -111,7 +113,12 @@ ALACRITTY_VERSION="0.16.1"
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 rustup override set stable
 rustup update stable
+if ! command -v cargo &> /dev/null; then
+    curl https://sh.rustup.rs -sSf | sh
+fi
+
 sudo apt-get -y install cmake g++ pkg-config libfontconfig1-dev libxcb-xfixes0-dev libxkbcommon-dev python3
+sudo apt-get -y install libwayland-dev libxkbcommon-dev wayland-protocols libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev
 
 if [[ -d $CLONES_DIR/alacritty ]]; then
     pushd $CLONES_DIR/alacritty
@@ -127,15 +134,14 @@ fi
 # this works, for example string becomes v0.16.1
 git checkout v"${ALACRITTY_VERSION}"
 
-if [[ command -v alacritty ]]; then
+VER_SAME=false
+if command -v alacritty &> /dev/null; then
     if [[ $(alacritty --version | grep $ALACRITTY_VERSION) ]]; then
-        VER_SAME=true
-    else
-        VER_SAME=false
+        # VER_SAME=true
+        echo ''
     fi
-else
-    VER_SAME=false
 fi
+
 if [[ $VER_SAME == true ]]; then
     echo -e "${CLR_RED}"
     echo "[RUNS/DEV] Alacritty version $ALACRITTY_VERSION exists, and built before."
@@ -143,7 +149,7 @@ if [[ $VER_SAME == true ]]; then
     echo -e "${CLR_RST}"
 else
     cargo clean
-    cargo build --release
+    cargo build --release --no-default-features --features=wayland
 
     sudo install -m 755 target/release/alacritty /usr/local/bin/alacritty
     sudo chmod +x /usr/local/bin/alacritty

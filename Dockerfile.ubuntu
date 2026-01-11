@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
 RUN userdel -r ubuntu || true && \
     groupadd -g $HOST_GID jaysh && \
     useradd -u $HOST_UID -g $HOST_GID -ms /bin/bash jaysh && \
-    echo "jaysh:0000" | chpasswd && \
+    echo "jaysh:test" | chpasswd && \
     usermod -aG sudo jaysh
 
 WORKDIR /home/jaysh/dotfiles

@@ -11,7 +11,7 @@ else
 fi
 # pushd to env
 pushd $DEV_ENV/env
-# stow the tmux package
+# stow the scripts package
 stow --target=$HOME scripts
 # go back to wherever you were
 popd
