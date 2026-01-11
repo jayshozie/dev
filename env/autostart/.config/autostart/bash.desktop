@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Exec=bash -c "sleep 1 && bluetoothctl connect 8C:0D:D9:19:43:B3"
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name[en_US]=Crusher ANC2 Autoconnect
+Name=Crusher ANC2 Autoconnect
+Comment[en_US]=It tries to connect to my bluetooth headphones after boot.
+Comment=It tries to connect to my bluetooth headphones after boot.

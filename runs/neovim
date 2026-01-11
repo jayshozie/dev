@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
-# tmp
-DEV_ENV=${HOME}/dotfiles
-
-rm -rf $HOME/.config/nvim
+# rm -rf the default configs
+rm -rf $XDG_CONFIG_HOME/nvim
+# pushd to env
 pushd $DEV_ENV/env
+# stow the noevim package
 stow --target=$HOME neovim
+# go back to wherever you were
 popd

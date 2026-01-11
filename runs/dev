@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+CLR_RED='\033[0;31m'
+CLR_WHT='\033[0;37m'
+CLR_RST='\033[0m'
+
+# WARNING
+# echo "[RUNS/${SCRIPT}] ${CLR_RED}WARNING${CLR_RST} : ${1} SHOULD BE RUN AFTER ${DEV_ENV}/ubuntu-install"
+
+if [[ ! -d $CLONES_DIR ]]; then
+    echo -e "[RUNS/DEV] ${CLR_RED}ERROR${CLR_RST} : ${0} SHOULD BE RUN AFTER THE POST-INTSALL SCRIPTS"
+    exit 1
+fi
+
+sudo apt update
+sudo apt upgrade
+sudo apt-get install ninja-build gettext cmake curl build-essential git
+
+# build neovim
+if [[ -d $CLONES_DIR/neovim ]]; then
+    pushd $CLONE_DIR/neovim
+    git fetch
+else
+    pushd $HOME/clones
+    git clone git@github.com:neovim/neovim.git
+    popd
+    pushd $CLONES_DIR/neovim
+fi
+
+# update this regularly
+git checkout v0.11.5
+
+rm -rf build
+make CMAKE_BUILD_TYPE=RelWithDebInfo
+sudo make install
+
+popd
