@@ -13,4 +13,6 @@ stow --target=$HOME bash
 # go back to wherever you were
 popd
 
-echo -e "${CLR_RED}[RUNS/BASH] IMPORTANT : DON'T FORGET TO SOURCE BASHRC"
+echo -e "${CLR_RED}"
+echo "[RUNS/BASH] IMPORTANT : DON'T FORGET TO SOURCE BASHRC"
+echo -e "${CLR_RST}"
