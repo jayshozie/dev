@@ -111,12 +111,6 @@ if ! shopt -oq posix; then
   fi
 fi
 
-source $HOME/.bash_env
-
-eval "$(starship init bash)"
-
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-. "$HOME/.cargo/env"
+if [[ -f $HOME/.bash_env ]]; then
+    . $HOME/.bash_env
+fi
