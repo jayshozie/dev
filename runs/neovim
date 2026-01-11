@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# tmp
+DEV_ENV=${HOME}/dotfiles
+
+rm -rf $HOME/.config/nvim
+pushd $DEV_ENV/env
+stow --target=$HOME neovim
+popd
