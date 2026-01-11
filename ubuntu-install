@@ -52,11 +52,7 @@ if [[ $? -eq 0 ]]; then
     fi
 
     # CLONES_DIR
-    if [[ -d $CLONES_DIR ]]; then
-        echo "[INFO] ${CLONES_DIR} exists, skipping."
-    else
-        mkdir -p $CLONES_DIR
-    fi
+    mkdir -p $CLONES_DIR
 else
     echo "[ERROR] Something went wrong with the installation of the programs."
     echo "[INFO] Please check the installation, then re-run this script."
