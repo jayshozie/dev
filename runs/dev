@@ -18,10 +18,10 @@ sudo apt-get install ninja-build gettext cmake curl build-essential git
 
 # build neovim
 if [[ -d $CLONES_DIR/neovim ]]; then
-    pushd $CLONE_DIR/neovim
+    pushd $CLONES_DIR/neovim
     git fetch
 else
-    pushd $HOME/clones
+    pushd $CLONES_DIR
     git clone git@github.com:neovim/neovim.git
     popd
     pushd $CLONES_DIR/neovim

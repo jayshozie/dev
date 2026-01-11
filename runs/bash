@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# rm- rf the default configs
+rm -rf $HOME/.bashrc $HOME/.bash_env $HOME/.bash_aliases
+# pushd to env
+pushd $DEV_ENV/env
+# stow the bash package
+stow --target=$HOME bash
+# go back to wherever you were
+popd

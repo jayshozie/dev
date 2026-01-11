@@ -4,7 +4,7 @@
 rm -rf $XDG_CONFIG_HOME/nvim
 # pushd to env
 pushd $DEV_ENV/env
-# stow the noevim package
+# stow the neovim package
 stow --target=$HOME neovim
 # go back to wherever you were
 popd
