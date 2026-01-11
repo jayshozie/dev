@@ -9,7 +9,7 @@ sudo apt update -y
 sudo apt upgrade -y
 
 # make sure everything is installed except neovim
-sudo apt install -y git make tmux alacritty stow gh-cli gpg
+sudo apt install -y git make stow gh-cli gpg
 
 # check default config files, back them up and remove them.
 if [[ $? -eq 0 ]]; then
@@ -58,9 +58,6 @@ else
     echo "[INFO] Please check the installation, then re-run this script."
 fi
 
-./run dev
 ./run bash
-./run git
-./run alacritty
-./run tmux
-./run neovim
+
+source ~/.bashrc
