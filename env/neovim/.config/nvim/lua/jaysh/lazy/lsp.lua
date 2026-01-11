@@ -287,7 +287,7 @@ return {
             -----------------------
             -- Bash LS (Bash)
             -----------------------
-            vim.lsp.config.bashls = {
+            vim.lsp.config['bash-language-server'] = {
                 cmd = { "bash-language-server", "start" },
                 filetypes = { "sh", "bash" },
                 on_attach = on_attach,
@@ -298,8 +298,8 @@ return {
                     },
                 },
             }
-            if vim.fn.executable("bashls") == 1 then
-                vim.lsp.enable("bashls")
+            if vim.fn.executable("bash-language-server") == 1 then
+                vim.lsp.enable("bash-language-server")
             end
 
             -----------------------
