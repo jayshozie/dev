@@ -4,7 +4,8 @@ SCRIPTS_DIR=$HOME/.local/bin/scripts
 
 # rm -rf the default configs
 if [[ -d $SCRIPTS_DIR ]]; then
-    mv $SCRIPTS_DIR $HOME/scripts.bak
+    cp -r -L $SCRIPTS_DIR $HOME/scripts.bak
+    rm -rf $SCRIPTS_DIR
 else
     mkdir -p $SCRIPTS_DIR
 fi

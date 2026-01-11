@@ -3,7 +3,7 @@
 # i'm ok. i'm ok. i'm ok. i'm ok.
 export DISPLAY=:1
 
-export PATH="$HOME/.local/bin/scripts:$PATH"
+export PATH="$HOME/.local/bin/scripts:$HOME/.local/bin/scripts/weather:$PATH"
 
 # i hate nano
 export EDITOR=nvim
