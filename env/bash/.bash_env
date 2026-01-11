@@ -3,6 +3,8 @@
 # i'm ok. i'm ok. i'm ok. i'm ok.
 export DISPLAY=:1
 
+export PATH="$HOME/.local/bin/scripts:$PATH"
+
 # i hate nano
 export EDITOR=nvim
 

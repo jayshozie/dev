@@ -70,3 +70,11 @@ else
 fi
 
 ./run bash
+source $HOME/.bash_env
+./run dev
+./run git
+./run alacritty
+./run tmux
+./run neovim
+./run autostart
+./run scripts
