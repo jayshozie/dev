@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# fuck fuck fuck fuck fuck
+export DISPLAY=:1
+
 # i hate nano
 export EDITOR=nvim
 

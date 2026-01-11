@@ -50,9 +50,9 @@ alias bat='batcat'
 
 # i usually sleep while my workstation is on, so i have an alias to shut it down
 # automatically after 90 minutes
-alias sleep='sudo shutdown +90'
+alias sleepy='sudo shutdown +90'
 # here if i change my mind
-alias unsleep='sudo shutdown -c'
+alias unsleepy='sudo shutdown -c'
 
 # i usually close my workstation via terminal mostly, and got annoyed at always
 # writing the whole command

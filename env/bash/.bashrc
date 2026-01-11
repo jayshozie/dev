@@ -111,20 +111,11 @@ if ! shopt -oq posix; then
   fi
 fi
 
-export EDITOR=nvim
+source $HOME/.bash_env
 
 eval "$(starship init bash)"
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
-# Install Ruby Gems to ~/gems
-export GEM_HOME="$HOME/gems"
-export PATH="$HOME/gems/bin:$PATH"
-export GPG_TTY=$(tty)
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-export MOZ_ENABLE_WAYLAND=1
-
-export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
