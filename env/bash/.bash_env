@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
-export CLONES_DIR=$HOME/clones
+export CLONES_DIR=$HOME/src
 
 # i'm ok. i'm ok. i'm ok. i'm ok.
-export DISPLAY=:1
+# uncomment this if the problem is present on arch too
+# export DISPLAY=:1
 
 export PATH="$HOME/.local/bin/scripts:$HOME/.local/bin/scripts/weather:$PATH"
 
@@ -18,6 +19,8 @@ export PATH="$HOME/gems/bin:$PATH"
 export GPG_TTY=$(tty)
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+
+export STARSHIP_CONFIG=$XDG_CONFIG_HOME/starship/starship.toml
 
 # TEST
 export MOZ_ENABLE_WAYLAND=1

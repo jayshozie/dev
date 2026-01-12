@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 
+sudo pacman -Syu
+sudo pacman -Sy alacritty
+
 # rm -rf the default configs
-rm -rf $XDG_CONFIG_HOME/alacritty
+rm -rf "$XDG_CONFIG_HOME/alacritty"
 # pushd to env
-pushd $DEV_ENV/env
+pushd "$DEV_ENV/env" || exit 1
 # stow the alacritty package
-stow --target=$HOME alacritty
+stow --target="$HOME" alacritty
 # go back to wherever you were
 popd
