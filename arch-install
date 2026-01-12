@@ -9,7 +9,6 @@ TARGET_USRNAME='jaysh'
 TARGET_ID='1000' # Target for both UID and GID
 
 echo "[ARCH-INSTALL] Validating Identity for: $TARGET_USRNAME (UID/GID: $TARGET_ID)"
-
 # ---------------------------------------------------------
 # STEP 1: SAFETY CHECKS (OCCUPANTS)
 # ---------------------------------------------------------
@@ -80,7 +79,6 @@ fi
 # STEP 4: ENABLE SUDO FOR WHEEL GROUP
 # ---------------------------------------------------------
 echo "[ARCH-INSTALL] Enabling sudo access for %wheel group..."
-
 # check if the line is already uncommented to avoid duplicates
 if grep -q "^# %wheel ALL=(ALL:ALL) ALL" /etc/sudoers; then
     # use sed to uncomment the line safely
