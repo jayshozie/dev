@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+
+# make sure multilibe is uncommented in /etc/pacman.conf
+sudo sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
+# Refresh repos to include multilib
+sudo pacman -Sy 
+
+# ARCH POST-INSTALLATION SCRIPT
+# CANNOT NOT HAVE PACKAGES
+sudo pacman -S --noconfirm base-devel linux-headers git networkmanager sudo
+
+# LESS IMPORTANT BUT YOU'LL LOSE YOUR MIND WITHOUT THEM AFTER INSTALLATION
+sudo pacman -S --noconfirm vim neovim man-db man-pages less openssh
+
+# enable NetworkManager and sshd just in case archinstall failed to do so
+sudo systemctl enable NetworkManager
+sudo systemctl enable sshd
+
+# compositor and stuff like that
+sudo pacman -S --noconfirm hyprland xdg-desktop-portal-hyprland
+sudo pacman -S --noconfirm xdg-desktop-portal-gtk
+
+sudo pacman -S --noconfirm sddm qt5-graphicaleffects qt5-quickcontrols2 qt5-svg
+sudo pacman -S --noconfirm xorg-xwayland qt5-wayland qt6-wayland waybar
+sudo pacman -S --noconfirm swaybg mako polkit-kde-agent
+
+# drivers
+sudo pacman -S --noconfirm intel-ucode nvidia nvidia-utils nvidia-settings 
+sudo pacman -S --noconfirm lib32-nvidia-utils egl-wayland
+sudo pacman -S --noconfirm pipewire pipewire-alsa pipewire-pulse wireplumber
+sudo pacman -S --noconfirm bluez bluez-utils blueman
+# enable bluetooth
+sudo systemctl enable bluetooth
+
+# userspace programs
+sudo pacman -S --noconfirm alacritty tmux starship bash-completion
+sudo pacman -S --noconfirm ripgrep fd fzf unzip wget tree btop fastfetch tldr
+
+# fonts
+sudo pacman -S --noconfirm ttf-jetbrains-mono-nerd ttf-font-awesome
+sudo pacman -S --noconfirm noto-fonts-emoji
+
+# browser
+sudo pacman -S --noconfirm firefox
+
+# add the line nvidia_drm.modeset=1 to make sure the drivers work
+if ! grep -q "nvidia_drm.modeset=1" /etc/default/grub; then
+    sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="/&nvidia_drm.modeset=1 /' /etc/default/grub
+fi
+
+# rebuild grub
+grub-mkconfig -o /boot/grub/grub.cfg
+
+# enable sddm
+sudo systemctl enable sddm
+
+echo "[SUCCESS] Reboot now. Don't forget to install librewolf later."
