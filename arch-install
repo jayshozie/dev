@@ -1,11 +1,110 @@
 #!/usr/bin/env bash
 
+# ARCH POST-INSTALLATION SCRIPT
+# Purpose: to make sure the user jaysh exist, that user has the correct
+#          permissions, everything is installed, and the system is ready to
+#          be used
+
+TARGET_USRNAME='jaysh'
+TARGET_ID='1000' # Target for both UID and GID
+
+echo "[ARCH-INSTALL] Validating Identity for: $TARGET_USRNAME (UID/GID: $TARGET_ID)"
+
+# ---------------------------------------------------------
+# STEP 1: SAFETY CHECKS (OCCUPANTS)
+# ---------------------------------------------------------
+# check if UID 1000 is taken by a weird ahh user
+UID_HOLDER=$(getent passwd "$TARGET_ID" | cut -d: -f1)
+if [[ -n "$UID_HOLDER" && "$UID_HOLDER" != "$TARGET_USRNAME" ]]; then
+    echo "[CRITICAL] UID $TARGET_ID is occupied by '$UID_HOLDER'."
+    echo "Make sure it is safe to remove that user, and run:"
+    echo "userdel -r $UID_HOLDER"
+    exit 1
+fi
+# check if GID 1000 is taken by a weird ahh group
+GID_HOLDER=$(getent group "$TARGET_ID" | cut -d: -f1)
+if [[ -n "$GID_HOLDER" && "$GID_HOLDER" != "$TARGET_USRNAME" ]]; then
+    echo "[CRITICAL] GID $TARGET_ID is occupied by group '$GID_HOLDER'."
+    echo "Make sure it is safe to remove that group, and run:"
+    echo "groupdel $GID_HOLDER"
+    exit 1
+fi
+# ---------------------------------------------------------
+# STEP 2: GROUP ENFORCEMENT (GID 1000)
+# ---------------------------------------------------------
+# create the group 'jaysh' at 1000 if it doesn't exist
+if ! getent group "$TARGET_USRNAME" >/dev/null; then
+    echo "[ARCH-INSTALL] Creating group '$TARGET_USRNAME' at GID $TARGET_ID..."
+    groupadd -g "$TARGET_ID" "$TARGET_USRNAME"
+else
+    # if group exists, ensure it has the right GID
+    CURR_GID=$(getent group "$TARGET_USRNAME" | cut -d: -f3)
+    if [[ "$CURR_GID" != "$TARGET_ID" ]]; then
+        echo "[ARCH-INSTALL] Correcting GID for group '$TARGET_USRNAME'..."
+        groupmod -g "$TARGET_ID" "$TARGET_USRNAME"
+    fi
+fi
+# ---------------------------------------------------------
+# STEP 3: USER ENFORCEMENT (UID 1000 + GROUPS)
+# ---------------------------------------------------------
+# check if user exists
+if id "$TARGET_USRNAME" &>/dev/null; then
+    echo "[ARCH-INSTALL] User exists. Verifying configuration..."
+    
+    # 1. fix UID (-u) and primary group (-g)
+    # 2. add to 'wheel' for sudo access (-aG)
+    # 3. ensure shell is bash (-s)
+    usermod -u "$TARGET_ID" -g "$TARGET_ID" -aG wheel -s /bin/bash "$TARGET_USRNAME"
+    
+    # CRITICAL: re-stamp home directory ownership to match new UID:GID
+    echo "[ARCH-INSTALL] Enforcing ownership on /home/$TARGET_USRNAME..."
+    # only run if home dir exists to avoid errors
+    if [[ -d "/home/$TARGET_USRNAME" ]]; then
+        chown -R "$TARGET_ID":"$TARGET_ID" "/home/$TARGET_USRNAME"
+        # paranoid SSH/GPG fix:
+        chmod 700 "/home/$TARGET_USRNAME/.ssh" 2>/dev/null
+        chmod 700 "/home/$TARGET_USRNAME/.gnupg" 2>/dev/null
+    fi
+else
+    echo "[ARCH-INSTALL] Creating clean user..."
+    # -m: create home
+    # -u: UID 1000
+    # -g: primary GID 1000
+    # -g: secondary group (wheel)
+    useradd -m -u "$TARGET_ID" -g "$TARGET_ID" -G wheel -s /bin/bash "$TARGET_USRNAME"
+    
+    echo "[ARCH-INSTALL] Set password for $TARGET_USRNAME:"
+    passwd "$TARGET_USRNAME"
+fi
+# ---------------------------------------------------------
+# STEP 4: ENABLE SUDO FOR WHEEL GROUP
+# ---------------------------------------------------------
+echo "[ARCH-INSTALL] Enabling sudo access for %wheel group..."
+
+# check if the line is already uncommented to avoid duplicates
+if grep -q "^# %wheel ALL=(ALL:ALL) ALL" /etc/sudoers; then
+    # use sed to uncomment the line safely
+    sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
+    # check if the file is syntactically valid
+    if ! visudo -c; then
+        echo "[CRITICAL] /etc/sudoers syntax is broken!"
+        echo "[CRITICAL] It is recommended that you start the installation from scratch."
+        exit 1
+    fi
+    echo "[ARCH-INSTALL] Sudo access enabled."
+elif grep -q "^%wheel ALL=(ALL:ALL) ALL" /etc/sudoers; then
+    echo "[ARCH-INSTALL] Sudo access was already enabled."
+else
+    # fallback if the file structure is weird (rare in fresh install)
+    echo "[WARNING] Could not auto-enable sudo. Please run 'visudo' and uncomment %wheel manually."
+fi
+echo "[ARCH-INSTALL] SUCCESS: User is $TARGET_ID:$TARGET_ID with wheel access."
+
 # make sure multilib is uncommented in /etc/pacman.conf
 sudo sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
 # Refresh repos to include multilib
 sudo pacman -Syu
 
-# ARCH POST-INSTALLATION SCRIPT
 # CANNOT NOT HAVE PACKAGES
 sudo pacman -S --noconfirm base-devel linux-headers git networkmanager sudo
 
