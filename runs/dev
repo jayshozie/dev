@@ -62,6 +62,7 @@ popd
 ################################################################################
 
 TMUX_VERSION="3.6a"
+TPM_VERSION="v3.1.0"
 
 # get dependencies
 sudo apt-get -y install libevent-dev ncurses-dev bison autoconf automake pkg-config
@@ -76,6 +77,20 @@ else
     popd
     pushd $CLONES_DIR/tmux
 fi
+
+
+## B L O C K   T P M   S T A R T
+if [[ ! -d $DEV_ENV/env/tmux/.config/tmux/plugins/tpm ]]; then
+    pushd $DEV_ENV/env/tmux/.config/tmux/plugins
+    git clone git@github.com:tmux-plugins/tpm.git
+else
+    pushd $DEV_ENV/env/tmux/.config/tmux/plugins/tpm
+    git fetch
+fi
+git checkout "${TPM_VERSION}"
+popd
+## B L O C K   T P M   E N D
+
 
 # update this regularly
 git checkout "$TMUX_VERSION"
@@ -110,13 +125,6 @@ popd
 ALACRITTY_VERSION="0.16.1"
 
 # get dependencies
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-rustup override set stable
-rustup update stable
-if ! command -v cargo &> /dev/null; then
-    curl https://sh.rustup.rs -sSf | sh
-fi
-
 sudo apt-get -y install cmake g++ pkg-config libfontconfig1-dev libxcb-xfixes0-dev libxkbcommon-dev python3
 sudo apt-get -y install libwayland-dev libxkbcommon-dev wayland-protocols libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev
 
@@ -137,8 +145,7 @@ git checkout v"${ALACRITTY_VERSION}"
 VER_SAME=false
 if command -v alacritty &> /dev/null; then
     if [[ $(alacritty --version | grep $ALACRITTY_VERSION) ]]; then
-        # VER_SAME=true
-        echo ''
+        VER_SAME=true
     fi
 fi
 
