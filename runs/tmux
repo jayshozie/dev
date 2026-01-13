@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 
+if [[ ! -d $DEV_ENV/env/tmux/.config/tmux/plugins/tpm ]]; then
+    pushd "${DEV_ENV}/env/tmux/.config/tmux/" || exit 1
+    mkdir plugins
+    pushd plugins || exit 1
+    git clone git@github.com:tmux-plugins/tpm.git
+    popd
+    popd
+fi
+
 # rm -rf the default configs
 rm -rf "${XDG_CONFIG_HOME}/tmux"
 # pushd to env
