@@ -1,3 +1,4 @@
+
 configuration {
     modi: "drun,run";
     show-icons: true;
@@ -7,16 +8,16 @@ configuration {
 }
 
 * {
-    background-color: #1e1e1e;
+    background-color: #000000; 
     text-color: #ffffff;
-    border-color: #33ccff;
+    border-color: #444444; 
     width: 500px;
 }
 
 window {
-    border: 2px;
+    border: 1px; 
     border-radius: 10px;
-    padding: 20px;
+    padding: 0px;
 }
 
 inputbar {
@@ -32,9 +33,22 @@ listview {
 element {
     padding: 8px;
     border-radius: 5px;
+    background-color: transparent;
+    text-color: #ffffff;
 }
 
-element selected {
+element normal.normal, element alternate.normal {
+    background-color: transparent;
+    text-color: #ffffff;
+}
+
+element selected.normal {
     background-color: #33ccff;
     text-color: #000000;
+}
+
+element-text, element-icon {
+    background-color: transparent;
+    text-color:       inherit;
+    vertical-align:   0.5;
 }
