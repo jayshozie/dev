@@ -7,33 +7,26 @@
 }
 
 window#waybar {
-    background-color: #000000;
-    color: #ffffff;
+    background-color: #08080b;
+    color: #787c99;
 }
 
 #workspaces button {
     padding: 0 10px;
-    color: #ffffff;
+    color: #787c99;
 }
 
 #workspaces button.active {
-    background-color: #33ccff;
-    color: #000000;
+    background-color: #7aa2f7;
+    color: #08080b;
 }
 
 #clock, #battery, #pulseaudio, #tray {
     padding: 0 10px;
     margin: 0 4px;
-    color: #ffffff;
+    color: #787c99;
 }
 
-#bluetooth {
-    color: #ffffff;
-}
-
-#bluetooth.connected {
-    color: #2980b9;
-}
-
-#battery.warning { color: #ffcc00; }
-#battery.critical { color: #ff0000; }
+#bluetooth.connected { color: #7aa2f7; }
+#battery.warning { color: #e0af68; }
+#battery.critical { color: #f7768e; }
