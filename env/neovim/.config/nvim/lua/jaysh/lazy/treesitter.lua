@@ -64,19 +64,19 @@ return {
     --     },
     -- end,
     config = function(_, opts)
-    ▎   require("nvim-treesitter.configs").setup(opts)
-    ▎   vim.api.nvim_create_autocmd({'BufNewFile', 'BufRead'}, {
-    ▎   ▎   pattern = {"*.service"},
-    ▎   ▎   callback = function()
-    ▎   ▎   ▎   vim.cmd("set filetype=ini")
-    ▎   ▎   end,
-    ▎   })
+        require("nvim-treesitter.configs").setup(opts)
+        vim.api.nvim_create_autocmd({'BufNewFile', 'BufRead'}, {
+            pattern = {"*.service"},
+            callback = function()
+                vim.cmd("set filetype=ini")
+            end,
+        })
     end,
     {
-    ▎   'nvim-treesitter/nvim-treesitter-context',
-    ▎   dependencies = { 'nvim-treesitter/nvim-treesitter', },
-    ▎   config = function()
-    ▎   ▎   require('treesitter-context').setup({})
-    ▎   end,
+        'nvim-treesitter/nvim-treesitter-context',
+        dependencies = { 'nvim-treesitter/nvim-treesitter', },
+        config = function()
+            require('treesitter-context').setup({})
+        end,
     },
 }
