@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+rm -rf "${XDG_CONFIG_HOME}/mako"
+
+pushd "${DEV_ENV}/env" || exit 1
+
+stow --target="$HOME" mako
+
+popd
