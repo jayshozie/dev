@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+# Define source and target
+SOURCE="${DEV_ENV}/env/keyd/default.conf"
+TARGET="/etc/keyd/default.conf"
+
+echo "[RUNS/KEYD] Installing keyd config..."
+
+# Ensure keyd is installed
+if ! command -v keyd &> /dev/null; then
+    echo "[RUNS/KEYD] keyd not found. Installing..."
+    sudo pacman -S --noconfirm keyd
+    sudo systemctl enable --now keyd
+fi
+
+# Check if content differs (idempotency)
+# We use sudo cat to read the target because it might be root-read-only
+if sudo test -f "$TARGET" && diff "$SOURCE" <(sudo cat "$TARGET") > /dev/null; then
+    echo "[RUNS/KEYD] Config is already up to date."
+else
+    echo "[RUNS/KEYD] Updating config..."
+    # Copy with correct permissions (root:root, 644)
+    sudo install -m 644 -o root -g root "$SOURCE" "$TARGET"
+    
+    # Reload keyd to apply changes
+    sudo keyd reload
+    echo "[RUNS/KEYD] Reloaded keyd."
+fi
