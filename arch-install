@@ -190,7 +190,7 @@ sudo -u "$TARGET_USRNAME" bash <<EOF
         echo "---------------------------------------------------"
         
         # Interactive decryption
-        age -d "\$KEY_ARCHIVE" | tar -xvf -C "$HOMEDIR"
+        age -d "\$KEY_ARCHIVE" | tar -xv -C "$HOMEDIR"
         
         # CAPTURE EXIT CODE of the pipe
         DECRYPT_STATUS=\${PIPESTATUS[0]} 
@@ -231,7 +231,7 @@ sudo -u "$TARGET_USRNAME" bash <<EOF
             echo ""
             echo ">> TO FIX THIS MANUALLY AFTER REBOOT:"
             echo "1. Run this to retry decryption:"
-            echo "   age -d ~/dotfiles/identity.tar.age.pass1 | tar -xvf -C ~"
+            echo "   age -d ~/dotfiles/identity.tar.age.pass1 | tar -xv -C ~"
             echo ""
             echo "2. Run this to switch the git remote:"
             echo "   cd ~/dotfiles && git remote set-url origin git@github.com:jayshozie/dotfiles.git"
