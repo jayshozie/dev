@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+rm -rf $XDG_CONFIG_HOME/hypr
+
+pushd $DEV_ENV/env
+
+stow --target=$HOME hyprland
+
+popd
