@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 # rm -rf the default config
-rm -rf $HOME/.gitconfig
+rm -rf "${HOME}/.gitconfig"
 # pushd to env
-pushd $DEV_ENV/env
+pushd "${DEV_ENV}/env" || exit 1
 # stow the git package
-stow --target=$HOME git
+stow --target="$HOME" git
 # go back to wherever you were
 popd

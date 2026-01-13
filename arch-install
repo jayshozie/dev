@@ -1,17 +1,25 @@
 #!/usr/bin/env bash
 
+# Fail safe, fail hard.
+set -euo pipefail
+# This is not a toy or a vibe-coded slop that doesn't matter, we can't take
+# chances.
+
 # ARCH POST-INSTALLATION SCRIPT
-# Purpose: to make sure the user jaysh exist, that user has the correct
-#          permissions, everything is installed, and the system is ready to
-#          be used
+# Execution: Run as ROOT while chrooting into the system.
 
 TARGET_USRNAME='jaysh'
 TARGET_ID='1000' # Target for both UID and GID
 
+echo "[ARCH-INSTALL] == INITIALIZING SEQUENCE =="
+
+# ---------------------------------------------------------
+# PHASE 1: IDENTITY & SECURITY (ROOT)
+# ---------------------------------------------------------
+
 echo "[ARCH-INSTALL] Validating Identity for: $TARGET_USRNAME (UID/GID: $TARGET_ID)"
-# ---------------------------------------------------------
-# STEP 1: SAFETY CHECKS (OCCUPANTS)
-# ---------------------------------------------------------
+
+# [SAFETY CHECKS - PRESERVED]
 # check if UID 1000 is taken by a weird ahh user
 UID_HOLDER=$(getent passwd "$TARGET_ID" | cut -d: -f1)
 if [[ -n "$UID_HOLDER" && "$UID_HOLDER" != "$TARGET_USRNAME" ]]; then
@@ -28,127 +36,224 @@ if [[ -n "$GID_HOLDER" && "$GID_HOLDER" != "$TARGET_USRNAME" ]]; then
     echo "groupdel $GID_HOLDER"
     exit 1
 fi
-# ---------------------------------------------------------
-# STEP 2: GROUP ENFORCEMENT (GID 1000)
-# ---------------------------------------------------------
-# create the group 'jaysh' at 1000 if it doesn't exist
+
+# [GROUP ENFORCEMENT]
 if ! getent group "$TARGET_USRNAME" >/dev/null; then
     echo "[ARCH-INSTALL] Creating group '$TARGET_USRNAME' at GID $TARGET_ID..."
     groupadd -g "$TARGET_ID" "$TARGET_USRNAME"
 else
-    # if group exists, ensure it has the right GID
     CURR_GID=$(getent group "$TARGET_USRNAME" | cut -d: -f3)
     if [[ "$CURR_GID" != "$TARGET_ID" ]]; then
         echo "[ARCH-INSTALL] Correcting GID for group '$TARGET_USRNAME'..."
         groupmod -g "$TARGET_ID" "$TARGET_USRNAME"
     fi
 fi
-# ---------------------------------------------------------
-# STEP 3: USER ENFORCEMENT (UID 1000 + GROUPS)
-# ---------------------------------------------------------
-# check if user exists
+
+# [USER ENFORCEMENT]
 if id "$TARGET_USRNAME" &>/dev/null; then
     echo "[ARCH-INSTALL] User exists. Verifying configuration..."
-    
-    # 1. fix UID (-u) and primary group (-g)
-    # 2. add to 'wheel' for sudo access (-aG)
-    # 3. ensure shell is bash (-s)
     usermod -u "$TARGET_ID" -g "$TARGET_ID" -aG wheel -s /bin/bash "$TARGET_USRNAME"
-    
-    # CRITICAL: re-stamp home directory ownership to match new UID:GID
-    echo "[ARCH-INSTALL] Enforcing ownership on /home/$TARGET_USRNAME..."
-    # only run if home dir exists to avoid errors
-    if [[ -d "/home/$TARGET_USRNAME" ]]; then
-        chown -R "$TARGET_ID":"$TARGET_ID" "/home/$TARGET_USRNAME"
-        # paranoid SSH/GPG fix:
-        chmod 700 "/home/$TARGET_USRNAME/.ssh" 2>/dev/null
-        chmod 700 "/home/$TARGET_USRNAME/.gnupg" 2>/dev/null
-    fi
 else
     echo "[ARCH-INSTALL] Creating clean user..."
-    # -m: create home
-    # -u: UID 1000
-    # -g: primary GID 1000
-    # -g: secondary group (wheel)
     useradd -m -u "$TARGET_ID" -g "$TARGET_ID" -G wheel -s /bin/bash "$TARGET_USRNAME"
-    
     echo "[ARCH-INSTALL] Set password for $TARGET_USRNAME:"
     passwd "$TARGET_USRNAME"
 fi
-# ---------------------------------------------------------
-# STEP 4: ENABLE SUDO FOR WHEEL GROUP
-# ---------------------------------------------------------
+
+# [SUDOERS]
 echo "[ARCH-INSTALL] Enabling sudo access for %wheel group..."
-# check if the line is already uncommented to avoid duplicates
 if grep -q "^# %wheel ALL=(ALL:ALL) ALL" /etc/sudoers; then
-    # use sed to uncomment the line safely
     sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
-    # check if the file is syntactically valid
     if ! visudo -c; then
         echo "[CRITICAL] /etc/sudoers syntax is broken!"
-        echo "[CRITICAL] It is recommended that you start the installation from scratch."
         exit 1
     fi
     echo "[ARCH-INSTALL] Sudo access enabled."
-elif grep -q "^%wheel ALL=(ALL:ALL) ALL" /etc/sudoers; then
-    echo "[ARCH-INSTALL] Sudo access was already enabled."
-else
-    # fallback if the file structure is weird (rare in fresh install)
-    echo "[WARNING] Could not auto-enable sudo. Please run 'visudo' and uncomment %wheel manually."
 fi
-echo "[ARCH-INSTALL] SUCCESS: User is $TARGET_ID:$TARGET_ID with wheel access."
 
-# make sure multilib is uncommented in /etc/pacman.conf
-sudo sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
-# Refresh repos to include multilib
-sudo pacman -Syu
+# ---------------------------------------------------------
+# PHASE 2: SYSTEM PACKAGES (ROOT CONTEXT)
+# ---------------------------------------------------------
+echo "[ARCH-INSTALL] System Update & Package Installation..."
 
-# CANNOT NOT HAVE PACKAGES
-sudo pacman -S --noconfirm base-devel linux-headers git networkmanager sudo
+# Enable Multilib
+sed -i '/^\[multilib\]/,/^\[/{s/^#//}' /etc/pacman.conf
 
-# LESS IMPORTANT BUT YOU'LL LOSE YOUR MIND WITHOUT THEM AFTER INSTALLATION
-sudo pacman -S --noconfirm vim neovim man-db man-pages less openssh paru
+# Atomic Install Function
+inst() {
+    pacman -Syu --needed --noconfirm "$@"
+}
 
-# enable NetworkManager and sshd just in case archinstall failed to do so
-sudo systemctl enable NetworkManager
-sudo systemctl enable sshd
+# 1. Update DB
+pacman -Syu --noconfirm
 
-# compositor and stuff like that
-sudo pacman -S --noconfirm hyprland xdg-desktop-portal-hyprland
-sudo pacman -S --noconfirm xdg-desktop-portal-gtk
+# 2. Critical & Security
+inst base linux-headers linux-firmware networkmanager sudo age man-db man-pages less openssh
 
-sudo pacman -S --noconfirm sddm qt5-graphicaleffects qt5-quickcontrols2 qt5-svg
-sudo pacman -S --noconfirm xorg-xwayland qt5-wayland qt6-wayland waybar
-sudo pacman -S --noconfirm swaybg mako polkit-kde-agent
+# 3. Dev Stack
+inst base-devel git github-cli gcc vim neovim gdb valgrind clang clangd cmake ninja strace
 
-# drivers
-sudo pacman -S --noconfirm intel-ucode nvidia nvidia-utils nvidia-settings 
-sudo pacman -S --noconfirm lib32-nvidia-utils egl-wayland
-sudo pacman -S --noconfirm pipewire pipewire-alsa pipewire-pulse wireplumber
-sudo pacman -S --noconfirm bluez bluez-utils blueman
-# enable bluetooth
-sudo systemctl enable bluetooth
+# 4. Desktop (Hyprland)
+inst hyprland xdg-desktop-portal-hyprland xdg-desktop-portal-gtk wl-clipboard
+inst sddm sddm-wayland qt5-graphicaleffects qt5-quickcontrols2 qt5-svg
+inst xorg-xwayland qt5-wayland qt6-wayland waybar swaybg mako polkit-kde-agent
+inst grim slurp
+inst xdg-user-dirs
 
-# userspace programs
-sudo pacman -S --noconfirm alacritty tmux starship bash-completion github-cli
-sudo pacman -S --noconfirm ripgrep fd fzf unzip wget tree btop fastfetch tldr
+# 5. Drivers
+inst intel-ucode nvidia-open nvidia-utils nvidia-settings lib32-nvidia-utils egl-wayland
+inst pipewire pipewire-alsa pipewire-pulse wireplumber pavucontrol
+inst bluez bluez-utils blueman
 
-# fonts
-sudo pacman -S --noconfirm ttf-jetbrains-mono-nerd ttf-font-awesome
-sudo pacman -S --noconfirm noto-fonts-emoji
+# 6. User Apps & Fonts
+inst alacritty tmux starship bash-completion ripgrep fd fzf unzip wget tree btop fastfetch tldr
+inst ttf-jetbrains-mono-nerd ttf-font-awesome noto-fonts-emoji noto-fonts-cjk firefox
 
-# browser
-sudo pacman -S --noconfirm firefox
+# ---------------------------------------------------------
+# PHASE 3: CONFIGURATION (ROOT CONTEXT)
+# ---------------------------------------------------------
+HOMEDIR="/home/$TARGET_USRNAME"
 
-# add the line nvidia_drm.modeset=1 to make sure the drivers work
+# Skeleton
+mkdir -p "$HOMEDIR/uni"
+mkdir -p "$HOMEDIR/src/upstream"
+mkdir -p "$HOMEDIR/src/aur"
+mkdir -p "$HOMEDIR/src/refs"
+chown -R "$TARGET_USRNAME:$TARGET_USRNAME" "$HOMEDIR"
+
+# Services
+systemctl enable NetworkManager sshd bluetooth sddm
+
+# Grub Nvidia Patch
 if ! grep -q "nvidia_drm.modeset=1" /etc/default/grub; then
-    sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="/&nvidia_drm.modeset=1 /' /etc/default/grub
+    echo "[ARCH-INSTALL] Patching GRUB..."
+    sed -i '/^GRUB_CMDLINE_LINUX_DEFAULT=/ {
+        # If the line ALREADY contains the parameter, do nothing (skip to end)
+        /nvidia_drm.modeset=1/b
+        
+        # Otherwise, replace the closing quote (and any trailing garbage)
+        s/"[[:space:]]*$/ nvidia_drm.modeset=1"/
+    }' /etc/default/grub
+    grub-mkconfig -o /boot/grub/grub.cfg
 fi
 
-# rebuild grub
-grub-mkconfig -o /boot/grub/grub.cfg
+# ---------------------------------------------------------
+# PHASE 4: USER SPACE & KEY REHYDRATION (CONTEXT SWITCH)
+# ---------------------------------------------------------
+echo "---------------------------------------------------------"
+echo "[ARCH-INSTALL] >> SWITCHING CONTEXT TO: $TARGET_USRNAME <<"
+echo "[ARCH-INSTALL] >> PREPARE YOUR PASSPHRASE FOR KEY DECRYPTION <<"
+echo "---------------------------------------------------------"
 
-# enable sddm
-sudo systemctl enable sddm
+# We pass variables into the heredoc, but escape internal vars ($?) as \$?
+sudo -u "$TARGET_USRNAME" bash <<EOF
+    # -- USER CONTEXT STARTED --
+    cd "$HOMEDIR"
 
-echo "[SUCCESS] Reboot now. Don't forget to install librewolf later."
+    # Define a smart permission checker function
+    enforce_perm() {
+        local path="\$1"
+        local want_perm="\$2"
+        local user="$TARGET_USRNAME"
+
+        if [[ -e "\$path" ]]; then
+            # Check ownership
+            local current_owner=\$(stat -c "%U:%G" "\$path")
+            if [[ "\$current_owner" != "\$user:\$user" ]]; then
+                echo "   [FIX] Ownership mismatch on \$path. Fixing..."
+                chown "\$user:\$user" "\$path"
+            fi
+
+            # Check Permissions
+            local current_perm=\$(stat -c "%a" "\$path")
+            if [[ "\$current_perm" != "\$want_perm" ]]; then
+                echo "   [FIX] Permission mismatch on \$path (\$current_perm -> \$want_perm). Fixing..."
+                chmod "\$want_perm" "\$path"
+            else
+                echo "   [OK] \$path is safe (\$want_perm)"
+            fi
+        fi
+    }
+
+    # 1. CLONE DOTFILES (HTTPS)
+    if [[ ! -d "dotfiles" ]]; then
+        echo "[USER-CTX] Cloning dotfiles (HTTPS)..."
+        git clone https://github.com/jayshozie/dotfiles.git
+    fi
+
+    # 2. KEY REHYDRATION PROTOCOL
+    KEY_ARCHIVE="$HOMEDIR/dotfiles/identity.tar.age.pass1"
+
+    if [[ -f "\$KEY_ARCHIVE" ]]; then
+        echo "---------------------------------------------------"
+        echo "⚠️  DECRYPTING IDENTITY ARCHIVE ⚠️"
+        echo "---------------------------------------------------"
+        
+        # Interactive decryption
+        age -d "\$KEY_ARCHIVE" | tar -xvf -C "$HOMEDIR"
+        
+        # CAPTURE EXIT CODE of the pipe
+        DECRYPT_STATUS=\${PIPESTATUS[0]} 
+
+        if [[ \$DECRYPT_STATUS -eq 0 ]]; then
+            echo "[USER-CTX] Decryption successful. verifying permissions..."
+            
+            # 3. VERIFY & ENFORCE PERMISSIONS (Based on your ls -l)
+            # SSH
+            enforce_perm "$HOMEDIR/.ssh" "700"
+            enforce_perm "$HOMEDIR/.ssh/id_ed25519" "600"
+            enforce_perm "$HOMEDIR/.ssh/id_ed25519.pub" "644"
+            enforce_perm "$HOMEDIR/.ssh/known_hosts" "600"
+            
+            # GPG
+            enforce_perm "$HOMEDIR/.gnupg" "700"
+            enforce_perm "$HOMEDIR/.gnupg/private-keys-v1.d" "700"
+            enforce_perm "$HOMEDIR/.gnupg/trustdb.gpg" "600"
+            # Pubring usually 644 or 664, allowing existing state if safe, forcing 600 if paranoid.
+            # We will force 600 for safety as GPG complains otherwise.
+            enforce_perm "$HOMEDIR/.gnupg/pubring.kbx" "664" 
+
+            # 4. SWITCH GIT REMOTE
+            echo "[USER-CTX] Trusting GitHub & Switching Remote..."
+            mkdir -p "$HOMEDIR/.ssh"
+            # Prevent "Host key verification failed" by scanning github
+            ssh-keyscan -t ed25519 github.com >> "$HOMEDIR/.ssh/known_hosts" 2>/dev/null
+            
+            cd "$HOMEDIR/dotfiles"
+            git remote set-url origin git@github.com:jayshozie/dotfiles.git
+            echo "[USER-CTX] Remote updated to SSH: git@github.com:jayshozie/dotfiles.git"
+            
+        else
+            echo ""
+            echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+            echo "[CRITICAL] DECRYPTION FAILED (Wrong Passphrase?)"
+            echo "Skipping git remote switch to prevent errors."
+            echo ""
+            echo ">> TO FIX THIS MANUALLY AFTER REBOOT:"
+            echo "1. Run this to retry decryption:"
+            echo "   age -d ~/dotfiles/identity.tar.age.pass1 | tar -xvf -C ~"
+            echo ""
+            echo "2. Run this to switch the git remote:"
+            echo "   cd ~/dotfiles && git remote set-url origin git@github.com:jayshozie/dotfiles.git"
+            echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+            echo ""
+        fi
+    else
+        echo "[WARNING] Key archive not found at \$KEY_ARCHIVE"
+    fi
+
+    # 5. PARU INSTALLATION
+    if ! command -v paru &> /dev/null; then
+        echo "[USER-CTX] Installing Paru..."
+        mkdir -p "$HOMEDIR/src/aur"
+        cd "$HOMEDIR/src/aur"
+        [[ ! -d paru ]] && git clone https://aur.archlinux.org/paru.git
+        cd paru
+        makepkg -si --noconfirm
+    fi
+
+    # -- USER CONTEXT END --
+EOF
+
+echo "[ARCH-INSTALL] SUCCESS: System Provisioned."
+echo "You can now reboot."

@@ -10,31 +10,31 @@ if [[ ! -d "$BASH_ARCH_BACKUP_DIR" ]]; then
     mkdir "$BASH_ARCH_BACKUP_DIR"
 
     echo "[RUNS/BASH] Moving ${HOME}/.bashrc to $BASH_ARCH_BACKUP_DIR/.bashrc-arch-default"
-    mv -i "$HOME/.bashrc" "$BASH_ARCH_BACKUP_DIR/.bashrc-arch-default"
+    mv -i "${HOME}/.bashrc" "$BASH_ARCH_BACKUP_DIR/.bashrc-arch-default"
 
     echo "[RUNS/BASH] Moving ${HOME}/.bash_env to $BASH_ARCH_BACKUP_DIR/.bash_env-arch-default"
-    mv -i "$HOME/.bash_env" "$BASH_ARCH_BACKUP_DIR/.bash_env-arch-default"
+    mv -i "${HOME}/.bash_env" "$BASH_ARCH_BACKUP_DIR/.bash_env-arch-default"
 
     echo "[RUNS/BASH] Moving ${HOME}/.bash_aliases to $BASH_ARCH_BACKUP_DIR/.bash_aliases-arch-default"
-    mv -i "$HOME/.bash_aliases" "$BASH_ARCH_BACKUP_DIR/.bash_aliases-arch-default"
+    mv -i "${HOME}/.bash_aliases" "$BASH_ARCH_BACKUP_DIR/.bash_aliases-arch-default"
 else
     if [[ ! -f $BASH_ARCH_BACKUP_DIR/.bashrc-arch-default ]]; then
-        mv -i "$HOME/.bashrc" "$BASH_ARCH_BACKUP_DIR/.bashrc-arch-default"
+        mv -i "${HOME}/.bashrc" "$BASH_ARCH_BACKUP_DIR/.bashrc-arch-default"
     fi
     if [[ ! -f $BASH_ARCH_BACKUP_DIR/.bash_env-arch-default ]]; then
-        mv -i "$HOME/.bash_env" "$BASH_ARCH_BACKUP_DIR/.bash_env-arch-default"
+        mv -i "${HOME}/.bash_env" "$BASH_ARCH_BACKUP_DIR/.bash_env-arch-default"
     fi
     if [[ ! -f $BASH_ARCH_BACKUP_DIR/.bash_aliases-arch-default ]]; then
-        mv -i "$HOME/.bash_aliases" "$BASH_ARCH_BACKUP_DIR/.bash_aliases-arch-default"
+        mv -i "${HOME}/.bash_aliases" "$BASH_ARCH_BACKUP_DIR/.bash_aliases-arch-default"
     fi
 fi
 
 # rm- rf the default configs
-rm -rf "$HOME/.bashrc" $HOME/.bash_env $HOME/.bash_aliases
+rm -rf "${HOME}/.bashrc" "${HOME}/.bash_env" "${HOME}/.bash_aliases"
 # pushd to env
-pushd $DEV_ENV/env
+pushd "${DEV_ENV}/env" || exit 1
 # stow the bash package
-stow --target=$HOME bash
+stow --target="$HOME" bash
 # go back to wherever you were
 popd
 

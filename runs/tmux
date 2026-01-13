@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 # rm -rf the default configs
-rm -rf $XDG_CONFIG_HOME/tmux
+rm -rf "${XDG_CONFIG_HOME}/tmux"
 # pushd to env
-pushd $DEV_ENV/env
+pushd "${DEV_ENV}/env" || exit 1
 # stow the tmux package
-stow --target=$HOME tmux
+stow --target="$HOME" tmux
 # go back to wherever you were
 popd

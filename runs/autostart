@@ -5,9 +5,9 @@ CLR_WHT='\033[0;37m'
 CLR_RST='\033[0m'
 
 # rm -rf the default
-if [[ -d "$XDG_CONFIG_HOME/autostart" ]]; then
+if [[ -d "${XDG_CONFIG_HOME}/autostart" ]]; then
     echo -e "${CLR_RED}"
-    echo -e "[RUNS/AUTOSTART] WARNING : $XDG_CONFIG_HOME/autostart EXISTS."
+    echo -e "[RUNS/AUTOSTART] WARNING : ${XDG_CONFIG_HOME}/autostart EXISTS."
     echo -e "[RUNS/AUTOSTART] THIS WILL REMOVE THE FILES IN IT."
     read -r "[RUNS/AUTOSTART] DID YOU BACK THEM UP? (y/N)" answer
     if [[ $answer == "y" ]]; then
@@ -18,9 +18,9 @@ if [[ -d "$XDG_CONFIG_HOME/autostart" ]]; then
         exit 1
     fi
 fi
-rm -rf "$XDG_CONFIG_HOME/autostart"
+rm -rf "${XDG_CONFIG_HOME}/autostart"
 
-pushd "$DEV_ENV/env" || exit 1
+pushd "${DEV_ENV}/env" || exit 1
 
 stow --target="$HOME" autostart
 

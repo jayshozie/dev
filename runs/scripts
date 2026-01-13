@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 
-SCRIPTS_DIR=$HOME/.local/bin/scripts
+SCRIPTS_DIR="${HOME}/.local/bin/scripts"
 
 # rm -rf the default configs
-if [[ -d $SCRIPTS_DIR ]]; then
-    cp -r -L $SCRIPTS_DIR $HOME/scripts.bak
-    rm -rf $SCRIPTS_DIR
+if [[ -d "$SCRIPTS_DIR" ]]; then
+    cp -r -L "$SCRIPTS_DIR" "${HOME}/scripts.bak"
+    rm -rf "$SCRIPTS_DIR"
 else
-    mkdir -p $SCRIPTS_DIR
+    mkdir -p "$SCRIPTS_DIR"
 fi
 # pushd to env
-pushd $DEV_ENV/env
+pushd "${DEV_ENV}/env" || exit 1
 # stow the scripts package
-stow --target=$HOME scripts
+stow --target="$HOME" scripts
 # go back to wherever you were
 popd

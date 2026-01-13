@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 
-ENV_D_DIR=$XDG_CONFIG_HOME/environment.d
+ENV_D_DIR="${XDG_CONFIG_HOME}/environment.d"
 
 # rm -rf the default config
 if [[ -d $ENV_D_DIR ]]; then
-    cp -r -L $ENV_D_DIR $HOME/environment.d.bak
-    rm -rf $ENV_D_DIR
+    cp -r -L "$ENV_D_DIR" "${HOME}/environment.d.bak"
+    rm -rf "$ENV_D_DIR"
 else
-    mkdir -p $ENV_D_DIR
+    mkdir -p "$ENV_D_DIR"
 fi
 # pushd to env
-pushd $DEV_ENV/env
+pushd "${DEV_ENV}/env" || exit 1
 # stow the environment.d package
-stow --target=$HOME environment.d
+stow --target="$HOME" environment.d
 # go back to wherever you were
 popd

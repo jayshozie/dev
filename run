@@ -31,7 +31,6 @@ usage() {
     echo -e "${CLR_MGA}usage: ./run [--sim] PROGRAM"
     echo -e ''
     echo -e "${CLR_RED}[IMPORTANT] This script does not support multiple PROGRAM arguments."
-    # echo -e "${CLR_RST}"
     echo -e "${CLR_GRN}"
     echo -e 'Examples:'
     echo -e './run --sim nvim'
@@ -71,7 +70,7 @@ log() {
 
 log "[RUN] env: ${DEV_ENV} -- program: ${ARG2}"
 
-RUNS_DIR=`find $DEV_ENV/runs -mindepth 1 -maxdepth 1 -executable`
+RUNS_DIR=`find ${DEV_ENV}/runs -mindepth 1 -maxdepth 1 -executable`
 
 for RUN in $RUNS_DIR; do
     if basename $RUN | grep -vq "$ARG2"; then

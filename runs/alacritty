@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-sudo pacman -Syu
-sudo pacman -Sy alacritty
-
 # rm -rf the default configs
 rm -rf "$XDG_CONFIG_HOME/alacritty"
 # pushd to env
