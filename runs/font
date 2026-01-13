@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+CLR_RED='\033[0;31m'
+CLR_WHT='\033[0;37m'
+CLR_RST='\033[0m'
+
+if [[ -d "${XDG_CONFIG_HOME}/fontconfig" ]]; then
+    echo -e "${CLR_RED}"
+    echo -e "[RUNS/FONT] WARNING : ${XDG_CONFIG_HOME}/fontconfig EXISTS."
+    echo -e "[RUNS/AUTOSTART] THIS WILL REMOVE THE FILES IN IT."
+    read -r "[RUNS/AUTOSTART] DID YOU BACK THEM UP? (y/N)" answer
+    if [[ $answer == 'y' ]]; then
+        echo -e "${CLR_RST}[RUNS/AUTOSTART] Good for you."
+        sleep 2
+    else
+        echo -e "${CLR_RED}[RUNS/AUTOSTART] GO BACK THEM UP AND RE-RUN THIS SCRIPT."
+        exit 1
+    fi
+fi
+
+rm -rf "${XDG_CONFIG_HOME}/fontconfig"
+
+pushd "${DEV_ENV}/env" || exit 1
+
+stow --target="$HOME" font
+
+popd
