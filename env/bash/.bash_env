@@ -19,6 +19,8 @@ export GPG_TTY=$(tty)
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
+export STARSHIP_CONFIG=$XDG_CONFIG_HOME/starship/starship.toml
+
 # TEST
 export MOZ_ENABLE_WAYLAND=1
 
