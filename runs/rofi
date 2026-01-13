@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+rm -rf "${XDG_CONFIG_HOME}/rofi"
+
+pushd "${DEV_ENV}/env" || exit 1
+
+stow --target="$HOME" rofi
+
+popd

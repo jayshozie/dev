@@ -1,0 +1,40 @@
+configuration {
+    modi: "drun,run";
+    show-icons: true;
+    font: "JetBrainsMono Nerd Font 12";
+    display-drun: " ";
+    display-run: " ";
+}
+
+* {
+    background-color: #1e1e1e;
+    text-color: #ffffff;
+    border-color: #33ccff;
+    width: 500px;
+}
+
+window {
+    border: 2px;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+inputbar {
+    children: [prompt, entry];
+    padding: 10px;
+}
+
+listview {
+    lines: 10;
+    scrollbar: false;
+}
+
+element {
+    padding: 8px;
+    border-radius: 5px;
+}
+
+element selected {
+    background-color: #33ccff;
+    text-color: #000000;
+}
