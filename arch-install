@@ -88,7 +88,7 @@ inst() {
 pacman -Syu --noconfirm
 
 # 2. Critical & Security
-inst base linux-headers linux-firmware networkmanager sudo age man-db man-pages less openssh
+inst base linux-headers linux-firmware networkmanager sudo age man-db man-pages less openssh stow
 
 # 3. Dev Stack
 inst base-devel git github-cli gcc vim neovim gdb valgrind clang clangd cmake ninja strace
