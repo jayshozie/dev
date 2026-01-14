@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Define source and target
-SOURCE="${DEV_ENV}/env/keyd/default.conf"
+SOURCE="${DEV_ENV}/env/keyd/etc/keyd/default.conf"
 TARGET="/etc/keyd/default.conf"
 
 echo "[RUNS/KEYD] Installing keyd config..."

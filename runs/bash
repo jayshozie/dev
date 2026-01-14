@@ -4,7 +4,7 @@ CLR_RED='\033[0;31m'
 CLR_WHT='\033[0;37m'
 CLR_RST='\033[0m'
 
-BASH_ARCH_BACKUP_DIR="$HOME/.bash-arch-default.d"
+BASH_ARCH_BACKUP_DIR="$HOME/arch-default-configurations/.bash-arch-default.d"
 
 if [[ ! -d "$BASH_ARCH_BACKUP_DIR" ]]; then
     mkdir "$BASH_ARCH_BACKUP_DIR"
@@ -18,14 +18,14 @@ if [[ ! -d "$BASH_ARCH_BACKUP_DIR" ]]; then
     echo "[RUNS/BASH] Moving ${HOME}/.bash_aliases to $BASH_ARCH_BACKUP_DIR/.bash_aliases-arch-default"
     mv -i "${HOME}/.bash_aliases" "$BASH_ARCH_BACKUP_DIR/.bash_aliases-arch-default"
 else
-    if [[ ! -f $BASH_ARCH_BACKUP_DIR/.bashrc-arch-default ]]; then
+    if [[ ! -f ${BASH_ARCH_BACKUP_DIR}/.bashrc-arch-default ]]; then
         mv -i "${HOME}/.bashrc" "$BASH_ARCH_BACKUP_DIR/.bashrc-arch-default"
     fi
-    if [[ ! -f $BASH_ARCH_BACKUP_DIR/.bash_env-arch-default ]]; then
-        mv -i "${HOME}/.bash_env" "$BASH_ARCH_BACKUP_DIR/.bash_env-arch-default"
+    if [[ ! -f ${BASH_ARCH_BACKUP_DIR}/.bash_env-arch-default ]]; then
+        mv -i "${HOME}/.bash_env" "${BASH_ARCH_BACKUP_DIR}/.bash_env-arch-default"
     fi
-    if [[ ! -f $BASH_ARCH_BACKUP_DIR/.bash_aliases-arch-default ]]; then
-        mv -i "${HOME}/.bash_aliases" "$BASH_ARCH_BACKUP_DIR/.bash_aliases-arch-default"
+    if [[ ! -f ${BASH_ARCH_BACKUP_DIR}/.bash_aliases-arch-default ]]; then
+        mv -i "${HOME}/.bash_aliases" "${BASH_ARCH_BACKUP_DIR}/.bash_aliases-arch-default"
     fi
 fi
 

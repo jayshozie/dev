@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+# Define source and target
+SOURCE="${DEV_ENV}/env/greetd/etc/greetd/config.toml"
+TARGET="/etc/greetd/config.toml"
+
+echo "[RUNS/GREETD] Installing greetd config..."
+
+# Ensure keyd is installed
+# if ! command -v keyd &> /dev/null; then
+#     echo "[RUNS/GREETD] keyd not found. Installing..."
+#     sudo pacman -Syu --noconfirm keyd
+#     sudo systemctl enable --now keyd
+# fi
+
+# check if content differs
+# use sudo cat to read the target because of permissions
+if sudo test -f "$TARGET" && diff "$SOURCE" <(sudo cat "$TARGET") > /dev/null; then
+    echo "[RUNS/GREETD] Config is already up to date."
+else
+    echo "[RUNS/GREETD] Updating config..."
+    # copy with correct permissions (root:root, 644)
+    sudo cp "$SOURCE" "$TARGET"
+    sudo chown root:root "$TARGET"
+    sudo chmod 644 "$TARGET"
+
+    echo "[RUNS/GREETD] Reloaded greetd."
+fi

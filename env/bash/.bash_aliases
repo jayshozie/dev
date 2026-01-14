@@ -36,9 +36,6 @@ alias scri='pushd ~/dev/env/scripts && nv && popd'
 alias docs='cd ~/Documents'
 alias downs='cd ~/Downloads'
 
-# batcat => cat
-alias bat='batcat'
-
 # i usually sleep while my workstation is on, so i have an alias to shut it down
 # automatically after 90 minutes
 alias eepy='shutdown +90'
@@ -48,3 +45,4 @@ alias uneepy='shutdown -c'
 # i usually close my workstation via terminal mostly, and got annoyed at always
 # writing the whole command
 alias die='systemctl poweroff'
+alias arise='systemctl restart'
