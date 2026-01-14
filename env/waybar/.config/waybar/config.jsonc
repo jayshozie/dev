@@ -5,7 +5,7 @@
     "spacing": 4,
     "modules-left": ["hyprland/workspaces"],
     "modules-center": ["clock"],
-    "modules-right": ["bluetooth", "pulseaudio", "battery", "tray"],
+    "modules-right": ["bluetooth", "wireplumber", "battery", "tray"],
     "hyprland/workspaces": {
         "disable-scroll": true,
         "all-outputs": true,
