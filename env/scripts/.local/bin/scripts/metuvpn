@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
 
-SES=`via-cli session info | grep -c "active"`
-CON=`ifconfig -a | grep -c "via_vpn: flags=4305"`
+via-cli session info 2>/dev/null | grep -q "active" || via-cli session start 2>/dev/null
 
-if [[ SES -eq 0 ]]; then
-	via-cli session start
-fi
+if via-cli vpn status 2>/dev/null | grep -iq "not connected"; then
 
-if [[ CON -eq 0 ]]; then
-    via-cli vpn connect --username e267561@metu.edu.tr --userpass ***REMOVED***
-elif [[ CON -eq 1 ]]; then
-    via-cli vpn disconnect
+    via-cli vpn connect --username e267561@metu.edu.tr --userpass "$(pass metu)" > /dev/null 2>&1
+
+    if [[ $? -eq 0 ]]; then
+        notify-send "VPN" "Connected to METU"
+    else
+        notify-send "VPN" "Connection Failed"
+    fi
+else
+    via-cli vpn disconnect > /dev/null 2>&1
+    notify-send "VPN" "Disconnected from METU"
 fi

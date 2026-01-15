@@ -9,7 +9,8 @@ if [[ -d "${XDG_CONFIG_HOME}/autostart" ]]; then
     echo -e "${CLR_RED}"
     echo -e "[RUNS/AUTOSTART] WARNING : ${XDG_CONFIG_HOME}/autostart EXISTS."
     echo -e "[RUNS/AUTOSTART] THIS WILL REMOVE THE FILES IN IT."
-    read -r "[RUNS/AUTOSTART] DID YOU BACK THEM UP? (y/N)" answer
+    echo -e "[RUNS/AUTOSTART] DID YOU BACK THEM UP? (y/N)"
+    read -r answer
     if [[ $answer == "y" ]]; then
         echo -e "${CLR_RST}[RUNS/AUTOSTART] Good for you."
         sleep 2
