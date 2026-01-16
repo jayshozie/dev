@@ -5,7 +5,7 @@
     "spacing": 1,
     "modules-left": ["hyprland/workspaces", "mpris"],
     "modules-center": ["clock"],
-    "modules-right": ["bluetooth", "wireplumber", "battery", "tray"],
+    "modules-right": ["bluetooth", "wireplumber", "battery"],
     "hyprland/workspaces": {
         "disable-scroll": true,
         "all-outputs": true,
@@ -53,7 +53,4 @@
         "format-charging": "⚡ {capacity}%",
         "format-icons": ["", "", "", "", ""]
     },
-    "tray": {
-        "spacing": 5
-    }
 }
