@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Ankara Coordinates : LAT(39.9199) LON(32.8543)
-# TODO: DAILY API CALL LIMIT IMPLEMENTATION
+# TODO: Fix configuration creation
 WXS_DIR="$HOME/.config/bashweather"
 API_FILE="$WXS_DIR/.openweathermapAPI"
 CONFIG_FILE="$WXS_DIR/config"
@@ -67,7 +67,7 @@ check_structure() {
                 Yes)
                     echo 'Creating...'
                     mkdir -p $WXS_DIR
-                    touch -p $API_FILE
+                    touch $API_FILE
                     chmod 700 $WXS_DIR
                     chmod 600 $API_FILE
                     echo 'Done.'
@@ -83,10 +83,9 @@ check_structure() {
                                 exit
                                 ;;
                             'Do it for me.')
-                                local KEY_INPUT
-                                read -r -s -p 'Please enter your API key.' >> $KEY_INPUT
+                                read -r -s -p 'Please enter your API key.' KEY_INPUT
                                 echo $KEY_INPUT > $API_FILE
-                                if [[ $(check_api_key $API) -ne 0 ]]; then
+                                if [[ $(check_api_key $KEY_INPUT) -ne 0 ]]; then
                                     echo 'Something went wrong. Please manually copy your API to the file:'
                                     echo $API_FILE
                                     exit
@@ -143,31 +142,28 @@ check_structure() {
                     echo 'FORMAT: units:latitude:longtitude (e.g., metric:39.9199:32.8543)'
                     ;;
                 'Do it for me.')
-                    local UNIT
                     echo 'Units? (metric, imperial)'
                     select opt in 'metric' 'imperial'; do
                         case $opt in
-                            'metric')
-                                $UNIT='metric'
+                            1|'metric')
+                                UNIT="metric"
                                 break
                                 ;;
-                            'imperial')
-                                $UNIT='imperial'
+                            2|'imperial')
+                                UNIT="imperial"
                                 break
                                 ;;
                             *)
                                 echo "Couldn't get the unit. Please check ${CONFIG_FILE}."
-                                $UNIT='unit'
+                                UNIT='unit'
                                 break
                                 ;;
                         esac
                     done
-                    local LAT
-                    local LON
                     echo 'Latitude? (e.g.: 39.9199)'
-                    read -r >> $LAT
+                    read -r >> LAT
                     echo 'Longtitude? (e.g.: 32.8543)'
-                    read -r >> $LAT
+                    read -r >> LAT
                     echo "${UNIT}:${LAT}:${LON}" > $CONFIG_FILE
                     echo 'Done.'
                     break

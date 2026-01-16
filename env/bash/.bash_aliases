@@ -6,8 +6,12 @@ alias src='source ~/.bashrc'
 # netrw
 alias nv='nvim .'
 
+# programs
+alias img='imv'
+alias vid='vlc'
+
 # i like it this way
-alias ll='ls -lAh --color=auto'
+alias ll='ls -FlAh --color=auto'
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
@@ -19,6 +23,7 @@ alias cp='cp -i'
 
 # easier readability
 alias df='df -h'
+alias tree='tree -C'
 
 # sometimes it feels better to look at diffs, logs, and status in a text editor
 alias utils='./utils.sh'
@@ -32,7 +37,7 @@ alias gitconf='nvim ~/dev/env/git/.gitconfig'
 
 # easier access to stuff i'm constantly working on
 alias project='pushd ~/projects/c-mastery-projects/jayshell && nv && popd'
-alias scri='pushd ~/dev/env/scripts && nv && popd'
+alias scri='pushd ~/dev/env/scripts/.local/bin/scripts/ && nv && popd'
 alias docs='cd ~/Documents'
 alias downs='cd ~/Downloads'
 
@@ -44,5 +49,5 @@ alias uneepy='shutdown -c'
 
 # i usually close my workstation via terminal mostly, and got annoyed at always
 # writing the whole command
-alias die='systemctl poweroff'
-alias arise='systemctl restart'
+alias die='shutdown now'
+alias arise='shutdown -r now'

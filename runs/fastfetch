@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+rm -rf "${XDG_CONFIG_HOME}/fastfetch"
+
+pushd "${DEV_ENV}/env" || exit 1
+
+stow --target="$HOME" fastfetch
+
+popd
