@@ -16,6 +16,9 @@ alias ll='ls -FlAh --color=auto'
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
+alias fd='fd -uic always'
+alias find='fd -uic always'
+alias dev-commit="git add . && git commit -m 'wip: automated dev-commit' && git push"
 
 # better safe then sorry
 alias rm='rm -i'
