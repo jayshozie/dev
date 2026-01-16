@@ -87,17 +87,27 @@ inst() {
 # 1. Update DB
 pacman -Syu --noconfirm
 
-# 2. Critical & Security
-inst base linux-headers linux-firmware networkmanager sudo age man-db man-pages less openssh stow
+# 2. System Stuff
+inst base linux-headers linux-firmware networkmanager sudo age man-db man-pages 
+inst less openssh stow
 
 # 3. Dev Stack
-inst base-devel git github-cli gcc vim neovim gdb valgrind clang clangd cmake ninja strace lua51
+inst base-devel git github-cli gcc vim neovim tree-sitter-cli gdb valgrind clang
+inst cmake ninja strace lua51 alacritty tmux starship bash-completion ripgrep fd
+inst fzf unzip wget tree btop fastfetch tldr git-filter-repo bat bat-extras
+# check if necessary
+inst ncurses git-delta fzf exa entr prettier shfmt rustfmt python-black
+
+# 4. LSP's
+inst bash-language-server lua-language-server harper
 
 # 4. Desktop (Hyprland)
-inst hyprland xdg-desktop-portal-hyprland xdg-desktop-portal-gtk wl-clipboard
-inst sddm sddm-wayland qt5-graphicaleffects qt5-quickcontrols2 qt5-svg
-inst xorg-xwayland qt5-wayland qt6-wayland waybar swaybg mako polkit-kde-agent
-inst grim slurp
+inst hyprland xdg-desktop-portal-hyprland xdg-desktop-portal-gtk grim slurp
+inst hyprlock hyprpaper hyprpicker greetd greetd-tuigreet waybar mako
+inst rofi pinentry-rofi rofi-polkit-agent-git
+inst wl-clipboard cliphist
+inst qt5-graphicaleffects qt5-quickcontrols2 qt5-svg
+inst xorg-xwayland qt5-wayland qt6-wayland swaybg 
 inst xdg-user-dirs
 
 # 5. Drivers
@@ -105,8 +115,7 @@ inst intel-ucode nvidia-open nvidia-utils nvidia-settings lib32-nvidia-utils egl
 inst pipewire pipewire-alsa pipewire-pulse wireplumber pavucontrol
 inst bluez bluez-utils blueman
 
-# 6. User Apps & Fonts
-inst alacritty tmux starship bash-completion ripgrep fd fzf unzip wget tree btop fastfetch tldr
+# 6. Fonts
 inst ttf-jetbrains-mono-nerd ttf-font-awesome noto-fonts-emoji noto-fonts-cjk firefox
 
 # ---------------------------------------------------------
