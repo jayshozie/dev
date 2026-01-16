@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+MIMEAPPS_LIST="${XDG_CONFIG_HOME}/mimeapps.list"
+MIMEAPPS_BAK="${HOME}/arch-default-configurations/mimeapps.list.bak"
+if [[ -f $MIMEAPPS_LIST && ! -f $MIMEAPPS_BAK ]]; then
+    cp "$MIMEAPPS_LIST" "${HOME}/arch-default-configurations.bak"
+fi
+
+rm -rf "${XDG_CONFIG_HOME}/mimeapps.list"
+
+pushd "${DEV_ENV}/env" || exit 1
+
+stow --target="$HOME" mimetypes
+
+popd
