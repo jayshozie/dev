@@ -2,7 +2,7 @@
     "layer": "top",
     "position": "top",
     "height": 30,  // Was 30
-    "spacing": 4,
+    "spacing": 1,
     "modules-left": ["hyprland/workspaces", "mpris"],
     "modules-center": ["clock"],
     "modules-right": ["bluetooth", "wireplumber", "battery", "tray"],
@@ -54,6 +54,6 @@
         "format-icons": ["", "", "", "", ""]
     },
     "tray": {
-        "spacing": 10
+        "spacing": 5
     }
 }
