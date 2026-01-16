@@ -3,10 +3,24 @@ return {
     lazy = false,
     build = ":TSUpdate",
     config = function()
-        require("nvim-treesitter").setup({
+        require("nvim-treesitter.configs").setup({
             ensure_installed = {
-                "c", "lua", "vim", "vimdoc", "query", "cpp", "cmake", "make",
-                "python", "markdown", "latex", "asm", "bash",
+                'asm',
+                'c',
+                'cmake',
+                'cpp',
+                'gitcommit',
+                'hyprlang',
+                'latex',
+                'lua',
+                'make',
+                'markdown',
+                'python',
+                'query',
+                'vim',
+                'vimdoc',
+                'markdown_inline',
+                -- 'x86asm',
             },
             sync_install = true,
             auto_install = true,
