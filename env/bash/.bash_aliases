@@ -9,6 +9,7 @@ alias nv='nvim .'
 # programs
 alias img='imv'
 alias vid='vlc'
+alias yay='paru'
 
 # i like it this way
 alias ll='ls -FlAh --color=auto'

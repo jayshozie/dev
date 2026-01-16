@@ -9,8 +9,17 @@ if [[ -d "$SCRIPTS_DIR" ]]; then
 else
     mkdir -p "$SCRIPTS_DIR"
 fi
+
+
 # pushd to env
 pushd "${DEV_ENV}/env" || exit 1
+cp ../tmux-sessionizer/tmux-sessionizer scripts/.local/bin/scripts/
+if [[ ! -d "${XDG_CONFIG_HOME}/tmux-sessionizer" ]]; then
+    mkdir -p "${XDG_CONFIG_HOME}/tmux-sessionizer"
+fi
+if [[ ! -f "${XDG_CONFIG_HOME}/tmux-sessionizer/tmux-sessionizer.conf" ]]; then
+    touch "${XDG_CONFIG_HOME}/tmux-sessionizer/tmux-sessionizer.conf"
+fi
 # stow the scripts package
 stow --target="$HOME" scripts
 # go back to wherever you were

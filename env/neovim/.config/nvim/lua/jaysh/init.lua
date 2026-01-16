@@ -74,6 +74,13 @@ vim.keymap.set('n', '<M-.>', '<c-w>5<')
 vim.keymap.set('n', '<M-t>', '<c-w>5+')
 vim.keymap.set('n', '<M-s>', '<c-w>5-')
 
+-- tmux-sessionizer thanks to ThePrimeagen
+vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
+vim.keymap.set("n", "<M-h>", "<cmd>silent !tmux neww tmux-sessionizer -s 0<CR>")
+vim.keymap.set("n", "<M-t>", "<cmd>silent !tmux neww tmux-sessionizer -s 1<CR>")
+vim.keymap.set("n", "<M-n>", "<cmd>silent !tmux neww tmux-sessionizer -s 2<CR>")
+vim.keymap.set("n", "<M-s>", "<cmd>silent !tmux neww tmux-sessionizer -s 3<CR>")
+
 -- Highlight when yanking, thanks TJ.
 vim.api.nvim_create_autocmd('TextYankPost', {
     desc = 'Highlight when yanking (copying) text',
