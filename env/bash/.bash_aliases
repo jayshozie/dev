@@ -12,7 +12,7 @@ alias vid='vlc'
 alias yay='paru'
 
 # i like it this way
-alias ll='ls -FlAh --color=auto'
+alias ll='eza -liah --git'
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'

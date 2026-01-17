@@ -92,11 +92,11 @@ inst base linux-headers linux-firmware networkmanager sudo age man-db man-pages
 inst less openssh stow
 
 # 3. Dev Stack
-inst base-devel git github-cli gcc vim neovim tree-sitter-cli gdb valgrind clang
+inst base-devel git github-cli gcc vim tree-sitter-cli neovim gdb valgrind clang
 inst cmake ninja strace lua51 alacritty tmux starship bash-completion ripgrep fd
 inst fzf unzip wget tree btop fastfetch tldr git-filter-repo bat bat-extras
 # check if necessary
-inst ncurses git-delta fzf exa entr prettier shfmt rustfmt python-black
+inst ncurses git-delta fzf eza entr prettier shfmt rustfmt python-black
 
 # 4. LSP's
 inst bash-language-server lua-language-server harper
