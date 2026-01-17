@@ -1,7 +1,7 @@
 {
     "layer": "top",
     "position": "top",
-    "height": 30,  // Was 30
+    "height": 30,
     "spacing": 1,
     "modules-left": ["hyprland/workspaces", "mpris"],
     "modules-center": ["clock"],
