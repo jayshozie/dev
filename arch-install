@@ -109,8 +109,8 @@ inst qt5-graphicaleffects qt5-quickcontrols2 qt5-svg
 inst xorg-xwayland qt5-wayland qt6-wayland
 
 # 5. Drivers
-inst intel-ucode nvidia-open nvidia-utils nvidia-settings lib32-nvidia-utils egl-wayland
-inst pipewire pipewire-alsa pipewire-pulse wireplumber pavucontrol
+inst intel-ucode nvidia-open nvidia-utils nvidia-settings lib32-nvidia-utils
+inst egl-wayland pipewire pipewire-alsa pipewire-pulse wireplumber pavucontrol
 inst bluez bluez-utils blueman
 
 # 6. Fonts
@@ -126,7 +126,6 @@ mkdir -p "$HOMEDIR/uni"
 mkdir -p "$HOMEDIR/src/upstream"
 mkdir -p "$HOMEDIR/src/aur"
 mkdir -p "$HOMEDIR/src/refs"
-mkdir -p "$HOMEDIR/clones"
 chown -R "$TARGET_USRNAME:$TARGET_USRNAME" "$HOMEDIR"
 
 # Services
@@ -183,7 +182,7 @@ sudo -u "$TARGET_USRNAME" bash <<EOF
         fi
     }
 
-    # 1. CLONE DOTFILES (HTTPS)
+    # 1. CLONE DEV (HTTPS)
     if [[ ! -d "dev" ]]; then
         echo "[USER-CTX] Cloning dev (HTTPS)..."
         git clone https://github.com/jayshozie/dev.git
@@ -193,9 +192,9 @@ sudo -u "$TARGET_USRNAME" bash <<EOF
     KEY_ARCHIVE="$HOMEDIR/dev/identity.tar.age.pass1"
 
     if [[ -f "\$KEY_ARCHIVE" ]]; then
-        echo "---------------------------------------------------"
-        echo "-------- ⚠️ DECRYPTING IDENTITY ARCHIVE ⚠️---------"
-        echo "---------------------------------------------------"
+        echo '---------------------------------------------------'
+        echo '------- !!! DECRYPTING IDENTITY ARCHIVE !!! -------'
+        echo '---------------------------------------------------'
         
         # Interactive decryption
         age -d "\$KEY_ARCHIVE" | tar -xv -C "$HOMEDIR"
@@ -281,21 +280,24 @@ sudo -u "$TARGET_USRNAME" bash <<EOF
     git clone git@github.com:jayshozie/ce241.git
     popd
 
-    pushd "$HOMEDIR/clones"
+    pushd "$HOMEDIR/src/upstream"
     git clone git@github.com:nvim-treesitter/nvim-treesitter.git
     git clone git@github.com:neovim/neovim.git
     git clone git@github.com:tmux/tmux.git
-    git clone git@github.com:ThePrimeagen/dev.git prime-dev
     git clone git@github.com:ThePrimeagen/tmux-sessionizer.git
     popd
 
+    pushd "$HOMEDIR/src/refs"
+    git clone git@github.com:ThePrimeagen/dev.git prime-dev
+    popd
+
     # treesitter
-    pushd "$HOMEDIR/clones/nvim-treesitter"
+    pushd "$HOMEDIR/src/upstream/nvim-treesitter"
     git checkout "v0.10.0"
     popd
 
     # neovim
-    pushd "$HOMEDIR/clones/neovim"
+    pushd "$HOMEDIR/src/upstream/neovim"
     git checkout "v0.11.5"
     make CMAKE_BUILD_TYPE=RelWithDebInfo
     sudo make install

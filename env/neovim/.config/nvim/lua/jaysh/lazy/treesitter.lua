@@ -1,5 +1,5 @@
 return {
-    dir = "~/clones/nvim-treesitter", -- Point to your local clone
+    dir = "~/src/upstream/nvim-treesitter", -- Point to your local clone
     name = "nvim-treesitter", -- Explicitly name it so other plugins find it
     lazy = false,
     build = ":TSUpdate",
