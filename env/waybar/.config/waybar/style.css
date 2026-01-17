@@ -11,6 +11,18 @@ window#waybar {
     color: #787c99;
 }
 
+tooltip {
+    background-color: #08080b;
+    border: 2px solid #bb9af7;
+    border-radius: 12px;
+    font-family: "JetBrainsMono Nerd Font";
+    font-weight: 200; 
+}
+
+tooltip label {
+    color: #787c99;
+}
+
 #workspaces button {
     padding: 0 10px;
     color: #787c99;

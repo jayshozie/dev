@@ -23,7 +23,24 @@
     },
     "clock": {
         "format": "{:%H:%M  %a, %d %b}",
-        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+        "tooltip-format": "<big>{:%Y %B}</big>\n\n<span font='JetBrainsMono Nerd Font ExtraLight' size='12000'>{calendar}</span>",
+        "calendar": {
+            "mode": "month",
+            "mode-mon-col": 3,
+            "on-scroll": 1,
+            "format": {
+                "months":     "<span color='#bb9af7'><b>{}</b></span>", // Purple header
+                "days":       "<span color='#787c99'>{}</span>",       // Dimmed standard days
+                "weeks":      "<span color='#7dcfff'><b>W{}</b></span>", // Cyan week numbers
+                "weekdays":   "<span color='#ff9e64'><b>{}</b></span>", // Orange Mon/Tue/Wed...
+                "today":      "<span color='#7aa2f7'><b><u>{}</u></b></span>" // Bright Blue & Underlined for Today
+            }
+        },
+        "actions": {
+            "on-click-right": "mode",
+            "on-scroll-up": "shift_up",
+            "on-scroll-down": "shift_down"
+        }
     },
     "wireplumber": {
         "format": " {icon}  {node_name}: {volume}%",

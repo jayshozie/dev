@@ -13,3 +13,6 @@ fi
 if [[ -f "$HOME/.bash_aliases" ]]; then
     source "$HOME/.bash_aliases"
 fi
+
+# tmux-sessionizer thanks to ThePrimeagen
+bind '"\C-f":"tmux neww tmux-sessionizer\n"'
