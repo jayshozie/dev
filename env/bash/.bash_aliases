@@ -40,7 +40,7 @@ alias ali='nvim ~/dev/env/bash/.bash_aliases'
 alias gitconf='nvim ~/dev/env/git/.gitconfig'
 
 # easier access to stuff i'm constantly working on
-alias project='pushd ~/projects/c-mastery-projects/jayshell && nv && popd'
+alias project='pushd ~/projects/c-mastery-projects/jayshell && nv'
 alias scri='pushd ~/dev/env/scripts/.local/bin/scripts/ && nv && popd'
 alias docs='cd ~/Documents'
 alias downs='cd ~/Downloads'

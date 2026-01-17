@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+SESSIONIZER_LOC="${HOME}/src/upstream/tmux-sessionizer/tmux-sessionizer"
+SYMLINK_LOC="${DEV_ENV}/env/scripts/tmux-sessionizer"
 SCRIPTS_DIR="${HOME}/.local/bin/scripts"
 
 # rm -rf the default configs
@@ -10,10 +12,11 @@ else
     mkdir -p "$SCRIPTS_DIR"
 fi
 
+# symlink tmux-sessionizer
+ln -s "$SESSIONIZER_LOC" "$SYMLINK_LOC"
 
 # pushd to env
 pushd "${DEV_ENV}/env" || exit 1
-cp ../tmux-sessionizer/tmux-sessionizer scripts/.local/bin/scripts/
 if [[ ! -d "${XDG_CONFIG_HOME}/tmux-sessionizer" ]]; then
     mkdir -p "${XDG_CONFIG_HOME}/tmux-sessionizer"
 fi

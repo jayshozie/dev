@@ -327,8 +327,6 @@ return {
                     "md",
                     "plaintex",
                     "gitcommit",
-                    "",
-                    "",
                 },
                 settings = {
                 },
