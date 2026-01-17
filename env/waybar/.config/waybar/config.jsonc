@@ -12,7 +12,7 @@
         "format": "{name}"
     },
     "mpris": {
-        "format": "|  {status_icon} {artist} - {title}",
+        "format": " |  {status_icon} {artist} - {title}",
         "title-len": 25,
         "interval": 1,
         "status-icons": {
@@ -22,8 +22,8 @@
         }
     },
     "clock": {
-        "format": "{:%H:%M  %a, %d %b}",
-        "tooltip-format": "<big>{:%Y %B}</big>\n\n<span font='JetBrainsMono Nerd Font ExtraLight' size='12000'>{calendar}</span>",
+        "format": "{:%H:%M  |  %b %d, %a}",
+        "tooltip-format": "<big>{:%B} {ordinal_date}</big>\n\n<span font='JetBrainsMono Nerd Font ExtraLight' size='12000'>{calendar}</span>",
         "calendar": {
             "mode": "month",
             "mode-mon-col": 3,
@@ -37,9 +37,9 @@
             }
         },
         "actions": {
-            "on-click-right": "mode",
-            "on-scroll-up": "shift_up",
-            "on-scroll-down": "shift_down"
+            "on-click": "shift_up",
+            "on-click-right": "shift_down",
+            "on-click-middle": "mode",
         }
     },
     "wireplumber": {
