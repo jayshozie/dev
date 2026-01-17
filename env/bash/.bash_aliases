@@ -44,6 +44,9 @@ alias project='pushd ~/projects/c-mastery-projects/jayshell && nv && popd'
 alias scri='pushd ~/dev/env/scripts/.local/bin/scripts/ && nv && popd'
 alias docs='cd ~/Documents'
 alias downs='cd ~/Downloads'
+alias uni='cd ~/uni'
+alias 240='cd ~/uni/ceng240'
+alias 301='cd ~/uni/ceng301'
 
 # i usually sleep while my workstation is on, so i have an alias to shut it down
 # automatically after 90 minutes

@@ -11,7 +11,7 @@ set -euo pipefail
 TARGET_USRNAME='jaysh'
 TARGET_ID='1000' # Target for both UID and GID
 
-echo "[ARCH-INSTALL] == INITIALIZING SEQUENCE =="
+echo "[ARCH-INSTALL] === INITIALIZING SEQUENCE ==="
 
 # ---------------------------------------------------------
 # PHASE 1: IDENTITY & SECURITY (ROOT)
@@ -89,26 +89,24 @@ pacman -Syu --noconfirm
 
 # 2. System Stuff
 inst base linux-headers linux-firmware networkmanager sudo age man-db man-pages 
-inst less openssh stow
+inst less openssh stow snapper grub-btrfs inotify-tools
 
 # 3. Dev Stack
-inst base-devel git github-cli gcc vim tree-sitter-cli neovim gdb valgrind clang
+inst base-devel git github-cli gcc tree-sitter-cli gdb valgrind clang
 inst cmake ninja strace lua51 alacritty tmux starship bash-completion ripgrep fd
 inst fzf unzip wget tree btop fastfetch tldr git-filter-repo bat bat-extras
-# check if necessary
-inst ncurses git-delta fzf eza entr prettier shfmt rustfmt python-black
+inst python python-pip qemu-full virt-manager libvirt edk2-ovmf dnsmasq eza entr
+inst iptables-nft git-delta
 
 # 4. LSP's
 inst bash-language-server lua-language-server harper
 
 # 4. Desktop (Hyprland)
-inst hyprland xdg-desktop-portal-hyprland xdg-desktop-portal-gtk grim slurp
-inst hyprlock hyprpaper hyprpicker greetd greetd-tuigreet waybar mako
-inst rofi pinentry-rofi rofi-polkit-agent-git
-inst wl-clipboard cliphist
+inst hyprland xdg-desktop-portal-hyprland xdg-desktop-portal-gtk grim slurp vlc
+inst hyprlock hyprpaper hyprpicker greetd greetd-tuigreet waybar mako udiskie
+inst rofi thunar wl-clipboard cliphist nwg-look xdg-user-dirs qbittorrent via
 inst qt5-graphicaleffects qt5-quickcontrols2 qt5-svg
-inst xorg-xwayland qt5-wayland qt6-wayland swaybg 
-inst xdg-user-dirs
+inst xorg-xwayland qt5-wayland qt6-wayland
 
 # 5. Drivers
 inst intel-ucode nvidia-open nvidia-utils nvidia-settings lib32-nvidia-utils egl-wayland
@@ -116,7 +114,7 @@ inst pipewire pipewire-alsa pipewire-pulse wireplumber pavucontrol
 inst bluez bluez-utils blueman
 
 # 6. Fonts
-inst ttf-jetbrains-mono-nerd ttf-font-awesome noto-fonts-emoji noto-fonts-cjk firefox
+inst ttf-jetbrains-mono-nerd noto-fonts-emoji noto-fonts-cjk
 
 # ---------------------------------------------------------
 # PHASE 3: CONFIGURATION (ROOT CONTEXT)
@@ -128,6 +126,7 @@ mkdir -p "$HOMEDIR/uni"
 mkdir -p "$HOMEDIR/src/upstream"
 mkdir -p "$HOMEDIR/src/aur"
 mkdir -p "$HOMEDIR/src/refs"
+mkdir -p "$HOMEDIR/clones"
 chown -R "$TARGET_USRNAME:$TARGET_USRNAME" "$HOMEDIR"
 
 # Services
@@ -149,15 +148,15 @@ fi
 # ---------------------------------------------------------
 # PHASE 4: USER SPACE & KEY REHYDRATION (CONTEXT SWITCH)
 # ---------------------------------------------------------
-echo "---------------------------------------------------------"
-echo "[ARCH-INSTALL] >> SWITCHING CONTEXT TO: $TARGET_USRNAME <<"
+echo "---------------------------------------------------------------"
+echo "[ARCH-INSTALL] >> SWITCHING CONTEXT TO: $TARGET_USRNAME      <<"
 echo "[ARCH-INSTALL] >> PREPARE YOUR PASSPHRASE FOR KEY DECRYPTION <<"
-echo "---------------------------------------------------------"
+echo "---------------------------------------------------------------"
 
 # We pass variables into the heredoc, but escape internal vars ($?) as \$?
 sudo -u "$TARGET_USRNAME" bash <<EOF
     # -- USER CONTEXT STARTED --
-    cd "$HOMEDIR"
+    pushd "$HOMEDIR"
 
     # Define a smart permission checker function
     enforce_perm() {
@@ -185,17 +184,17 @@ sudo -u "$TARGET_USRNAME" bash <<EOF
     }
 
     # 1. CLONE DOTFILES (HTTPS)
-    if [[ ! -d "dotfiles" ]]; then
-        echo "[USER-CTX] Cloning dotfiles (HTTPS)..."
-        git clone https://github.com/jayshozie/dotfiles.git
+    if [[ ! -d "dev" ]]; then
+        echo "[USER-CTX] Cloning dev (HTTPS)..."
+        git clone https://github.com/jayshozie/dev.git
     fi
 
     # 2. KEY REHYDRATION PROTOCOL
-    KEY_ARCHIVE="$HOMEDIR/dotfiles/identity.tar.age.pass1"
+    KEY_ARCHIVE="$HOMEDIR/dev/identity.tar.age.pass1"
 
     if [[ -f "\$KEY_ARCHIVE" ]]; then
         echo "---------------------------------------------------"
-        echo "⚠️  DECRYPTING IDENTITY ARCHIVE ⚠️"
+        echo "-------- ⚠️ DECRYPTING IDENTITY ARCHIVE ⚠️---------"
         echo "---------------------------------------------------"
         
         # Interactive decryption
@@ -228,9 +227,10 @@ sudo -u "$TARGET_USRNAME" bash <<EOF
             # Prevent "Host key verification failed" by scanning github
             ssh-keyscan -t ed25519 github.com >> "$HOMEDIR/.ssh/known_hosts" 2>/dev/null
             
-            cd "$HOMEDIR/dotfiles"
-            git remote set-url origin git@github.com:jayshozie/dotfiles.git
-            echo "[USER-CTX] Remote updated to SSH: git@github.com:jayshozie/dotfiles.git"
+            pushd "$HOMEDIR/dev"
+            git remote set-url origin git@github.com:jayshozie/dev.git
+            echo "[USER-CTX] Remote updated to SSH: git@github.com:jayshozie/dev.git"
+            popd
             
         else
             echo ""
@@ -240,10 +240,10 @@ sudo -u "$TARGET_USRNAME" bash <<EOF
             echo ""
             echo ">> TO FIX THIS MANUALLY AFTER REBOOT:"
             echo "1. Run this to retry decryption:"
-            echo "   age -d ~/dotfiles/identity.tar.age.pass1 | tar -xv -C ~"
+            echo "   age -d ~/dev/identity.tar.age.pass1 | tar -xv -C ~"
             echo ""
             echo "2. Run this to switch the git remote:"
-            echo "   cd ~/dotfiles && git remote set-url origin git@github.com:jayshozie/dotfiles.git"
+            echo "   cd ~/dev && git remote set-url origin git@github.com:jayshozie/dev.git"
             echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
             echo ""
         fi
@@ -255,14 +255,55 @@ sudo -u "$TARGET_USRNAME" bash <<EOF
     if ! command -v paru &> /dev/null; then
         echo "[USER-CTX] Installing Paru..."
         mkdir -p "$HOMEDIR/src/aur"
-        cd "$HOMEDIR/src/aur"
+        pushd "$HOMEDIR/src/aur"
         [[ ! -d paru ]] && git clone https://aur.archlinux.org/paru.git
-        cd paru
+        popd
+        pushd "$HOMEDIR/src/aur/paru"
         makepkg -si --noconfirm
+        popd
     fi
 
+    paru -S rofi-polkit-agent-git pinentry-rofi jellyfin-desktop
+
+    # 6. CLONE REPOSITORIES
+
+    pushd "$HOMEDIR"
+    git clone --recursive git@github.com:jayshozie/projects.git
+    popd
+    pushd "$HOMEDIR/projects"
+    git submodule foreach --recursive 'git switch main'
+    pushd
+
+    pushd "$HOMEDIR/uni"
+    git clone git@github.com:jayshozie/ceng240.git
+    git clone git@github.com:jayshozie/ceng301.git
+    git clone git@github.com:jayshozie/ce231.git
+    git clone git@github.com:jayshozie/ce241.git
+    popd
+
+    pushd "$HOMEDIR/clones"
+    git clone git@github.com:nvim-treesitter/nvim-treesitter.git
+    git clone git@github.com:neovim/neovim.git
+    git clone git@github.com:tmux/tmux.git
+    git clone git@github.com:ThePrimeagen/dev.git prime-dev
+    git clone git@github.com:ThePrimeagen/tmux-sessionizer.git
+    popd
+
+    # treesitter
+    pushd "$HOMEDIR/clones/nvim-treesitter"
+    git checkout "v0.10.0"
+    popd
+
+    # neovim
+    pushd "$HOMEDIR/clones/neovim"
+    git checkout "v0.11.5"
+    make CMAKE_BUILD_TYPE=RelWithDebInfo
+    sudo make install
+    popd
+
+    popd
     # -- USER CONTEXT END --
 EOF
 
-echo "[ARCH-INSTALL] SUCCESS: System Provisioned."
-echo "You can now reboot."
+echo "[ARCH-INSTALL] System Provisioned."
+echo "[ARCH-INSTALL] === You can now reboot. ==="
