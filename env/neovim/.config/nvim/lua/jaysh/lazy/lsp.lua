@@ -230,7 +230,7 @@ return {
             ------------------
             -- Lua LS (Lua) --
             ------------------
-            vim.lsp.config.lua_ls = {
+            vim.lsp.config['lua_ls'] = {
                 cmd = { "lua-language-server" },
                 filetypes = { "lua" },
                 on_attach = on_attach,
@@ -241,8 +241,9 @@ return {
                         diagnostics = { globals = { "vim" } },
                     },
                 },
+                root_markers = { { '.luarc.json', '.luarc.jsonc' }, '.git' },
             }
-            if vim.fn.executable("lua_ls") == 1 then
+            if vim.fn.executable("lua-language-server") == 1 then
                 vim.lsp.enable("lua_ls")
             end
 
@@ -395,7 +396,7 @@ return {
             -----------------------
             vim.lsp.config["pyright"] = {
                 cmd = { "pyright-langserver", "--stdio" },
-                filetypes = { "py", "python" },
+                filetypes = { "python" },
                 on_attach = on_attach,
                 capabilities = capabilities,
                 settings = {
