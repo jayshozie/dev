@@ -1,0 +1,54 @@
+# --- Settings ---
+set selection-clipboard clipboard
+set statusbar-h-padding 0
+set statusbar-v-padding 0
+set page-padding 1
+set font "JetBrainsMono Nerd Font 14"
+
+# --- Tokyo Night Enhanced Colors ---
+# Background and Foreground
+set default-bg                  "#08080b"
+set default-fg                  "#787c99"
+
+# Statusbar
+set statusbar-bg                "#08080b"
+set statusbar-fg                "#787c99"
+
+# Input Bar (The ':' command prompt)
+set inputbar-bg                 "#08080b"
+set inputbar-fg                 "#bb9af7" 
+
+# Notification colors (matches your waybar warnings/criticals)
+set notification-error-bg       "#f7768e"
+set notification-error-fg       "#08080b"
+set notification-warning-bg     "#e0af68"
+set notification-warning-fg     "#08080b"
+set notification-bg             "#08080b"
+set notification-fg             "#7aa2f7"
+
+# --- Highlight and Selection (with Alpha Transparency) ---
+# This uses the Tokyo Night Blue and Yellow with 0.5 opacity
+set highlight-color             "rgba(224, 175, 104, 0.5)"
+set highlight-active-color      "rgba(122, 162, 247, 0.5)"
+
+# If you want mouse selection to match your Alacritty selection background (#515c7e)
+# you can use this instead for the active color:
+set highlight-active-color    "rgba(81, 92, 126, 0.5)"
+
+# Completion (keep these solid as they are UI elements, not overlays)
+set completion-highlight-bg     "#7aa2f7"
+set completion-highlight-fg     "#08080b"
+
+set completion-bg               "#08080b"
+set completion-fg               "#787c99"
+set completion-highlight-bg     "#7aa2f7"
+set completion-highlight-fg     "#08080b"
+
+# --- Recolor Settings (The Dark Mode Toggle) ---
+# This forces the PDF content itself to use your color scheme
+set recolor                     "true"
+set recolor-lightcolor          "#08080b"
+set recolor-darkcolor           "#787c99"
+
+# Keybinding to toggle the dark mode (Recolor)
+map r recolor

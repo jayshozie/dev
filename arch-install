@@ -123,13 +123,11 @@ HOMEDIR="/home/$TARGET_USRNAME"
 
 # Skeleton
 mkdir -p "$HOMEDIR/uni"
-mkdir -p "$HOMEDIR/src/upstream"
-mkdir -p "$HOMEDIR/src/aur"
-mkdir -p "$HOMEDIR/src/refs"
+mkdir -p "$HOMEDIR/src/{upstream,aur,refs}"
 chown -R "$TARGET_USRNAME:$TARGET_USRNAME" "$HOMEDIR"
 
 # Services
-systemctl enable NetworkManager sshd bluetooth sddm
+systemctl enable NetworkManager sshd bluetooth greetd
 
 # Grub Nvidia Patch
 if ! grep -q "nvidia_drm.modeset=1" /etc/default/grub; then
@@ -253,7 +251,6 @@ sudo -u "$TARGET_USRNAME" bash <<EOF
     # 5. PARU INSTALLATION
     if ! command -v paru &> /dev/null; then
         echo "[USER-CTX] Installing Paru..."
-        mkdir -p "$HOMEDIR/src/aur"
         pushd "$HOMEDIR/src/aur"
         [[ ! -d paru ]] && git clone https://aur.archlinux.org/paru.git
         popd

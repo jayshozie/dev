@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# rm -rf the default configs
+rm -rf "${XDG_CONFIG_HOME}/zathura"
+# pushd to env
+pushd "${DEV_ENV}/env" || exit 1
+# stow the zathura package
+stow --target="$HOME" zathura
+# go back to wherever you were
+popd
+
