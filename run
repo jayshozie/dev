@@ -1,87 +1,71 @@
 #!/usr/bin/env bash
 
-CLR_RED='\033[0;31m'
-CLR_GRN='\033[0;32m'
-CLR_WHT='\e[37m'
-CLR_RST='\033[0m'
-CLR_BLK='\e[30m'
-CLR_RED='\e[31m'
-CLR_GRN='\e[32m'
-CLR_YLW='\e[33m'
-CLR_BLU='\e[34m'
-CLR_MGA='\e[35m'
-CLR_CYN='\e[36m'
-CLR_WHT='\e[37m'
-CLR_RST='\e[0m'
+# Usage:
+# ./run [-dry|--dry-run]
+#
+# Options:
+#    -dry : only test the config, don't actually do anything.
 
-# prime you don't have to write DEV_ENV=$(pwd) every time you run the script...
 export DEV_ENV=$(cd "$(dirname "$0")" && pwd)
+dry_run="0"
 
-echo "[RUN] Need sudo priveleges:"
-sudo -v
-
-ARG1=$1
-ARG2=$2
-SIM="0"
-# echo $ARG1
-# echo $ARG2
-
-usage() {
-    echo -e "${CLR_YLW}${0}- A script that will only work for me lol"
-    echo -e "${CLR_MGA}usage: ./run [--sim] PROGRAM"
-    echo -e ''
-    echo -e "${CLR_RED}[IMPORTANT] This script does not support multiple PROGRAM arguments."
-    # echo -e "${CLR_RST}"
-    echo -e "${CLR_GRN}"
-    echo -e 'Examples:'
-    echo -e './run --sim nvim'
-    echo -e './run tmux'
-    echo -e "${CLR_RST}"
-    echo -e ''
-}
-
-# safety check for argument count
-if [[ $# -gt 2 ]]; then
-    echo -e "${CLR_RED}"
-    echo -e '[ERROR] Too many arguments.'
-    echo -e "${CLR_RST}"
-    usage
-    exit 1
+if [[ -v XDG_CONFIG_HOME ]]; then
+    echo "[RUN] XDG_CONFIG_HOME is set."
+    echo "[RUN] It has the value : $XDG_CONFIG_HOME"
+else
+    echo "[RUN] XDG_CONFIG_HOME is not set."
+    echo "[RUN] Using ${HOME}/.config for it."
+    export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 fi
 
-# check for sim run, and also gets the name of the run
-while [[ $# -gt 0 ]]; do
-    echo "[RUN] arg: ${1}"
-    if [[ $ARG1 == "--sim" ]]; then
-        SIM="1"
-    else
-        ARG2="$1"
-    fi
-    shift
-done
+SRC="${DEV_ENV}/modules/"
+DEST=""
 
-# basic log functionality
+pushd "$DEV_ENV"
+
+modules=`find modules/* -maxdepth 0`
+
+if [[ $1 == "-dry" ]]; then
+    dry_run="1"
+fi
+if [[ $1 == "--dry-run" ]]; then
+    dry_run="1"
+fi
+
 log() {
-    if [[ $SIM == "1" ]]; then
-        echo "[SIM]: $1"
-    else
+    if [[ $dry_run == "0" ]]; then
         echo "$1"
+    else
+        echo "[DRY]: $1"
     fi
 }
 
-log "[RUN] env: ${DEV_ENV} -- program: ${ARG2}"
-
-RUNS_DIR=`find $DEV_ENV/runs -mindepth 1 -maxdepth 1 -executable`
-
-for RUN in $RUNS_DIR; do
-    if basename $RUN | grep -vq "$ARG2"; then
-        log "[RUN] arg ${ARG2} filtered out $RUN"
-        continue
+for m in $modules; do
+    log "[RUN] "
+    if [[ -f "${m}/.sudo" ]]; then
+        log "[RUN] Module $m requires sudo access."
+        sudo -v
     fi
+    if [[ ! -f "${m}/.dest" ]]; then
+        log "[RUN/ERROR] Module $m doesn't have a .dest file. Skipping..."
+        continue
+    else
+        DEST=$(envsubst < "${m}/.dest")
+        log "[RUN] Removing ${DEST}..."
+        if [[ $dry_run == "0" ]]; then
+            rm -rf "$DEST"
+        else
+            log "rm -rf $DEST"
+        fi
 
-    log "[RUN] Running Script: ${RUN}"
-
-    if [[ $SIM == "0" ]]; then
-        $RUN
+        log "[RUN] Copying ${m}/payload to ${DEST}..."
+        if [[ $dry_run == "0" ]]; then
+            cp -r "${m}/payload" "$DEST"
+        else
+            log "cp -r ${m}/payload ${DEST}"
+        fi
     fi
 done
+
+
+popd # $DEV_ENV

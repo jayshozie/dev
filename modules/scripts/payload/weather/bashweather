@@ -1,0 +1,396 @@
+#!/usr/bin/env bash
+# Ankara Coordinates : LAT(39.9199) LON(32.8543)
+# TODO: Fix configuration creation
+WXS_DIR="$HOME/.config/bashweather"
+API_FILE="$WXS_DIR/.openweathermapAPI"
+CONFIG_FILE="$WXS_DIR/config"
+DAILY_API_CALLS_FILE="$WXS_DIR/dailyAPIcalls"
+DAILY_LIMIT=999
+SLEEP_TIME='2m'
+
+# --- API Call Limit related functions start ---
+# check whether the dailyAPIcalls file was created today
+check_day() {
+    # get the creation moment of the file into BIRTH_EPOCH
+    if [[ -f $DAILY_API_CALLS_FILE ]]; then
+        # get the current time into TODAY_EPOCH
+        TODAY=$(date +%Y%m%d)
+        TMP=$(stat --format=%w "$DAILY_API_CALLS_FILE")
+        BIRTH=$(date --date="$TMP" +%Y%m%d)
+    else
+        check_structure
+        exit 1
+    fi
+
+    if [[ $BIRTH == $TODAY ]]; then
+        return 1
+    else
+        return 0
+    fi
+}
+get_count() {
+    if [[ -f $DAILY_API_CALLS_FILE ]]; then
+        cat $DAILY_API_CALLS_FILE
+    else
+        check_structure
+    fi
+}
+increment_count() {
+    local current_count=$(get_count)
+    local new_count=$((current_count+1))
+    echo $new_count > $DAILY_API_CALLS_FILE
+}
+# --- API Call Limit related functions end ---
+
+# rest of the script
+
+# check if the given api key is actually stored correctly
+check_api_key() {
+    if [[ -n $1 ]]; then
+        local API=$1
+        MASKED_KEY="${API:0:4}****************************"
+        echo "Key saved: $MASKED_KEY"
+        return 0
+    else
+        echo 'No key entered.'
+        return 1
+    fi
+}
+
+# check the file structure of the scripts configuration files
+check_structure() {
+    if [[ ! -d $WXS_DIR ]]; then
+        echo "This script needs $WXS_DIR and $API_FILE to exist to be able to work properly."
+        echo 'Would you like the script to create the required files?'
+        select opt in Yes No; do
+            case $opt in
+                Yes)
+                    echo 'Creating...'
+                    mkdir -p $WXS_DIR
+                    touch $API_FILE
+                    chmod 700 $WXS_DIR
+                    chmod 600 $API_FILE
+                    echo 'Done.'
+                    echo 'Now we need your API key to make API calls to OpenWeatherMap.'
+                    echo 'Would you like to copy it yourself, or do you want the script to do it for you?'
+                    select opt in 'I would like to do it myself.' 'Do it for me.'; do
+                        case $opt in
+                            'I would like to do it myself.')
+                                echo 'OK.'
+                                echo 'You need to copy your API key and without any other characters into:'
+                                echo $API_FILE
+                                echo 'After that you can rerun the script.'
+                                exit
+                                ;;
+                            'Do it for me.')
+                                read -r -s -p 'Please enter your API key.' KEY_INPUT
+                                echo $KEY_INPUT > $API_FILE
+                                if [[ $(check_api_key $KEY_INPUT) -ne 0 ]]; then
+                                    echo 'Something went wrong. Please manually copy your API to the file:'
+                                    echo $API_FILE
+                                    exit
+                                else # return value of check_api_key 0
+                                    echo 'Done.'
+                                    break
+                                fi
+                                ;;
+                        esac
+                    done
+                    ;;
+                No)
+                    echo 'OK.'
+                    echo 'Exitting...'
+                    exit
+                    ;;
+            esac
+        done
+    fi
+    if [[ ! -f $API_FILE ]]; then
+        echo 'We need your API key to make API calls to OpenWeatherMap.'
+        echo 'Would you like to copy it yourself, or do you want the script to do it for you?'
+        select opt in 'I would like to do it myself.' 'Do it for me.'; do
+            case $opt in
+                'I would like to do it myself.')
+                    echo 'OK.'
+                    echo 'You need to copy your API key and without any other characters into:'
+                    echo $API_FILE
+                    echo 'After that you can rerun the script.'
+                    exit
+                    ;;
+                'Do it for me.')
+                    read -r -s -p 'Please enter your API key.' >> $API
+                    $API >> $API_FILE
+                    if [[ $(check_api_key $API) -ne 0 ]]; then
+                        echo 'Something went wrong. Please manually copy your API to the file:'
+                        echo $API_FILE
+                        exit
+                    else # return value of check_api_key 0
+                        echo 'Done.'
+                        break
+                    fi
+                    ;;
+            esac
+        done
+    fi
+    if [[ ! -f $CONFIG_FILE ]]; then
+        echo "Error: Configuration file not found at $CONFIG_FILE"
+        echo 'Would you like to write it yourself, or do you want the script to do it for you?'
+        select opt in 'I would like to do it myself.' 'Do it for me.'; do
+            case $opt in
+                'I would like to do it myself.')
+                    echo "Please create $CONFIG_FILE with the following format (on a single line):"
+                    echo 'FORMAT: units:latitude:longtitude (e.g., metric:39.9199:32.8543)'
+                    ;;
+                'Do it for me.')
+                    echo 'Units? (metric, imperial)'
+                    select opt in 'metric' 'imperial'; do
+                        case $opt in
+                            1|'metric')
+                                UNIT="metric"
+                                break
+                                ;;
+                            2|'imperial')
+                                UNIT="imperial"
+                                break
+                                ;;
+                            *)
+                                echo "Couldn't get the unit. Please check ${CONFIG_FILE}."
+                                UNIT='unit'
+                                break
+                                ;;
+                        esac
+                    done
+                    echo 'Latitude? (e.g.: 39.9199)'
+                    read -r >> LAT
+                    echo 'Longtitude? (e.g.: 32.8543)'
+                    read -r >> LAT
+                    echo "${UNIT}:${LAT}:${LON}" > $CONFIG_FILE
+                    echo 'Done.'
+                    break
+                    ;;
+            esac
+        done
+    fi
+    if [[ ! -f $DAILY_API_CALLS_FILE ]]; then
+        echo "Error: Count file not found at $DAILY_API_CALLS_FILE"
+        echo 'Would you like to create it yourself, or do you want the script to do it for you?'
+        select opt in 'I would like to do it myself.' 'Do it for me.'; do
+            case $opt in
+                'I would like to do it myself.')
+                    echo "Please create $DAILY_API_CALLS_FILE."
+                    echo "IMPORTANT: It should be empty."
+                    break
+                    ;;
+                'Do it for me.')
+                    echo 0 > $DAILY_API_CALLS_FILE
+                    break
+                    ;;
+            esac
+        done
+    fi
+}
+
+get_config() {
+    # get api key from the users api file
+    API_KEY=$(tr -d '\n' < $API_FILE)
+
+    # save ifs to not lose it
+    local SAVE_IFS=$IFS
+
+    # cat the configuration (single line)
+    CONFIG_LINE=$(cat $CONFIG_FILE)
+
+    # set ISF to : and read the config line into UNIT LAT and LON vars
+    IFS=':' read -r UNIT LAT LON <<< "$CONFIG_LINE"
+
+    # restore IFS
+    IFS=$SAVE_IFS
+}
+
+api_call_current_weather() {
+    # also gets the api key of user
+    check_day
+    get_config
+    if [[ $(get_count) -gt $DAILY_LIMIT ]]; then
+        echo "You exceeded your API call limit."
+        echo 'Terminating...'
+        exit 1
+    fi
+
+    # easier change
+    API_CALL_URL="https://api.openweathermap.org/data/2.5/weather?lat=$LAT&lon=$LON&appid=$API_KEY&units=$UNIT"
+
+    # make the api call and get the json weather data
+    CURR_WX_JSON=$(curl -s "$API_CALL_URL")
+    increment_count
+}
+
+# Function to convert a string to Title Case (Capitalize the first letter of every word)
+title_case() {
+    # The 'awk' command uses the following logic:
+    # 1. Loop through every field (word) in the input line.
+    # 2. Convert the first character (substr($i, 1, 1)) to uppercase (toupper).
+    # 3. Concatenate it with the rest of the word (substr($i, 2)).
+    # 4. Print the modified fields.
+    echo "$1" | awk '{
+        for (i=1; i<=NF; i++) {
+            $i = toupper(substr($i, 1, 1)) substr($i, 2)
+        }
+        print $0
+    }'
+}
+
+################################################################################
+#                                                                              #
+#                                   M A I N                                    #
+#                                                                              #
+################################################################################
+
+# check file structure of the script
+check_structure
+
+# make an api call to openweathermap to get the current weather
+api_call_current_weather
+
+################################################################################
+#                     P A R S I N G   J S O N   D A T A                        #
+################################################################################
+
+# a jq filter to get all the information needed in a single call, rather than
+# piping echo-ing the entire json to jq for every single value
+JQ_FILTER='[ .name, .main.temp, .main.feels_like, .main.humidity, .weather[0].main, .weather[0].description, .weather[0].id, .wind.speed, .wind.deg, (.wind.gust // "N/A"), .sys.country ] | @tsv'
+
+# Save IFS to restore it later
+local SAVE_IFS=$IFS
+# Set IFS to the tab character to ensure read splits only on tabs from @tsv
+IFS=$'\t'
+# Get all the data parsed through jq. Use double quotes to preserve the string.
+read -r LOCATION TEMP_CURR TEMP_FEELSLIKE HUMIDITY CONDITION DESCRIPTION WEATHER_ID WIND_SPEED WIND_DEG WIND_GUST COUNTRY <<< "$(jq -r "$JQ_FILTER" <<< "$CURR_WX_JSON")"
+# Restore IFS
+IFS=$SAVE_IFS
+
+# Capitalize $DESCRIPTION
+DESCRIPTION=$(title_case "$DESCRIPTION")
+
+case $WEATHER_ID in
+    200|201|202|210|211|212|221|231|232)
+        EMOJI='⛈️'
+        ;;
+    300|301|302|310|311|312|313|314|314|520|521|522|531)
+        EMOJI='🌧️'
+        ;;
+    500|501|502|503|504)
+        EMOJI='🌦️'
+        ;;
+    511|600|601|602|611|612|613|615|616|620|621|622)
+        EMOJI='🌨️'
+        ;;
+    803|804)
+        EMOJI='☁️'
+        ;;
+    800)
+        EMOJI='☀️'
+        ;;
+    801|802)
+        EMOJI='🌤️'
+        ;;
+    701|711|721|731|741|751|761|762|771|781)
+        EMOJI='🌫️'
+        ;;
+    *)
+        EMOJI='❗'
+        ;;
+esac
+
+case $UNIT in
+    'imperial')
+        UNIT_TXT='°F'
+        WIND_TXT='mph'
+        ;;
+    'metric')
+        UNIT_TXT='°C'
+        WIND_TXT='m/s'
+        ;;
+    *)
+        UNIT_TXT='K'
+        WIND_TXT='m/s'
+        ;;
+esac
+
+################################################################################
+#            P R I N T I N G   T H E   W E A T H E R   I N F O                 #
+################################################################################
+
+if [[ $1 == 'live' ]]; then
+    ############################################################################
+    #                        M O N I T O R   M O D E                           #
+    ############################################################################
+    MIN_COL=50
+    MIN_ROW=20
+    CURR_COL=$(tput cols)
+    CURR_ROW=$(tput lines)
+    if [[ CURR_COL -lt MIN_COL ]] | [[ CURR_ROW -lt MIN_ROW ]]; then
+        echo "Error: Your terminal needs to be at least $MIN_COL columns and $MIN_ROW rows to use this mode."
+        exit 1
+    fi
+
+    # TODO: we'll got these later
+    # TODO: Center the text with tput
+    # tput smcup
+    # trap 2 # SIGINT <C-c>
+
+    while true; do
+        clear # clear the terminal
+        api_call_current_weather # make the api call
+
+        printf '%s\n' '--------------- 🌧️ BashWeather -----------------'
+        printf '\n'
+        printf '    󰇧 %s, %s\n' "${LOCATION}" "${COUNTRY}"
+        printf '\n'
+        printf '  ----  Temperature -------------------------  \n'
+        printf '\n'
+        printf '     Outside    : %s%s\n' "${TEMP_CURR}" "${UNIT_TXT}"
+        printf '    󱍞 Feels Like : %s%s\n' "${TEMP_FEELSLIKE}" "${UNIT_TXT}"
+        printf '\n'
+        printf '  ---- %s Condition --------------------------  \n' "${EMOJI}"
+        printf '\n'
+        printf '    󰂣 Condition  : %s %s\n' "${EMOJI}" "${DESCRIPTION}"
+        printf '     Humidity   : %s%%\n' "${HUMIDITY}"
+        printf '\n'
+        printf '  ----  Wind --------------------------------  \n'
+        printf '\n'
+        printf '    %s %s to %s° gusting %s %s\n' "${WIND_SPEED}" "${WIND_TXT}" "${WIND_DEG}" "${WIND_GUST}" "${WIND_TXT}"
+        printf '\n'
+        printf '%s\n' '------------------------------------------------'
+
+        sleep $SLEEP_TIME # sleep for 20 minutes before making another api call
+    done
+
+
+else
+    ############################################################################
+    #                  S I N G L E   P R I N T   M O D E                       #
+    ############################################################################
+
+    # clear the terminal for better looks
+    clear
+    printf '%s\n' '--------------- 🌧️ BashWeather -----------------'
+    printf '\n'
+    printf '    󰇧 %s, %s\n' "${LOCATION}" "${COUNTRY}"
+    printf '\n'
+    printf '  ----  Temperature -------------------------  \n'
+    printf '\n'
+    printf '     Outside    : %s%s\n' "${TEMP_CURR}" "${UNIT_TXT}"
+    printf '    󱍞 Feels Like : %s%s\n' "${TEMP_FEELSLIKE}" "${UNIT_TXT}"
+    printf '\n'
+    printf '  ---- %s Condition --------------------------  \n' "${EMOJI}"
+    printf '\n'
+    printf '    󰂣 Condition  : %s %s\n' "${EMOJI}" "${DESCRIPTION}"
+    printf '     Humidity   : %s%%\n' "${HUMIDITY}"
+    printf '\n'
+    printf '  ----  Wind --------------------------------  \n'
+    printf '\n'
+    printf '    %s %s to %s° gusting %s %s\n' "${WIND_SPEED}" "${WIND_TXT}" "${WIND_DEG}" "${WIND_GUST}" "${WIND_TXT}"
+    printf '\n'
+    printf '%s\n' '------------------------------------------------'
+fi

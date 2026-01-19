@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Exec=sh -c 'while [ -z "$WAYLAND_DISPLAY" ]; do sleep 0.5; done; alacritty -e tmux'
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name[en_US]=Alacritty w/ Tmux
+Name=Alacritty w/ Tmux
+Comment[en_US]=Starts a new tmux server when the envvar $WAYLAND_DISPLAY is set, and connects to it.
+Comment=Starts a new tmux server when the envvar $WAYLAND_DISPLAY is set, and connects to it.

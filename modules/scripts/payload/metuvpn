@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+sudo systemctl start --now via-vpn.service
+
+via-cli session info 2>/dev/null | grep -q "active" || via-cli session start 2>/dev/null
+
+if via-cli vpn status 2>/dev/null | grep -iq "not connected"; then
+
+    via-cli vpn connect --username e267561@metu.edu.tr --userpass "$(pass metu)" > /dev/null 2>&1
+
+    if [[ $? -eq 0 ]]; then
+        notify-send "VPN" "Connected to METU"
+    else
+        notify-send "VPN" "Connection Failed"
+    fi
+else
+    via-cli vpn disconnect > /dev/null 2>&1
+
+    sudo systemctl stop via-vpn.service
+
+    notify-send "VPN" "Disconnected from METU"
+fi

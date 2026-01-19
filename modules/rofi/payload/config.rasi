@@ -1,0 +1,91 @@
+configuration {
+    modi: "drun,run";
+    show-icons: true;
+    font: "JetBrainsMono Nerd Font 11";
+    display-drun: " ";
+    display-run: " ";
+}
+
+* {
+    /* --- Tokyo Night Palette --- */
+    bg-col:  #1a1b26B3;   /* 70% Opacity Background */
+    fg-col:  #c0caf5;     /* Bright White Text */
+    blue:    #7aa2f7;     /* Accent Blue */
+    dark-fg: #1a1b26;     /* Dark text for selected items */
+
+    /* --- Global Settings --- */
+    background-color: transparent;
+    text-color: @fg-col;
+    width: 400px;
+}
+
+window {
+    background-color: @bg-col;
+    border: 2px;
+    border-color: @blue;
+    border-radius: 0px;
+    padding: 10px;
+}
+
+/* This targets the dashed line between input and list */
+separator {
+    background-color: transparent;
+    color: @fg-col;
+    border-color: @fg-col;
+}
+
+/* Message Box (Where "Enter Passphrase" text lives) */
+message {
+    padding: 10px 10px;
+    border: 1px 1px 1px 1px;
+    border-color: @fg-col;
+}
+
+textbox {
+    text-color: @fg-col;
+}
+
+inputbar {
+    children: [prompt, entry];
+    padding: 10px 10px;
+}
+
+prompt {
+    text-color: @fg-col;
+    padding: 0px 10px 0px 0px;
+}
+
+entry {
+    placeholder: "Search...";
+    placeholder-color: @fg-col;
+    placeholder-markup: true;
+}
+
+listview {
+    padding: 0px;
+    lines: 10;
+    scrollbar: false;
+    border: 0px;
+}
+
+element {
+    padding: 8px;
+    border-radius: 0px;
+    text-color: @fg-col;
+}
+
+element normal.normal, element alternate.normal {
+    background-color: transparent;
+    text-color: @fg-col;
+}
+
+element selected.normal {
+    background-color: @blue;
+    text-color: @dark-fg;
+}
+
+element-text, element-icon {
+    background-color: transparent;
+    text-color: inherit;
+    vertical-align: 0.5;
+}

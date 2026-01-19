@@ -1,0 +1,73 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 30,
+    "spacing": 1,
+    "modules-left": ["hyprland/workspaces", "mpris"],
+    "modules-center": ["clock"],
+    "modules-right": ["bluetooth", "wireplumber", "battery"],
+    "hyprland/workspaces": {
+        "disable-scroll": true,
+        "all-outputs": true,
+        "format": "{name}"
+    },
+    "mpris": {
+        "format": " |  {status_icon} {artist} - {title}",
+        "title-len": 25,
+        "interval": 1,
+        "status-icons": {
+            "playing": "󰐊",
+            "paused": "󰏤",
+            "stopped": "󰓛"
+        }
+    },
+    "clock": {
+        "format": "{:%H:%M  |  %b %d, %a}",
+        "tooltip-format": "<big>{:%B} {ordinal_date}</big>\n\n<span font='JetBrainsMono Nerd Font ExtraLight' size='12000'>{calendar}</span>",
+        "calendar": {
+            "mode": "month",
+            "mode-mon-col": 3,
+            "on-scroll": 1,
+            "format": {
+                "months":     "<span color='#bb9af7'><b>{}</b></span>", // Purple header
+                "days":       "<span color='#787c99'>{}</span>",       // Dimmed standard days
+                "weeks":      "<span color='#7dcfff'><b>W{}</b></span>", // Cyan week numbers
+                "weekdays":   "<span color='#ff9e64'><b>{}</b></span>", // Orange Mon/Tue/Wed...
+                "today":      "<span color='#7aa2f7'><b><u>{}</u></b></span>" // Bright Blue & Underlined for Today
+            }
+        },
+        "actions": {
+            "on-click": "shift_up",
+            "on-click-right": "shift_down",
+            "on-click-middle": "mode",
+        }
+    },
+    "wireplumber": {
+        "format": " {icon}  {node_name}: {volume}%",
+        "format-muted": "🔇 Muted",
+        "format-icons": {
+            "default": ["", "", ""]
+        },
+        "on-click": "pavucontrol"
+    },
+    "bluetooth": {
+        "format": " {status}",
+        "format-connected": " {device_alias}",
+        "format-connected-battery": " {device_alias} - 󰂎 {device_battery_percentage}% ",
+        "#format-device-preference": [ "device1", "device2" ], 
+        "tooltip-format": "{controller_alias} {controller_address}\n{num_connections} connected",
+        "tooltip-format-connected": "Host: {controller_alias} {controller_address}\nConnected Devices: {num_connections}\n{device_enumerate}",
+        "tooltip-format-enumerate-connected": "Device: {device_alias} {device_address}",
+        "tooltip-format-enumerate-connected-battery": "Device: {device_alias} {device_address} {device_battery_percentage}%",
+        "on-click": "alacritty -e bluetoothctl" 
+    },
+    "battery": {
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon}  {capacity}%",
+        "format-charging": "⚡ {capacity}%",
+        "format-icons": ["", "", "", "", ""]
+    },
+}

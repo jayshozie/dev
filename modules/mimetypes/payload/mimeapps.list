@@ -1,0 +1,18 @@
+[Default Applications]
+# Images
+image/jpeg=imv.desktop
+image/png=imv.desktop
+image/gif=imv.desktop
+image/webp=imv.desktop
+image/svg+xml=imv.desktop
+
+# Videos
+video/mp4=vlc.desktop
+video/mkv=vlc.desktop
+video/x-matroska=vlc.desktop
+video/webm=vlc.desktop
+video/quicktime=vlc.desktop
+video/x-msvideo=vlc.desktop
+
+[Added Associations]
+image/jpeg=imv.desktop;
