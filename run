@@ -1,34 +1,32 @@
 #!/usr/bin/env bash
 
-# Usage:
-# ./run [-dry|--dry-run]
-#
-# Options:
-#    -dry : only test the config, don't actually do anything.
-
+# Usage: ./run [-dry|--dry-run]
 export DEV_ENV=$(cd "$(dirname "$0")" && pwd)
 dry_run="0"
 
+# --- Safety Check: Prevent suicide ---
+# We explicitly forbid the DEST from being root or HOME to prevent accidents.
+# Yep, I nuked my home directory before doing this. Thank God for btrfs, I
+# almost had a heart attack.
+is_safe_path() {
+    local path="$1"
+    if [[ "$path" == "$HOME" || "$path" == "/" ]]; then
+        return 1 # False (Unsafe)
+    fi
+    return 0 # True (Safe)
+}
+
 if [[ -v XDG_CONFIG_HOME ]]; then
-    echo "[RUN] XDG_CONFIG_HOME is set."
-    echo "[RUN] It has the value : $XDG_CONFIG_HOME"
+    echo "[RUN] XDG_CONFIG_HOME: $XDG_CONFIG_HOME"
 else
-    echo "[RUN] XDG_CONFIG_HOME is not set."
-    echo "[RUN] Using ${HOME}/.config for it."
-    export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+    echo "[RUN] XDG_CONFIG_HOME not set. Defaulting to $HOME/.config"
+    export XDG_CONFIG_HOME="${HOME}/.config"
 fi
 
-SRC="${DEV_ENV}/modules/"
-DEST=""
+pushd "$DEV_ENV" > /dev/null
 
-pushd "$DEV_ENV"
-
-modules=`find modules/* -maxdepth 0`
-
-if [[ $1 == "-dry" ]]; then
-    dry_run="1"
-fi
-if [[ $1 == "--dry-run" ]]; then
+# Parse arguments
+if [[ $1 == "-dry" || $1 == "--dry-run" ]]; then
     dry_run="1"
 fi
 
@@ -40,32 +38,67 @@ log() {
     fi
 }
 
-for m in $modules; do
-    log "[RUN] "
-    if [[ -f "${m}/.sudo" ]]; then
-        log "[RUN] Module $m requires sudo access."
-        sudo -v
-    fi
-    if [[ ! -f "${m}/.dest" ]]; then
-        log "[RUN/ERROR] Module $m doesn't have a .dest file. Skipping..."
-        continue
-    else
-        DEST=$(envsubst < "${m}/.dest")
-        log "[RUN] Removing ${DEST}..."
-        if [[ $dry_run == "0" ]]; then
-            rm -rf "$DEST"
-        else
-            log "rm -rf $DEST"
-        fi
+# Iterate over directories in modules/
+for m in modules/*; do
+    if [[ ! -d "$m" ]]; then continue; fi
+    
+    module_name=$(basename "$m")
 
-        log "[RUN] Copying ${m}/payload to ${DEST}..."
-        if [[ $dry_run == "0" ]]; then
-            cp -r "${m}/payload" "$DEST"
-        else
-            log "cp -r ${m}/payload ${DEST}"
-        fi
+    # Skip if no .dest file
+    if [[ ! -f "${m}/.dest" ]]; then
+        log "[RUN] $module_name: No .dest file found."
+        continue
     fi
+
+    # Check sudo requirement
+    RUN_CMD=""  # <--- Initialize empty
+    if [[ -f "${m}/.sudo" ]]; then
+        log "[RUN] $module_name requires sudo."
+        sudo -v
+        RUN_CMD="sudo" # <--- Set to sudo if needed
+    fi
+
+    # Resolve Destination
+    DEST=$(envsubst < "${m}/.dest")
+    
+    # --- The Logic Fix ---
+    # Strategy: Use rsync to SYNC contents, not remove the directory.
+    # Flags:
+    # -a : Archive mode (recursive, preserves permissions/times/symlinks)
+    # -v : Verbose
+    # --mkpath : Create destination dir if it doesn't exist (requires rsync 3.2.3+)
+    
+    # Special Handling:
+    # If DEST is HOME, we definitely just want to copy files INTO it (Merge).
+    # If DEST is a config folder (e.g., ~/.config/alacritty), maybe we WANT to clean it?
+    
+    # Current Decision: STRICT MERGE everywhere. 
+    # If you want to delete old configs, use the --delete flag cautiously, 
+    # but NEVER use --delete if DEST is HOME.
+    
+    RSYNC_FLAGS="-av"
+    
+    # Safety Logic: If we are targeting a subfolder (like alacritty), we can clean old files.
+    # If we are targeting HOME, we MUST NOT delete extraneous files.
+    if is_safe_path "$DEST"; then
+       # It's safe to make the destination mirror the payload exactly (removes stale config files)
+       # Uncomment the next line if you WANT 'alacritty' to be wiped of unknown files
+       # RSYNC_FLAGS="-av --delete" 
+       :
+    fi
+
+    log "[RUN] $module_name -> $DEST"
+    
+    if [[ $dry_run == "0" ]]; then
+        # Ensure parent directory exists
+        $RUN_CMD mkdir -p "$DEST"
+        
+        # RSYNC syntax note: Source must end in slash to copy CONTENTS
+        $RUN_CMD rsync $RSYNC_FLAGS "${m}/payload/" "$DEST/"
+    else
+        log "$RUN_CMD rsync $RSYNC_FLAGS ${m}/payload/ $DEST/"
+    fi
+
 done
 
-
-popd # $DEV_ENV
+popd > /dev/null
