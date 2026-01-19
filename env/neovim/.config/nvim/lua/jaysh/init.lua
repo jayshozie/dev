@@ -33,7 +33,7 @@ vim.opt.signcolumn = 'yes'
 vim.opt.updatetime = 50
 
 -- vim.g.netrw_browse_split = 0
--- vim.g.netrw_banner = 0
+vim.g.netrw_banner = 0
 vim.g.netrw_winsize = 50
 vim.opt.splitright = true
 vim.opt.splitbelow = true

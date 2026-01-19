@@ -26,7 +26,7 @@ alias cp='cp -i'
 
 # easier readability
 alias df='df -h'
-alias tree='tree -C'
+alias tree='tree -aC'
 
 # sometimes it feels better to look at diffs, logs, and status in a text editor
 alias utils='./utils.sh'
