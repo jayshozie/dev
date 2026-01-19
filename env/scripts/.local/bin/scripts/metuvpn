@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+sudo systemctl start --now via-vpn.service
+
 via-cli session info 2>/dev/null | grep -q "active" || via-cli session start 2>/dev/null
 
 if via-cli vpn status 2>/dev/null | grep -iq "not connected"; then
@@ -13,5 +15,8 @@ if via-cli vpn status 2>/dev/null | grep -iq "not connected"; then
     fi
 else
     via-cli vpn disconnect > /dev/null 2>&1
+
+    sudo systemctl stop via-vpn.service
+
     notify-send "VPN" "Disconnected from METU"
 fi

@@ -45,7 +45,7 @@ style = { shape = "Block", blinking = "Never" }
 unfocused_hollow = false
 
 [mouse]
-hide_when_typing = false
+hide_when_typing = true
 
 # tokyo-night-enhanced
 [colors]

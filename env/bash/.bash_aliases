@@ -6,6 +6,9 @@ alias src='source ~/.bashrc'
 # netrw
 alias nv='nvim .'
 
+# update
+alias update='sudo pacman -Syu'
+
 # programs
 alias img='imv'
 alias vid='vlc'
