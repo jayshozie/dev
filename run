@@ -41,7 +41,7 @@ log() {
 # Iterate over directories in modules/
 for m in modules/*; do
     if [[ ! -d "$m" ]]; then continue; fi
-    
+
     module_name=$(basename "$m")
 
     # Skip if no .dest file
@@ -51,48 +51,52 @@ for m in modules/*; do
     fi
 
     # Check sudo requirement
-    RUN_CMD=""  # <--- Initialize empty
+    RUN_CMD=""
     if [[ -f "${m}/.sudo" ]]; then
         log "[RUN] $module_name requires sudo."
         sudo -v
-        RUN_CMD="sudo" # <--- Set to sudo if needed
+        RUN_CMD="sudo"
     fi
 
     # Resolve Destination
     DEST=$(envsubst < "${m}/.dest")
-    
+
     # --- The Logic Fix ---
     # Strategy: Use rsync to SYNC contents, not remove the directory.
     # Flags:
     # -a : Archive mode (recursive, preserves permissions/times/symlinks)
     # -v : Verbose
     # --mkpath : Create destination dir if it doesn't exist (requires rsync 3.2.3+)
-    
+
     # Special Handling:
     # If DEST is HOME, we definitely just want to copy files INTO it (Merge).
     # If DEST is a config folder (e.g., ~/.config/alacritty), maybe we WANT to clean it?
-    
+
     # Current Decision: STRICT MERGE everywhere. 
     # If you want to delete old configs, use the --delete flag cautiously, 
     # but NEVER use --delete if DEST is HOME.
-    
+
     RSYNC_FLAGS="-av"
-    
-    # Safety Logic: If we are targeting a subfolder (like alacritty), we can clean old files.
-    # If we are targeting HOME, we MUST NOT delete extraneous files.
+
+    # Safety Logic: If we are targeting a subfolder (like alacritty), we can
+    # clean old files. If we are targeting HOME, we MUST NOT delete extraneous
+    # files.
     if is_safe_path "$DEST"; then
-       # It's safe to make the destination mirror the payload exactly (removes stale config files)
-       # Uncomment the next line if you WANT 'alacritty' to be wiped of unknown files
+       # It's safe to make the destination mirror the payload exactly (removes
+       # stale config files)
+
+       # Uncomment the next line if you WANT 'alacritty' to be wiped of unknown
+       # files
        # RSYNC_FLAGS="-av --delete" 
        :
     fi
 
     log "[RUN] $module_name -> $DEST"
-    
+
     if [[ $dry_run == "0" ]]; then
         # Ensure parent directory exists
         $RUN_CMD mkdir -p "$DEST"
-        
+
         # RSYNC syntax note: Source must end in slash to copy CONTENTS
         $RUN_CMD rsync $RSYNC_FLAGS "${m}/payload/" "$DEST/"
     else

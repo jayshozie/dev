@@ -23,7 +23,7 @@ format=<b>%s</b>\n%b
 
 # --- Behavior ---
 default-timeout=5000
-ignore-timeout=1
+ignore-timeout=0
 # Grouping stops spam from taking over screen
 max-visible=5
 
