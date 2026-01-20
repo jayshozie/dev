@@ -7,7 +7,7 @@ alias src='source ~/.bashrc'
 alias nv='nvim .'
 
 # update
-alias update='sudo pacman -Syu'
+alias update='sudo pacman -Syu; paru -Sua'
 
 # programs
 alias img='imv'

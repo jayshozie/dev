@@ -16,9 +16,23 @@ sudo -v
 ################################################################################
 
 NEOVIM_VERSION="v0.11.5"
+TREESITTER_VERSION="v0.10.0"
 
 build_neovim() {
     # source
+    if [[ -d "${SRCS}/nvim-treesitter" ]]; then
+        pushd "${SRCS}/nvim-treesitter"
+        git fetch
+    else
+        echo "[DEV] Treesitter is not cloned. Cloning..."
+        pushd "${SRCS}"
+        git clone git@github.com:nvim-treesitter/nvim-treesitter.git
+        popd
+        pushd "${SRCS}/nvim-treesitter"
+    fi
+    git checkout "$TREESITTER_VERSION"
+    popd
+
     if [[ ! -d "${SRCS}/neovim" ]]; then
         echo "[DEV] Neovim is not cloned. Cloning..."
         pushd "$SRCS"
@@ -56,13 +70,12 @@ build_tmux() {
     if [[ ! -d "${XDG_CONFIG_HOME}/tmux/plugins/tpm" ]]; then
         pushd "${XDG_CONFIG_HOME}/tmux/plugins/"
         git clone git@github:tmux-plugins/tpm.git
-        popd
     else
         pushd "${XDG_CONFIG_HOME}/tmux/plugins/tpm"
         git fetch
-        popd
     fi
     git checkout "$TPM_VERSION"
+    popd
 
     if [[ ! -d "${SRCS}/tmux" ]]; then
         echo "[DEV] Tmux is not cloned. Cloning..."
@@ -88,6 +101,7 @@ build_tmux() {
 
     popd
 }
+
 
 ################################################################################
 ############################# A L A C R I T T Y ################################
@@ -127,6 +141,7 @@ build_alacritty() {
     popd
 }
 
+
 program="$1"
 while [[ $# -gt 0 ]]; do
     echo "ARG: \"$1\""
@@ -158,64 +173,4 @@ while [[ $# -gt 0 ]]; do
             program="$1"
             ;;
     esac
-done
-
-usage() {
-    echo -e "${CLR_YLW}${0}- A script that will only work for me lol"
-    echo -e "${CLR_MGA}usage: ./run [--sim] PROGRAM"
-    echo -e ''
-    echo -e "${CLR_RED}[IMPORTANT] This script does not support multiple PROGRAM arguments."
-    # echo -e "${CLR_RST}"
-    echo -e "${CLR_GRN}"
-    echo -e 'Examples:'
-    echo -e './run --sim nvim'
-    echo -e './run tmux'
-    echo -e "${CLR_RST}"
-    echo -e ''
-}
-
-# safety check for argument count
-if [[ $# -gt 2 ]]; then
-    echo -e "${CLR_RED}"
-    echo -e '[ERROR] Too many arguments.'
-    echo -e "${CLR_RST}"
-    usage
-    exit 1
-fi
-
-# check for sim run, and also gets the name of the run
-while [[ $# -gt 0 ]]; do
-    echo "[RUN] arg: ${1}"
-    if [[ $ARG1 == "--sim" ]]; then
-        SIM="1"
-    else
-        ARG2="$1"
-    fi
-    shift
-done
-
-# basic log functionality
-log() {
-    if [[ $SIM == "1" ]]; then
-        echo "[SIM]: $1"
-    else
-        echo "$1"
-    fi
-}
-
-log "[RUN] env: ${DEV_ENV} -- program: ${ARG2}"
-
-RUNS_DIR=`find $DEV_ENV/runs -mindepth 1 -maxdepth 1 -executable`
-
-for RUN in $RUNS_DIR; do
-    if basename $RUN | grep -vq "$ARG2"; then
-        log "[RUN] arg ${ARG2} filtered out $RUN"
-        continue
-    fi
-
-    log "[RUN] Running Script: ${RUN}"
-
-    if [[ $SIM == "0" ]]; then
-        $RUN
-    fi
 done
