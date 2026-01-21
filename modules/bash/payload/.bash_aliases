@@ -16,7 +16,7 @@ alias yay='paru'
 alias calc='qalc -ec --interactive'
 
 # i like it this way
-alias ll='eza -liah --git'
+alias ll='eza -liah --git --total-size'
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
