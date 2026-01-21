@@ -1,44 +1,109 @@
+/* --- GLOBAL RESET --- */
 * {
     border: none;
     border-radius: 0;
     font-family: "JetBrainsMono Nerd Font";
     font-size: 14px;
+    font-weight: bold;
     min-height: 0;
 }
 
+/* --- BAR BACKGROUND --- */
 window#waybar {
-    background-color: #08080b;
-    color: #787c99;
+    background-color: rgba(26, 27, 38, 0.85); /* Tokyo Night #1a1b26 + opacity */
+    color: #c0caf5;
 }
 
 tooltip {
-    background-color: #08080b;
-    border: 2px solid #bb9af7;
-    border-radius: 12px;
-    font-family: "JetBrainsMono Nerd Font";
-    font-weight: 200; 
+    background-color: #16161e;
+    border: 1px solid #7aa2f7;
+    border-radius: 8px;
 }
 
-tooltip label {
-    color: #787c99;
+/* --- MODULE PILLS (RIGHT SIDE) --- */
+/* Target specific modules to create the "Pill" look */
+#custom-newsboat, #wireplumber, #bluetooth, #battery {
+    background-color: #24283b; /* Pill Background */
+    color: #c0caf5;            /* Pill Text */
+    
+    /* Spacing INSIDE the pill */
+    padding: 0 10px;
+    
+    /* Spacing BETWEEN pills (The Gaps) */
+    margin-left: 4px;          /* This creates the small gap you wanted */
+    
+    /* Vertical alignment */
+    margin-top: 4px;
+    margin-bottom: 4px;
+    border-radius: 6px;
+}
+
+/* Reset internal label margins to prevent double-spacing issues */
+.modules-right > widget > label {
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
+}
+
+/* --- WORKSPACES --- */
+#workspaces {
+    background-color: transparent;
+    margin-left: 10px;
 }
 
 #workspaces button {
-    padding: 0 10px;
-    color: #787c99;
+    padding: 0 5px;
+    color: #565f89;
+    border-radius: 4px;
 }
 
 #workspaces button.active {
-    background-color: #7aa2f7;
-    color: #08080b;
+    color: #7aa2f7; /* Active Blue */
+    background-color: transparent;
+    border-bottom: 2px solid #7aa2f7;
 }
 
-#clock, #battery, #wireplumber, #tray {
-    padding: 0 10px;
-    margin: 0 4px;
-    color: #787c99;
+#workspaces button:hover {
+    background-color: #24283b;
+    color: #c0caf5;
 }
 
-#bluetooth.connected { color: #7aa2f7; }
-#battery.warning { color: #e0af68; }
-#battery.critical { color: #f7768e; }
+/* --- CLOCK --- */
+#clock {
+    background-color: transparent;
+    color: #7aa2f7;
+    font-size: 16px;
+    font-weight: 800;
+}
+
+/* --- SPECIFIC MODULE OVERRIDES --- */
+
+/* 1. RSS: Unread State (Pink) */
+#custom-newsboat.unread {
+    background-color: #f7768e;
+    color: #1a1b26;
+}
+
+/* 2. Battery: Charging & Plugged (Green) */
+#battery.charging, #battery.plugged {
+    color: #9ece6a;
+}
+
+/* 3. Battery: Critical & Discharging (Pink Flash) */
+#battery.critical:not(.charging) {
+    background-color: #f7768e;
+    color: #1a1b26;
+    animation-name: blink;
+    animation-duration: 0.5s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+/* Animation Definition */
+@keyframes blink {
+    to {
+        background-color: #ffffff;
+        color: #000000;
+    }
+}

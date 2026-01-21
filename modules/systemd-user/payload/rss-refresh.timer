@@ -1,0 +1,11 @@
+[Unit]
+Description=Run RSS Refresh every 30 minutes
+
+[Timer]
+# run 5 minutes after boot to let the system settle
+OnBootSec=5min
+# run 30 minutes after the last run finished
+OnUnitActiveSec=30min
+
+[Install]
+WantedBy=timers.target

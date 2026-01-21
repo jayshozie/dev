@@ -13,7 +13,7 @@ alias update='sudo pacman -Syu; paru -Sua'
 alias img='imv'
 alias vid='vlc'
 alias yay='paru'
-alias calc='qalc -ec --interactive'
+alias calc='qalc -ec'
 
 # i like it this way
 alias ll='eza -liah --git --total-size'

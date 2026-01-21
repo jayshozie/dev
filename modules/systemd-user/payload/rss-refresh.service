@@ -1,0 +1,6 @@
+[Unit]
+Description=RSS Reloader Helper
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/newsboat -x reload
