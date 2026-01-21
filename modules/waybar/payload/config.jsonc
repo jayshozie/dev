@@ -14,7 +14,7 @@
         "on-click": "activate"
     },
 
-    /* OLD CLOCK
+    /* OLD CLOCK BLOCK
     "clock": {
         "format": "{:%H:%M  |  %b %d, %a}",
         "tooltip-format": "<big>{:%B} {ordinal_date}</big>\n\n<span font='JetBrainsMono Nerd Font ExtraLight' size='12000'>{calendar}</span>",

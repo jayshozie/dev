@@ -1,9 +1,9 @@
-# ----------------------------------------------------------------------------
-# Tokyo Night Moon Theme for Newsboat
-# ----------------------------------------------------------------------------
+# ----------------------------------- #
+# Tokyo Night Moon Theme for Newsboat #
+# ----------------------------------- #
 
 # --- Palette Mapping (Moon Variant) ---
-# Background:      color234  (#222436) - effectively "default" if term is themed
+# Background:      color234  (#222436)
 # Foreground:      color189  (#c8d3f5)
 # Selection:       color236  (#2f334d)
 # Accent (Blue):   color111  (#82aaff)
@@ -19,7 +19,7 @@
 color listnormal         color189  default
 color listnormal_unread  color150  default  bold
 
-# Selected item (The bar moving up and down)
+# Selected item
 color listfocus          color189  color236 bold
 color listfocus_unread   color150  color236 bold
 
@@ -38,12 +38,8 @@ highlight article   "^Date:.*"          color241 default
 highlight article   "\\[[0-9]+\\]"      color111 default bold  # Footnote markers
 
 # --- Formatting (Nerd Font Integration) ---
-# Uses icons suitable for your JetBrainsMono NF setup
 feedlist-format "%4i  %n %10u  %t"
 articlelist-format "%4i  %f %D  %?T?|%-17T| ?%t"
 
-# --- Browser Linkage (Optional) ---
-# Since you are on Arch/Hyprland, ensure xdg-open is set, 
-# or replace with 'firefox', 'brave', etc.
 browser "xdg-open %u"
 macro , open-in-browser
