@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="1.0">
+    <head>
+        <title>Jayshozie's Feeds</title>
+    </head>
+    <body>
+        <outline text="Tech &amp; Linux" title="Tech &amp; Linux">
+            <outline type="rss" text="Arch Linux News" title="Arch Linux News" xmlUrl="https://archlinux.org/feeds/news/" />
+            <outline type="rss" text="LWN.net" title="LWN.net" xmlUrl="https://lwn.net/headlines/rss" />
+            <outline type="rss" text="Null Program" title="Null Program" xmlUrl="https://nullprogram.com/feed/" />
+            <outline type="rss" text="Drew DeVault" title="Drew DeVault" xmlUrl="https://drewdevault.com/blog/index.xml" />
+            <outline type="rss" text="Dan Luu" title="Dan Luu" xmlUrl="https://danluu.com/atom.xml" />
+            <outline type="rss" text="Can I Use" title="Can I Use" xmlUrl="https://caniuse.com/feed" />
+        </outline>
+        <outline text="Politics" title="Politics">
+            <outline type="rss" text="Jacobin" title="Jacobin" xmlUrl="https://jacobin.com/feed/" />
+            <outline type="rss" text="MR Online" title="MR Online" xmlUrl="https://mronline.org/feed/" />
+        </outline>
+        <outline text="Aviation" title="Aviation">
+            <outline type="rss" text="The Aviation Herald" title="The Aviation Herald" xmlUrl="http://avherald.com/h?x=RSS" />
+        </outline>
+    </body>
+</opml>

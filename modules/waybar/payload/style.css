@@ -21,7 +21,7 @@ tooltip {
 }
 
 /* --- MODULE PILLS (RIGHT SIDE) --- */
-#custom-newsboat, #wireplumber, #bluetooth, #battery {
+#custom-rss, #wireplumber, #bluetooth, #battery {
     background-color: #24283b;
     color: #c0caf5;
     
@@ -78,7 +78,7 @@ tooltip {
 /* --- SPECIFIC MODULE OVERRIDES --- */
 
 /* 1. RSS: Unread State */
-#custom-newsboat.unread {
+#custom-rss.unread {
     background-color: #f7768e;
     color: #1a1b26;
 }

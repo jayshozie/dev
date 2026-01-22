@@ -5,7 +5,7 @@
     "spacing": 0,
     "modules-left": ["hyprland/workspaces"],
     "modules-center": ["clock"],
-    "modules-right": ["custom/newsboat", "wireplumber", "bluetooth", "battery"],
+    "modules-right": ["custom/rss", "wireplumber", "bluetooth", "battery"],
 
     "hyprland/workspaces": {
         "disable-scroll": true,
@@ -56,12 +56,12 @@
         }
     },
 
-    "custom/newsboat": {
+    "custom/rss": {
         "format": "󰑫 {}",
         "exec": "/home/jaysh/.local/bin/scripts/rss.sh",
         "return-type": "json",
         "interval": 5,
-        "on-click": "alacritty -e newsboat"
+        "on-click": "alacritty -e bulletty"
     },
 
     "wireplumber": {
