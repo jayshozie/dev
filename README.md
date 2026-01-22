@@ -1,5 +1,9 @@
-# jayshozie's Dotfiles
+# jayshozie's Development Environment
 
+- **WIP:** A lot has changed since this README was last updated, I'll rewrite it
+soon.
+
+<!--
 This is the modularized system configuration for my development environment. I
 changed it from a simple Neovim config to a full XDG-compliant setup managed by
 `GNU Stow`. Thank you [The Primeagen](https://github.com/theprimeagen) and
@@ -117,3 +121,4 @@ for Neovim features to work:
 
 This repository is licensed under the GNU Public License v3.0. Please see the
 [LICENSE](./LICENSE) file located at the repository root.
+-->
