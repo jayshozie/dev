@@ -3,7 +3,7 @@
     border: none;
     border-radius: 0;
     font-family: "JetBrainsMono Nerd Font";
-    font-size: 14px;
+    font-size: 12px;
     font-weight: bold;
     min-height: 0;
 }
@@ -47,7 +47,7 @@ tooltip {
 /* --- WORKSPACES --- */
 #workspaces {
     background-color: transparent;
-    margin-left: 10px;
+    margin-left: 0px;
 }
 
 #workspaces button {
@@ -71,7 +71,7 @@ tooltip {
 #clock {
     background-color: transparent;
     color: #7aa2f7;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 800;
 }
 

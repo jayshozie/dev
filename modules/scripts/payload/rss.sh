@@ -6,7 +6,7 @@ raw_output=$(newsboat -x print-unread 2>/dev/null | grep -o '[0-9]*' | head -n1)
 # if newsboat fails or returns empty, default to 0
 curr_unread=${raw_output:-0}
 
-state_file="/tmp/waybar-rss-state"
+state_file="/tmp/rss-state"
 
 if [[ -f "$state_file" ]]; then
     prev_unread=$(cat "$state_file")
@@ -15,8 +15,8 @@ else
 fi
 
 if [[ "$curr_unread" -gt "$prev_unread" ]]; then
-    notify-send --urgency=low --app-name='󰑫 RSS Feeds' \
-        "󰑫 RSS Feeds" "You have $curr_unread unread articles."
+    notify-send --urgency=normal --app-name='RSS Feeds' --icon='󰑫' \
+        '󰑫 RSS Feeds' "You have $curr_unread unread articles."
 fi
 
 echo "$curr_unread" > "$state_file"
