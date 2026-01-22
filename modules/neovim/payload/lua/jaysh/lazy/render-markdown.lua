@@ -7,5 +7,8 @@ return {
     ---@type render.md.UserConfig
     opts = {
         max_file_size = 50.0,
+        completions = {
+            lps = { enabled = true },
+        },
     },
 }

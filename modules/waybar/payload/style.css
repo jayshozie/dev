@@ -47,7 +47,7 @@ tooltip {
 /* --- WORKSPACES --- */
 #workspaces {
     background-color: transparent;
-    margin-left: 0px;
+    margin-left: 4px;
 }
 
 #workspaces button {
@@ -83,12 +83,17 @@ tooltip {
     color: #1a1b26;
 }
 
-/* 2. Battery: Charging & Plugged */
+/* 2. Battery: Right Margin */
+#battery {
+    margin-right: 4px;
+}
+
+/* 3. Battery: Charging & Plugged */
 #battery.charging, #battery.plugged {
     color: #9ece6a;
 }
 
-/* 3. Battery: Critical & Discharging */
+/* 4. Battery: Critical & Discharging */
 #battery.critical:not(.charging) {
     background-color: #f7768e;
     color: #1a1b26;
