@@ -54,9 +54,9 @@ alias 301='cd ~/uni/ceng301'
 
 # i usually sleep while my workstation is on, so i have an alias to shut it down
 # automatically after 90 minutes
-alias eepy='shutdown +90'
+alias eepy='shutdown +90; (sleep 30m && hyprlock) & disown'
 # here if i change my mind
-alias uneepy='shutdown -c'
+alias uneepy='shutdown -c; pkill sleep'
 
 # i usually close my workstation via terminal mostly, and got annoyed at always
 # writing the whole command
