@@ -21,7 +21,7 @@ tooltip {
 }
 
 /* --- MODULE PILLS (RIGHT SIDE) --- */
-#custom-rss, #wireplumber, #bluetooth, #battery {
+#custom-rss, #custom-mpris, #wireplumber, #bluetooth, #battery {
     background-color: #24283b;
     color: #c0caf5;
     
@@ -83,17 +83,23 @@ tooltip {
     color: #1a1b26;
 }
 
-/* 2. Battery: Right Margin */
+/* 2. MPRIS: Playing */
+#custom-mpris.playing {
+    background-color: #7aa2f7;
+    color: #1a1b26;
+}
+
+/* 3. Battery: Right Margin */
 #battery {
     margin-right: 4px;
 }
 
-/* 3. Battery: Charging & Plugged */
+/* 4. Battery: Charging & Plugged */
 #battery.charging, #battery.plugged {
     color: #9ece6a;
 }
 
-/* 4. Battery: Critical & Discharging */
+/* 5. Battery: Critical & Discharging */
 #battery.critical:not(.charging) {
     background-color: #f7768e;
     color: #1a1b26;

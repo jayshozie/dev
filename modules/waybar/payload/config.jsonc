@@ -5,7 +5,7 @@
     "spacing": 0,
     "modules-left": ["hyprland/workspaces"],
     "modules-center": ["clock"],
-    "modules-right": ["custom/rss", "wireplumber", "bluetooth", "battery"],
+    "modules-right": ["custom/mpris", "custom/rss", "wireplumber", "bluetooth", "battery"],
 
     "hyprland/workspaces": {
         "disable-scroll": true,
@@ -56,6 +56,15 @@
         }
     },
 
+    "custom/mpris": {
+        "format": "{}",
+        "exec": "/home/jaysh/.local/bin/scripts/mpris.sh",
+        "return-type": "json",
+        "on-click": "playerctl --player=spotify play-pause", 
+        "on-click-right": "playerctl --player=spotify next",
+        "on-click-middle": "playerctl --player=spotify previous"
+    },
+
     "custom/rss": {
         "format": "󰑫 {}",
         "exec": "/home/jaysh/.local/bin/scripts/rss.sh",
@@ -88,5 +97,5 @@
         "format": "{icon}  {capacity}%",
         "format-charging": "⚡ {capacity}%",
         "format-icons": ["", "", "", "", ""]
-    }
+    },
 }
