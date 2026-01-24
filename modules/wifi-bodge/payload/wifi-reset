@@ -1,0 +1,28 @@
+#!/bin/sh
+
+# TODO: Check if Kernel 6.20+ fixes this and remove this hack.
+# See: https://bugzilla.kernel.org/show_bug.cgi?id=XXXXX (Your future bug report)
+
+# Target: Intel Wi-Fi 7 (BE200) at 03:00.0
+PCI_ADDR="0000:03:00.0"
+
+case $1/$2 in
+  pre/*)
+    echo "[wifi-reset] Physically removing Wi-Fi card..." > /dev/kmsg
+    # 1. Kill the driver stack first to be clean
+    modprobe -r iwlmld
+    modprobe -r iwlwifi
+    # 2. Remove the device from the PCI bus (The nuclear option)
+    echo 1 > /sys/bus/pci/devices/$PCI_ADDR/remove
+    ;;
+  post/*)
+    echo "[wifi-reset] Rescanning PCI bus for Wi-Fi card..." > /dev/kmsg
+    # 1. Force the kernel to look for hardware changes
+    echo 1 > /sys/bus/pci/rescan
+    # 2. Wait a split second for the bus to stabilize
+    sleep 1
+    # 3. Load the drivers (if they didn't auto-load)
+    modprobe iwlwifi
+    modprobe iwlmld
+    ;;
+esac
