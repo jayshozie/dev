@@ -21,7 +21,7 @@ tooltip {
 }
 
 /* --- MODULE PILLS (RIGHT SIDE) --- */
-#custom-rss, #custom-mpris, #wireplumber, #bluetooth, #battery {
+#custom-rss, #custom-mpris, #wireplumber, #bluetooth, #battery, #custom-net, #tray{
     background-color: #24283b;
     color: #c0caf5;
     

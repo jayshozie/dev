@@ -1,0 +1,82 @@
+#!/usr/bin/env bash
+
+# nmcli dev wifi list | awk '/\*/{if (NR!=1) {print $9}}'
+# ^ wifi strength in bars
+#
+# {if wifi connected: 󰖩 wifi_strength} {if ethernet connected: 󰈀 <something>}
+
+# interface names for when thunderbolt ethernet connection is available
+tb_back="enp128s20f0u1"
+tb_front="enp128s20f0u3"
+rj45_back="enp129s0"
+css_class="net"
+
+while true; do
+    wifi_text=""
+    ethernet_text=""
+    tooltip=""
+
+    ###########
+    #  Wi-fi  #
+    ###########
+    nmcli_output=$(nmcli -t -f ACTIVE,SSID,BARS dev wifi list | grep '^yes')
+
+    if [[ -n "$nmcli_output" ]]; then
+        # Parse the saved output string
+        # Format from nmcli -t is: yes:SSID:▂▄▆_
+        wifi_ssid=$(echo "$nmcli_output" | cut -d':' -f2)
+        wifi_bars=$(echo "$nmcli_output" | cut -d':' -f3)
+        
+        wifi_text="󰖩  $wifi_ssid  $wifi_bars"
+        tooltip="Wi-Fi: $wifi_ssid"
+    else
+        wifi_text=""
+        tooltip=""
+    fi
+
+    ##############
+    #  Ethernet  #
+    ##############
+    for iface in $(ls /sys/class/net); do
+        # --- Filters ---
+        [[ "$iface" == "lo" ]] && continue
+        [[ -d "/sys/class/net/${iface}/wireless" ]] && continue
+        [[ ! -L "/sys/class/net/${iface}/device" ]] && continue
+        
+        # check operstate
+        state=$(cat "/sys/class/net/${iface}/operstate" 2>/dev/null)
+        [[ "$state" == "down" ]] && continue
+
+        # --- Mapping ---
+        case "$iface" in
+            "$tb_back")
+                ethernet_text="  Rear"
+                tooltip="${tooltip} | Ethernet: Thunderbolt Rear"
+                ;;
+            "$tb_front")
+                ethernet_text="  Front"
+                tooltip="${tooltip} | Ethernet: Thunderbolt Front"
+                ;;
+            "$rj45_back")
+                ethernet_text="󰈀  RJ45"
+                tooltip="${tooltip} | Ethernet: RJ45 Back"
+                ;;
+            *)
+                ethernet_text="󰈀  Ext"
+                tooltip="${tooltip} | Ethernet: External ($iface)"
+                ;;
+        esac
+        ethernet_text=" ${ethernet_text}"
+        break
+    done
+
+    text="${wifi_text} ${ethernet_text}"
+
+    # clean up tooltip
+    tooltip="${tooltip# | }"
+
+    printf '{"text": "%s", "class": "%s", "tooltip": "%s"}\n' \
+        "$text" "$css_class" "$tooltip"
+    
+    sleep 1
+done
