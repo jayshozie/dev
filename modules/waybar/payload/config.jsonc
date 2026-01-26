@@ -87,21 +87,26 @@
     },
 
     "bluetooth": {
-        "format": " {status}",
-        "format-connected": " {num_connections}",
+        "format": "",
+        "format-connected": " {device_alias}",
+        "format-connected-battery": " {device_alias} {device_battery_percentage}%",
         "tooltip-format": "{controller_alias}\t{controller_address}",
-        "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\nConnected Devices: {num_connections}\n{device_enumerate}",
+        "tooltip-format-connected": "Host:\n{controller_alias}\t{controller_address}\n\nConnected Devices: {num_connections}\n{device_enumerate}",
         "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
-        "on-click": "alacritty -e bluetoothctl" 
+        /* That doesn't work for some reason, crashes waybar. Need to check. */
+        /* "format-icons": ["", "", "", "", ""] */
+        "on-click": "alacritty -e bluetoothctl",
+        "on-click-middle": "bluetoothctl power off",
+        "on-click-right": "bluetoothctl power on",
     },
 
     "battery": {
         "states": {
             "warning": 30,
-            "critical": 15
+            "critical": 15,
         },
         "format": "{icon}  {capacity}%",
-        "format-charging": "⚡ {capacity}%",
+        "format-charging": "󱐥 {capacity}%",
         "format-icons": ["", "", "", "", ""]
     },
 }
