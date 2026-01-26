@@ -11,7 +11,7 @@ alias update='sudo pacman -Syu; paru; paru -Sua'
 
 # programs
 alias img='imv'
-alias vid='vlc'
+alias vid='mpv'
 alias yay='paru'
 alias calc='qalc --exrates --color --interactive'
 
