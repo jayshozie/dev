@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-sudo systemctl start --now via-vpn.service
+sudo systemctl start --now via-vpn-srv.service via-vpn.service
 
 via-cli session info 2>/dev/null | grep -q "active" || via-cli session start 2>/dev/null
 
@@ -16,7 +16,14 @@ if via-cli vpn status 2>/dev/null | grep -iq "not connected"; then
 else
     via-cli vpn disconnect > /dev/null 2>&1
 
-    sudo systemctl stop via-vpn.service
+    # mask it first so it CANNOT restart even if it wants to
+    sudo systemctl mask via-vpn-srv.service via-vpn.service
+    # kill them hard
+    sudo systemctl kill -s SIGKILL via-vpn-srv.service via-vpn.service
+    # reset the "failed" state so systemd doesn't keep tracking them
+    sudo systemctl reset-failed via-vpn-srv.service via-vpn.service
+    # unmask for next time (optional, or just unmask in the 'start' section)
+    sudo systemctl unmask via-vpn-srv.service via-vpn.service
 
     notify-send "VPN" "Disconnected from METU"
 fi
