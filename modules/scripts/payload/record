@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+# Copyright (C)  2025  BreadOnPenguins
+# Sorry, Bread, I can't actually put your copyright notice here, from the repo:
+# <https://github.com/BreadOnPenguins/scripts>, because you don't actually have
+# a copyright notice in the repo. If you see this, I highly recommend you to
+# explicitly put the copyright notices to individual files, because this way,
+# I'm technically breaching your license because I can't actually put the
+# correct copyright notice. If you would like for me to adjust the copyright
+# notice just hmu @ `yildirim.emir@metu.edu.tr` or `jayshozie@gmail.com` or
+# <https://github.com/jayshozie>.
+#
+# I'm gonna make a few little changes so I also put my copyright notice on top.
+
+record() {
+  # Toggle on mic
+  amixer set Capture toggle
+
+  # Original command for my own screen: :0.0+1920,0 ensures only 2nd monitor is captured
+  # -c:v sets codec, in this case, H.264; -qp 0 ensures lossless
+
+  # ffmpeg -s 1920x1200 -f x11grab -r 30 -i :0.0+1920,0 -c:v h264 -qp 0 "$HOME/video_$(date '+%a__%b%d__%H_%M_%S').mkv" &
+
+  # Generic command to record at your screen dimensions
+  ffmpeg -s "$(xdpyinfo | awk '/dimensions/{print $2}')" -f x11grab -r 30 -i :0.0 -c:v h264 -qp 0 "$HOME/video_$(date '+%a__%b%d__%H_%M_%S').mkv" &
+  echo $! > /tmp/recpid
+
+  # Specify alsa device with hw:0 etc.
+  # Filters audio noise with noise floor
+  ffmpeg -f alsa -i default -af "afftdn=nf=-75" "$HOME/audio_$(date '+%a__%b%d__%H_%M_%S').wav" &
+  echo $! > /tmp/audpid
+
+  echo "Rec •" > /tmp/recordingicon && pkill -RTMIN+3 dwmblocks
+
+  notify-send -t 500 -h string:bgcolor:#a3be8c "Recording started & mic toggled"
+  }
+
+end() {
+  kill -15 "$(cat /tmp/recpid)" "$(cat /tmp/audpid)" && rm -f /tmp/recpid /tmp/audpid
+
+  amixer set Capture toggle
+
+  echo "" > /tmp/recordingicon && pkill -RTMIN+3 dwmblocks
+
+  notify-send -t 500 -h string:bgcolor:#bf616a "Recording ended & mic toggled"
+  }
+
+# If the recording pid exists, end recording. If not, start recording
+([[ -f /tmp/recpid ]] && end && exit 0) || record
