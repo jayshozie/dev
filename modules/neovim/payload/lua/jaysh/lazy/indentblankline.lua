@@ -6,6 +6,13 @@ return {
     opts = {},
 
     config = function()
-        require("ibl").setup({})
+        require("ibl").setup({
+            whitespace = {
+                highlight = {
+                    "Whitespace",
+                    "NonText",
+                },
+            },
+        })
     end,
 }

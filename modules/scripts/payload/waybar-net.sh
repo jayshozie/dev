@@ -19,13 +19,29 @@ while true; do
     ###########
     #  Wi-fi  #
     ###########
-    nmcli_output=$(nmcli -t -f ACTIVE,SSID,BARS dev wifi list | grep '^yes')
+    # DEBUG:
+    # echo "LANG is: $LANG" >> ${HOME}/waybar-net-debug.log
+    nmcli_output=$(nmcli -t -f ACTIVE,SSID,SIGNAL dev wifi list | grep '^yes')
 
     if [[ -n "$nmcli_output" ]]; then
-        # Parse the saved output string
         # Format from nmcli -t is: yes:SSID:▂▄▆_
         wifi_ssid=$(echo "$nmcli_output" | cut -d':' -f2)
-        wifi_bars=$(echo "$nmcli_output" | cut -d':' -f3)
+        wifi_signal=$(echo "$nmcli_output" | cut -d':' -f3)
+
+        if [[ "$wifi_signal" -gt 80 ]]; then
+            wifi_bars="▂▄▆█"
+        elif [[ "$wifi_signal" -gt 60 ]]; then
+            wifi_bars="▂▄▆_"
+        elif [[ "$wifi_signal" -gt 40 ]]; then
+            wifi_bars="▂▄__"
+        elif [[ "$wifi_signal" -gt 20 ]]; then
+            wifi_bars="▂___"
+        else
+            wifi_bars="____"
+        fi
+
+        # DEBUG:
+        # echo $nmcli_output > ${HOME}/waybar-net-debug.log
         
         wifi_text="󰖩  $wifi_ssid  $wifi_bars"
         tooltip="Wi-Fi: $wifi_ssid"
@@ -70,7 +86,7 @@ while true; do
         break
     done
 
-    text="${wifi_text} ${ethernet_text}"
+    text="${wifi_text}${ethernet_text}"
 
     # clean up tooltip
     tooltip="${tooltip# | }"

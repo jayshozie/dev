@@ -5,7 +5,7 @@
     "spacing": 0,
     "modules-left": ["hyprland/workspaces", "custom/mpris"],
     "modules-center": ["clock"],
-    "modules-right": ["custom/rss", "wireplumber", "custom/net", "bluetooth", "battery"],
+    "modules-right": ["custom/rec", "custom/rss", "wireplumber", "custom/net", "bluetooth", "battery"],
 
     "hyprland/workspaces": {
         "disable-scroll": true,
@@ -65,6 +65,14 @@
         "on-click-middle": "playerctl --player=spotify previous"
     },
 
+    "custom/rec": {
+        "format": "{}",
+        "exec": "/home/jaysh/.local/bin/scripts/waybar-rec.sh",
+        "return-type": "json",
+        "on-click": "/home/jaysh/.local/bin/scripts/waybar-rec.sh toggle",
+        "restart-interval": 1
+    },
+
     "custom/rss": {
         "format": "󰑫 {}",
         "exec": "/home/jaysh/.local/bin/scripts/waybar-rss.sh",
@@ -77,6 +85,7 @@
         "format": "{}",
         "exec": "/home/jaysh/.local/bin/scripts/waybar-net.sh",
         "return-type": "json",
+        "inteval": 1,
     },
 
     "wireplumber": {

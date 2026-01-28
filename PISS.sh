@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
+# ARCHLINUX POST-INSTALLATION SYNCRONIZATION SCRIPT (a.k.a. PISS.sh)
+# Execution: Run as ROOT while chrooting into the system.
+
 # Fail safe, fail hard.
 set -euo pipefail
 # This is not a toy or a vibe-coded slop that doesn't matter, we can't take
 # chances.
-
-# ARCH POST-INSTALLATION SCRIPT
-# Execution: Run as ROOT while chrooting into the system.
 
 TARGET_USRNAME='jaysh'
 TARGET_ID='1000' # Target for both UID and GID
@@ -119,28 +119,34 @@ inst ttf-jetbrains-mono-nerd noto-fonts-emoji noto-fonts-cjk
 # ---------------------------------------------------------
 # PHASE 3: CONFIGURATION (ROOT CONTEXT)
 # ---------------------------------------------------------
-HOMEDIR="/home/$TARGET_USRNAME"
+HOMEDIR="/home/${TARGET_USRNAME}"
 
 # Skeleton
-mkdir -p "$HOMEDIR/uni"
-mkdir -p "$HOMEDIR/src/{upstream,aur,refs}"
+mkdir -p "${HOMEDIR}/uni"
+mkdir -p "${HOMEDIR}/src/{upstream,aur,refs}"
 chown -R "$TARGET_USRNAME:$TARGET_USRNAME" "$HOMEDIR"
 
 # Services
 systemctl enable NetworkManager sshd bluetooth greetd
 
 # Grub Nvidia Patch
+# TODO: Refactor it to put the flags:
+# ibt=off nvidia_drm.modeset=1 nvidia_drm.fbdev=1 acpi_backlight=native nvidia.NVreg_EnableBacklightHandler=1 module_blacklist=nvidia_wmi_ec_backlight
 if ! grep -q "nvidia_drm.modeset=1" /etc/default/grub; then
     echo "[ARCH-INSTALL] Patching GRUB..."
     sed -i '/^GRUB_CMDLINE_LINUX_DEFAULT=/ {
         # If the line ALREADY contains the parameter, do nothing (skip to end)
         /nvidia_drm.modeset=1/b
-        
+
         # Otherwise, replace the closing quote (and any trailing garbage)
         s/"[[:space:]]*$/ nvidia_drm.modeset=1"/
     }' /etc/default/grub
     grub-mkconfig -o /boot/grub/grub.cfg
 fi
+
+# TODO: /etc/mkinitcpio.conf Nvidia Patch
+# Current Flags:
+# MODULES=(i915 nvidia nvidia_modeset nvidia_uvm nvidia_drm)
 
 # ---------------------------------------------------------
 # PHASE 4: USER SPACE & KEY REHYDRATION (CONTEXT SWITCH)
@@ -187,48 +193,48 @@ sudo -u "$TARGET_USRNAME" bash <<EOF
     fi
 
     # 2. KEY REHYDRATION PROTOCOL
-    KEY_ARCHIVE="$HOMEDIR/dev/identity.tar.age.pass1"
+    KEY_ARCHIVE="${HOMEDIR}/dev/identity.tar.age.pass1"
 
     if [[ -f "\$KEY_ARCHIVE" ]]; then
         echo '---------------------------------------------------'
         echo '------- !!! DECRYPTING IDENTITY ARCHIVE !!! -------'
         echo '---------------------------------------------------'
-        
+
         # Interactive decryption
         age -d "\$KEY_ARCHIVE" | tar -xv -C "$HOMEDIR"
-        
+
         # CAPTURE EXIT CODE of the pipe
         DECRYPT_STATUS=\${PIPESTATUS[0]} 
 
         if [[ \$DECRYPT_STATUS -eq 0 ]]; then
             echo "[USER-CTX] Decryption successful. verifying permissions..."
-            
+
             # 3. VERIFY & ENFORCE PERMISSIONS (Based on your ls -l)
             # SSH
-            enforce_perm "$HOMEDIR/.ssh" "700"
-            enforce_perm "$HOMEDIR/.ssh/id_ed25519" "600"
-            enforce_perm "$HOMEDIR/.ssh/id_ed25519.pub" "644"
-            enforce_perm "$HOMEDIR/.ssh/known_hosts" "600"
-            
+            enforce_perm "${HOMEDIR}/.ssh" "700"
+            enforce_perm "${HOMEDIR}/.ssh/id_ed25519" "600"
+            enforce_perm "${HOMEDIR}/.ssh/id_ed25519.pub" "644"
+            enforce_perm "${HOMEDIR}/.ssh/known_hosts" "600"
+
             # GPG
-            enforce_perm "$HOMEDIR/.gnupg" "700"
-            enforce_perm "$HOMEDIR/.gnupg/private-keys-v1.d" "700"
-            enforce_perm "$HOMEDIR/.gnupg/trustdb.gpg" "600"
+            enforce_perm "${HOMEDIR}/.gnupg" "700"
+            enforce_perm "${HOMEDIR}/.gnupg/private-keys-v1.d" "700"
+            enforce_perm "${HOMEDIR}/.gnupg/trustdb.gpg" "600"
             # Pubring usually 644 or 664, allowing existing state if safe, forcing 600 if paranoid.
             # We will force 600 for safety as GPG complains otherwise.
-            enforce_perm "$HOMEDIR/.gnupg/pubring.kbx" "664" 
+            enforce_perm "${HOMEDIR}/.gnupg/pubring.kbx" "664" 
 
             # 4. SWITCH GIT REMOTE
             echo "[USER-CTX] Trusting GitHub & Switching Remote..."
-            mkdir -p "$HOMEDIR/.ssh"
+            mkdir -p "${HOMEDIR}/.ssh"
             # Prevent "Host key verification failed" by scanning github
-            ssh-keyscan -t ed25519 github.com >> "$HOMEDIR/.ssh/known_hosts" 2>/dev/null
-            
-            pushd "$HOMEDIR/dev"
+            ssh-keyscan -t ed25519 github.com >> "${HOMEDIR}/.ssh/known_hosts" 2>/dev/null
+
+            pushd "${HOMEDIR}/dev"
             git remote set-url origin git@github.com:jayshozie/dev.git
             echo "[USER-CTX] Remote updated to SSH: git@github.com:jayshozie/dev.git"
             popd
-            
+
         else
             echo ""
             echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
@@ -251,10 +257,10 @@ sudo -u "$TARGET_USRNAME" bash <<EOF
     # 5. PARU INSTALLATION
     if ! command -v paru &> /dev/null; then
         echo "[USER-CTX] Installing Paru..."
-        pushd "$HOMEDIR/src/aur"
+        pushd "${HOMEDIR}/src/aur"
         [[ ! -d paru ]] && git clone https://aur.archlinux.org/paru.git
         popd
-        pushd "$HOMEDIR/src/aur/paru"
+        pushd "${HOMEDIR}/src/aur/paru"
         makepkg -si --noconfirm
         popd
     fi
@@ -266,38 +272,31 @@ sudo -u "$TARGET_USRNAME" bash <<EOF
     pushd "$HOMEDIR"
     git clone --recursive git@github.com:jayshozie/projects.git
     popd
-    pushd "$HOMEDIR/projects"
+    pushd "${HOMEDIR}/projects"
     git submodule foreach --recursive 'git switch main'
     pushd
 
-    pushd "$HOMEDIR/uni"
+    pushd "${HOMEDIR}/uni"
     git clone git@github.com:jayshozie/ceng240.git
     git clone git@github.com:jayshozie/ceng301.git
     git clone git@github.com:jayshozie/ce231.git
     git clone git@github.com:jayshozie/ce241.git
     popd
 
-    pushd "$HOMEDIR/src/upstream"
+    pushd "${HOMEDIR}/src/refs"
+    git clone git@github.com:ThePrimeagen/dev.git prime-dev
+    popd
+
+    pushd "${HOMEDIR}/src/upstream"
     git clone git@github.com:nvim-treesitter/nvim-treesitter.git
     git clone git@github.com:neovim/neovim.git
     git clone git@github.com:tmux/tmux.git
     git clone git@github.com:ThePrimeagen/tmux-sessionizer.git
     popd
-
-    pushd "$HOMEDIR/src/refs"
-    git clone git@github.com:ThePrimeagen/dev.git prime-dev
-    popd
-
-    # treesitter
-    pushd "$HOMEDIR/src/upstream/nvim-treesitter"
-    git checkout "v0.10.0"
-    popd
-
-    # neovim
-    pushd "$HOMEDIR/src/upstream/neovim"
-    git checkout "v0.11.5"
-    make CMAKE_BUILD_TYPE=RelWithDebInfo
-    sudo make install
+    # now build/install dev stuff
+    pushd "${HOMEDIR}/dev"
+    ./dev
+    ./run
     popd
 
     popd

@@ -21,7 +21,7 @@ tooltip {
 }
 
 /* --- MODULE PILLS (RIGHT SIDE) --- */
-#custom-rss, #custom-mpris, #wireplumber, #bluetooth, #battery, #custom-net, #tray, #bluetooth.off {
+#custom-rss, #custom-mpris, #wireplumber, #bluetooth, #battery, #custom-net, #tray, #bluetooth.off, #custom-stopped, #custom-rec {
     background-color: #24283b;
     color: #c0caf5;
     
@@ -108,6 +108,11 @@ tooltip {
     animation-timing-function: linear;
     animation-iteration-count: infinite;
     animation-direction: alternate;
+}
+
+#custom-rec.recstart {
+    background-color: #f7768e;
+    color: #1a1b26;
 }
 
 /* Animation Definition */

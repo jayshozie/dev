@@ -53,3 +53,6 @@ group-by=none
 [category="osd"]
 default-timeout=1000
 border-radius=20
+
+[mode=dnd]
+invisible=1
