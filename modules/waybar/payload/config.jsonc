@@ -5,7 +5,14 @@
     "spacing": 0,
     "modules-left": ["hyprland/workspaces", "custom/mpris"],
     "modules-center": ["clock"],
-    "modules-right": ["custom/rec", "custom/rss", "wireplumber", "custom/net", "bluetooth", "battery"],
+    "modules-right": [
+        "custom/rec",
+        "custom/rss",
+        "wireplumber",
+        "custom/net",
+        "bluetooth",
+        "battery"
+    ],
 
     "hyprland/workspaces": {
         "disable-scroll": true,

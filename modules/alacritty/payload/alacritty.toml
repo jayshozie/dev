@@ -53,10 +53,10 @@ footer_bar = { foreground = "#787c99", background = "#08080b" }
 
 [colors.primary]
 background = "#08080b"
-foreground = "#787c99"
+foreground = "#c0caf5"
 
 [colors.cursor]
-cursor = "#787c99"
+cursor = "#c0caf5"
 
 [colors.selection]
 text = "CellForeground"
@@ -70,7 +70,7 @@ yellow = "#e0af68"
 blue = "#7aa2f7"
 magenta = "#bb9af7"
 cyan = "#7dcfff"
-white = "#787c99"
+white = "#c0caf5"
 
 [colors.bright]
 black = "#363b54"
@@ -80,4 +80,4 @@ yellow = "#e0af68"
 blue = "#7aa2f7"
 magenta = "#bb9af7"
 cyan = "#7dcfff"
-white = "#787c99"
+white = "#c0caf5"
