@@ -51,7 +51,7 @@ Cpp11BracedListStyle: true
 DerivePointerAlignment: false
 EmptyLineBeforeAccessModifier: Never
 FixNamespaceComments: true
-IncludeBlocks: Merge
+IncludeBlocks: Preserve
 IndentCaseLabels: false
 IndentExternBlock: Indent
 IndentRequires: false
