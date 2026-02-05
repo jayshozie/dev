@@ -308,7 +308,7 @@ return {
             -----------------------
             -- vim.lsp.config.marksman = {
             --     cmd = { "marksman", "server" },
-            --     filetypes = { "markdown", "md" },
+            --     filetypes = { "markdown" },
             --     on_attach = on_attach,
             --     capabilities = capabilities,
             -- }
@@ -324,7 +324,6 @@ return {
                 filetypes = {
                     "tex",
                     "markdown",
-                    "md",
                     "plaintex",
                     "gitcommit",
                 },
@@ -336,11 +335,59 @@ return {
             end
 
             -----------------------
+            -- Kakehashi (Injected Code Checker)
+            -----------------------
+            -- vim.lsp.config.kakehashi = {
+            --     cmd = { "kakehashi" },
+            --     on_attach = on_attach,
+            --     capabilities = capabilities,
+            --     root_markers = { ".git", "Cargo.toml", "pyproject.toml", "." },
+            --     filetypes = {
+            --         "markdown",
+            --         "gitcommit",
+            --         "text",
+            --     },
+            --     init_options = {
+            --         languages = {
+            --             markdown = {
+            --                 bridge = {
+            --                     python = { enabled = true },
+            --                     rust = { enabled = true },
+            --                     lua = { enabled = true },
+            --                 },
+            --             },
+            --         },
+            --         languageServers = {
+            --             ["rust-analyzer"] = {
+            --                 cmd = { "rust-analyzer" },
+            --                 languages = { "rust" },
+            --                 workspaceType = "cargo",
+            --             },
+            --             ["pyright"] = {
+            --                 cmd = { "pyright-langserver", "--stdio" },
+            --                 languages = { "python" },
+            --             },
+            --             ["lua-language-server"] = {
+            --                 cmd = { "lua-language-server" },
+            --                 languages = { "lua" },
+            --             },
+            --             ["clangd"] = {
+            --             },
+            --         },
+            --     },
+            --     settings = {
+            --     },
+            -- }
+            -- if vim.fn.executable("kakehashi") == 1 then
+            --     vim.lsp.enable("kakehashi")
+            -- end
+
+            -----------------------
             -- ltex-plus (LaTeX)
             -----------------------
             -- vim.lsp.config["ltex-ls-plus"] = {
             --     cmd = { "ltex-ls-plus" },
-            --     filetypes = { "tex", "markdown", "md" },
+            --     filetypes = { "tex", "markdown", },
             --     on_attach = on_attach,
             --     capabilities = capabilities,
             -- }
@@ -374,7 +421,7 @@ return {
             -----------------------
             -- vim.lsp.config["markdown-oxide"] = {
             --     cmd = { "markdown-oxide" },
-            --     filetypes = { "markdown", "md" },
+            --     filetypes = { "markdown", },
             --     -- capabilities = capabilities,
             --     capabilities = capabilities,
             --     settings = {
