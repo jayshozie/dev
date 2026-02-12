@@ -32,9 +32,34 @@ vim.opt.signcolumn = 'yes'
 
 vim.opt.updatetime = 50
 
--- vim.g.netrw_browse_split = 0
+-- NETRW
+
+-- Open files in split
+-- 0 : re-use the same window (default)
+-- 1 : horizontally splitting the window first
+-- 2 : vertically   splitting the window first
+-- 3 : open file in new tab
+-- 4 : act like "P" (ie. open previous window)
+vim.g.netrw_browse_split = 0
+
+-- Netrw banner
+-- 0 : Disable banner
+-- 1 : Enable banner
 vim.g.netrw_banner = 0
+
+-- Netew winsize
 vim.g.netrw_winsize = 50
+
+-- Human-readable files sizes
+vim.g.netrw_sizestyle = "H"
+
+-- Netrw list style
+-- 0 : thin listing (one file per line)
+-- 1 : long listing (one file per line with timestamp information and file size)
+-- 2 : wide listing (multiple files in columns)
+-- 3 : tree style listing
+vim.g.netrw_liststyle = 0
+
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 
@@ -76,10 +101,10 @@ vim.keymap.set('n', '<M-s>', '<c-w>5-')
 
 -- tmux-sessionizer thanks to ThePrimeagen
 vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
-vim.keymap.set("n", "<M-h>", "<cmd>silent !tmux neww tmux-sessionizer -s 0<CR>")
-vim.keymap.set("n", "<M-t>", "<cmd>silent !tmux neww tmux-sessionizer -s 1<CR>")
-vim.keymap.set("n", "<M-n>", "<cmd>silent !tmux neww tmux-sessionizer -s 2<CR>")
-vim.keymap.set("n", "<M-s>", "<cmd>silent !tmux neww tmux-sessionizer -s 3<CR>")
+-- vim.keymap.set("n", "<M-h>", "<cmd>silent !tmux neww tmux-sessionizer -s 0<CR>")
+-- vim.keymap.set("n", "<M-t>", "<cmd>silent !tmux neww tmux-sessionizer -s 1<CR>")
+-- vim.keymap.set("n", "<M-n>", "<cmd>silent !tmux neww tmux-sessionizer -s 2<CR>")
+-- vim.keymap.set("n", "<M-s>", "<cmd>silent !tmux neww tmux-sessionizer -s 3<CR>")
 
 -- Highlight when yanking, thanks TJ.
 vim.api.nvim_create_autocmd('TextYankPost', {

@@ -94,7 +94,7 @@ inst less openssh stow snapper grub-btrfs inotify-tools
 # 3. Dev Stack
 inst base-devel git github-cli gcc tree-sitter-cli gdb valgrind clang
 inst cmake ninja strace lua51 alacritty tmux starship bash-completion ripgrep fd
-inst fzf unzip wget tree btop fastfetch tldr git-filter-repo bat bat-extras
+inst fzf unzip wget tree btop fastfetch tldr git-filter-repo bat bat-extras rust
 inst python python-pip qemu-full virt-manager libvirt edk2-ovmf dnsmasq eza entr
 inst iptables-nft git-delta
 
@@ -265,7 +265,7 @@ sudo -u "$TARGET_USRNAME" bash <<EOF
         popd
     fi
 
-    paru -S rofi-polkit-agent-git pinentry-rofi jellyfin-desktop
+    paru -S rofi-polkit-agent-git pinentry-rofi jellyfin-desktop asm-lsp
 
     # 6. CLONE REPOSITORIES
 

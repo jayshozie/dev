@@ -266,6 +266,21 @@ return {
             end
 
             -----------------------
+            -- asm-lsp (Assembly)
+            -----------------------
+            -- vim.lsp.config['asm-lsp'] = {
+            --     cmd = {
+            --         "asm-lsp",
+            --     },
+            --     filetypes = { "asm" },
+            --     on_attach = on_attach,
+            --     capabilities = capabilities,
+            -- }
+            -- if vim.fn.executable("asm-lsp") == 1 then
+            --     vim.lsp.enable("asm-lsp")
+            -- end
+
+            -----------------------
             -- vtsls (TS/JS)
             -----------------------
             vim.lsp.config.vtsls = {

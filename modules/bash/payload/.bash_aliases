@@ -60,5 +60,5 @@ alias uneepy='shutdown -c; pkill sleep'
 
 # i usually close my workstation via terminal mostly, and got annoyed at always
 # writing the whole command
-alias die='pkill librewolf; pkill nvim; shutdown now'
-alias arise='pkill librewolf; pkill nvim; shutdown -r now'
+alias die='pkill harper-ls ; pkill librewolf ; pkill nvim ; shutdown now'
+alias arise='pkill harper-ls ; pkill librewolf ; pkill nvim ; shutdown -r now'
