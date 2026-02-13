@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+
+dry_run=0
+
+if [[ $1 == "--dry-run" ]]; then
+    dry_run=1
+fi
+
+log_file="${HOME}/die.log"
+
+if [[ ! -f $log_file ]]; then
+    touch $log_file
+fi
+
+timestamp=$(date +%Y-%m-%dT%H-%M-%S-%Z)
+
+log() {
+    if [[ dry_run -eq 1 ]]; then
+        echo "$timestamp [DRY]: $1" 2>&1
+    else
+        echo "$timestamp $1" 2>&1 | tee --append ${HOME}/die.log
+    fi
+}
+
+declare -A pids
+
+pids[nvim]=$(pgrep nvim)
+pids[harper-ls]=$(pgrep harper-ls)
+pids[librewolf]=$(pgrep librewolf)
+pids[spotify]=$(pgrep spotify)
+pids[jellyfin-deskto]=$(pgrep jellyfin-deskto)
+
+status=0
+for p in "${!pids[@]}"; do
+    if [[ "${pids[$p]}" == '' ]]; then
+        log "[DIE] $p is not running."
+        continue
+    fi
+    log "[DIE] SIGKILL $p --> ${pids[$p]}"
+    if [[ dry_run -eq 1 ]]; then
+        log "kill -9 ${pids[$p]}"
+    else
+        kill -9 ${pids[$p]}
+    fi
+
+    # if [[ dry_run -ne 1 && ! $(pgrep $p) ]]; then
+    #     log "[DIE] Killed $p"
+    # else
+    #     log "[DIE] Couldn't kill ${p}."
+    #     status=1
+    # fi
+done
+
+if [[ status -ne 0 ]]; then
+    log "[DIE] Couldn't kill all."
+    log "[DIE] Please manually kill them, and then re-run the script."
+else
+    log "[DIE] Killed everything successfully."
+    log "[DIE] Shutting down ..."
+    if [[ dry_run -eq 1 ]]; then
+        log "shutdown now"
+    else
+        shutdown now
+    fi
+fi

@@ -1,7 +1,7 @@
 # .bash_aliases
 
 # easier to type src then the whole command
-alias src='source ~/.bashrc'
+alias src='source ~/.bashrc && hash -r'
 
 # netrw
 alias nv='nvim .'
@@ -27,6 +27,11 @@ alias find='fd -uic always'
 alias rm='rm -i'
 alias mv='mv -i'
 alias cp='cp -i'
+
+# stupid stuff
+alias chomd='chmod'
+alias celar='clear'
+alias clera='clear'
 
 # easier readability
 alias df='df -h'
@@ -57,8 +62,3 @@ alias 301='cd ~/uni/ceng301'
 alias eepy='shutdown +90; (sleep 30m && hyprlock) & disown'
 # here if i change my mind
 alias uneepy='shutdown -c; pkill sleep'
-
-# i usually close my workstation via terminal mostly, and got annoyed at always
-# writing the whole command
-alias die='pkill harper-ls ; pkill librewolf ; pkill nvim ; shutdown now'
-alias arise='pkill harper-ls ; pkill librewolf ; pkill nvim ; shutdown -r now'
