@@ -22,6 +22,7 @@ alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 alias fd='fd -uic always'
 alias find='fd -uic always'
+alias clear='clear -x'
 
 # better safe then sorry
 alias rm='rm -i'

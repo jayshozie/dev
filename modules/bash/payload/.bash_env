@@ -40,6 +40,9 @@ path_prepend "$BUN_INSTALL/bin"
 export GEM_HOME="$HOME/gems"
 path_prepend "$GEM_HOME/bin"
 
+# Cargo
+path_prepend "${HOME}/.cargo/bin"
+
 # Local Scripts (Weather, Tmux, etc.)
 path_prepend "$HOME/.local/bin/scripts/weather"
 path_prepend "$HOME/.local/bin/scripts/tmux-sessionizer"
