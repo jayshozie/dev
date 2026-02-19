@@ -257,7 +257,8 @@ return {
                     "--clang-tidy",
                     "--log=error",
                 },
-                filetypes = { "c", "cpp", "objc", "objcpp", "h" },
+                root_markers = { '.git', '.clangd', 'compile_flags.txt' },
+                filetypes = { "c", "cpp", "objc", "objcpp" },
                 on_attach = on_attach,
                 capabilities = capabilities,
             }
