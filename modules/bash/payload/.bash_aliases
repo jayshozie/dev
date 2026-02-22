@@ -21,7 +21,7 @@ alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 alias fd='fd -uic always'
-alias find='fd -uic always'
+alias find='fd -ui'
 alias clear='clear -x'
 
 # better safe then sorry
@@ -44,19 +44,20 @@ alias dev-commit="git add . && git commit -m 'wip: automated dev-commit' && git 
 
 # you wouldn't even believe how much i make changes to these files
 alias dev='cd ~/dev && nv'
-alias lsp='pushd ~/dev/env/neovim/.config/nvim/ && nvim ./lua/jaysh/lazy/lsp.lua && popd'
-alias rc='nvim ~/dev/env/bash/.bashrc'
-alias ali='nvim ~/dev/env/bash/.bash_aliases'
-alias gitconf='nvim ~/dev/env/git/.gitconfig'
+alias lsp='pushd ~/dev/modules/neovim/payload && nvim ./lua/jaysh/lazy/lsp.lua && popd'
+alias bashrc='nvim ~/dev/modules/bash/.bashrc'
+alias aliases='nvim ~/dev/modules/bash/.bash_aliases'
+alias gitconfig='nvim ~/dev/modules/git/.gitconfig'
 
 # easier access to stuff i'm constantly working on
-alias project='pushd ~/projects/c-mastery-projects/jayshell && nv'
-alias scri='pushd ~/dev/env/scripts/.local/bin/scripts/ && nv && popd'
-alias docs='cd ~/Documents'
+alias jayshell='pushd ~/projects/c-mastery-projects/jayshell && nv'
+alias scripts='pushd ~/dev/modules/scripts && nv && popd'
+# alias docs='pushd ~/Documents' # became irrelevant when i switched to arch
 alias downs='cd ~/Downloads'
 alias uni='cd ~/uni'
-alias 240='cd ~/uni/ceng240'
-alias 301='cd ~/uni/ceng301'
+alias 240='pushd ~/uni/ceng240'
+alias 301='pushd ~/uni/ceng301'
+alias 302='pushd ~/uni/ceng302'
 
 # i usually sleep while my workstation is on, so i have an alias to shut it down
 # automatically after 90 minutes
