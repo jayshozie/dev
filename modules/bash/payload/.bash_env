@@ -23,6 +23,7 @@ export SYSTEMD_EDITOR=nvim
 export VISUAL=nvim
 export MANPAGER='nvim +Man!'
 export CLONES_DIR=$HOME/src
+export GEMINI_SYSTEM_MD='~/.gemini/system.md'
 
 # -------------------- #
 #  3. Path Management  #

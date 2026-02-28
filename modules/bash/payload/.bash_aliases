@@ -14,6 +14,7 @@ alias img='imv'
 alias vid='mpv'
 alias yay='paru'
 alias calc='qalc --exrates --color --interactive'
+alias gem='gemini'
 
 # i like it this way
 alias ll='eza -liah --git --total-size'
