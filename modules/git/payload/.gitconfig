@@ -1,7 +1,7 @@
 [user]
 	name = jayshozie
-	email = 143549527+jayshozie@users.noreply.github.com
-	signingkey = 04B2F29DB07215ED
+	email = jayshozie@gmail.com
+	signingkey = 813E5F0FB80AA0D1
 [credential "https://github.com"]
 	helper = 
 	helper = !/usr/bin/gh auth git-credential
@@ -15,9 +15,9 @@
 	excludefile = /home/jaysh/.gitignore
 [alias]
 	pr = pull --rebase
-    ss = status -s
-    stag = tag -s
+        ss = status -s
+        stag = tag -s
 [commit]
 	gpgsign = true
 [tag]
-    gpgSign = true
+        gpgSign = true
