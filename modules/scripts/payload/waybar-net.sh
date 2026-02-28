@@ -26,6 +26,9 @@ while true; do
     if [[ -n "$nmcli_output" ]]; then
         # Format from nmcli -t is: yes:SSID:▂▄▆_
         wifi_ssid=$(echo "$nmcli_output" | cut -d':' -f2)
+        if [[ "$wifi_ssid" == 'FiberHGW_TP8998' ]]; then
+            wifi_ssid=''
+        fi
         wifi_signal=$(echo "$nmcli_output" | cut -d':' -f3)
 
         if [[ "$wifi_signal" -gt 80 ]]; then
@@ -43,7 +46,11 @@ while true; do
         # DEBUG:
         # echo $nmcli_output > ${HOME}/waybar-net-debug.log
         
-        wifi_text="󰖩  $wifi_ssid  $wifi_bars"
+        if [[ "$wifi_ssid" == '' ]]; then
+            wifi_text="󰖩  $wifi_bars"
+        else
+            wifi_text="󰖩  $wifi_ssid  $wifi_bars"
+        fi
         tooltip="Wi-Fi: $wifi_ssid"
     else
         wifi_text=""
