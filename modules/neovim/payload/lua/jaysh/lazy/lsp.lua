@@ -31,17 +31,17 @@ return {
                 local opts = { noremap = true, silent = true, buffer = bufnr }
 
                 if client.server_capabilities.hoverProvider then
-                    vim.keymap.set("n", "<C-k>",
+                    vim.keymap.set("n", "K",
                         function() vim.lsp.buf.hover({ border = "rounded", width = 60 }) end, opts)
                 end
 
-                if client.server_capabilities.signatureHelpProvider then
-                    vim.keymap.set("n", "K",
-                        function() vim.lsp.buf.signature_help({ border = "rounded", width = 60 }) end, opts)
-                end
+                -- if client.server_capabilities.signatureHelpProvider then
+                --     vim.keymap.set("n", "K",
+                --         function() vim.lsp.buf.signature_help({ border = "rounded", width = 60 }) end, opts)
+                -- end
 
                 if client.server_capabilities.definitionProvider then
-                    vim.keymap.set("n", "<leader>d", vim.lsp.buf.definition, opts)
+                    vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
                 end
 
                 if client.server_capabilities.implementationProvider then
@@ -49,7 +49,7 @@ return {
                 end
 
                 if client.server_capabilities.referencesProvider then
-                    vim.keymap.set("n", "<leader>r", function()
+                    vim.keymap.set("n", "gr", function()
                         -- Custom function to make the results cleaner and shorter
                         -- by removing the spaces after the last colonsn and
                         -- before the actual line itself, without using vim.uri_to_fname
@@ -130,7 +130,7 @@ return {
             ---------------------------------------------------------
             -- AUTO SIGNATURE HELP (CursorHoldI)
             ---------------------------------------------------------
-            vim.o.updatetime = 300
+            vim.o.updatetime = 500
             local group = vim.api.nvim_create_augroup("jayshSignature", {})
             vim.api.nvim_create_autocmd("CursorHoldI", {
                 group = group,

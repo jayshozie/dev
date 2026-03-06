@@ -99,6 +99,8 @@ vim.keymap.set('n', '<leader>pv', vim.cmd.Ex)
 -- I hate using Ctrl for that, and got used to this to switch windows.
 -- vim.keymap.set('n', '<leader>w', '<C-w>')
 
+vim.keymap.set('n', '<leader>g', ':Git<CR>')
+
 -- Thanks a lot Primeagen. These are amazing.
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
@@ -150,62 +152,25 @@ vim.keymap.set('n', 'Q', '<nop>')
 -- I'll use it more now that I have an actually working LSP config.
 vim.keymap.set('n', '<leader>f', vim.lsp.buf.format)
 
-vim.keymap.set('n', '<C-k>', '<cmd>cnext<CR>zz')
-vim.keymap.set('n', '<C-j>', '<cmd>cprev<CR>zz')
-vim.keymap.set('n', '<leader>k', '<cmd>lnext<CR>zz')
-vim.keymap.set('n', '<leader>j', '<cmd>lprev<CR>zz')
+vim.keymap.set('n', '<C-k>', '<cmd>cprev<CR>zz')
+vim.keymap.set('n', '<C-j>', '<cmd>cnext<CR>zz')
+vim.keymap.set('n', '<leader>k', '<cmd>lprev<CR>zz')
+vim.keymap.set('n', '<leader>j', '<cmd>lnext<CR>zz')
 
 -- Change the word under the cursor in the entire file.
 vim.keymap.set('n', '<leader>s', [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 -- Just amazing, thanks once again Primeagen.
 
-
--- I do this way more accidentally than intentionally, so nope.
--- vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
-
--- Don't remember what this does, so commented.
--- vim.keymap.set(
---     "n",
---     "<leader>ee",
---     "oif err != nil {<CR>}<Esc>Oreturn err<Esc>"
--- )
+-- Thanks Prime
+vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 
 -- Opens ~/.config/nvim
-vim.keymap.set('n', '<leader>vpp', '<cmd>e ~/dotfiles/nvim/.config/nvim/<CR>');
+-- vim.keymap.set('n', '<leader>vpp', '<cmd>e ~/dotfiles/nvim/.config/nvim/<CR>');
 -- I use this more than I'd like to admit.
 
 -- Helps a lot when rewriting the config.
 vim.keymap.set('n', '<leader><leader>', function()
     vim.cmd('so')
-end)
-
-vim.keymap.set('n', '<C-x>', function()
-    local file_path = vim.fn.expand('%:p')
-    local file_stat = vim.uv.fs_stat(file_path)
-
-    if not file_state then
-        print("File doesn't exist yet.")
-        return
-    end
-
-    local mode = file_stat.mode
-    local is_executable = bit.band(mode, 64) ~= 0
-
-    local command = ""
-    local msg = ""
-
-    if is_executable then
-        command = "chmod -x " .. file_path
-        msg = "Removed executable permisison."
-    else
-        command = "chmod +x " .. file_path
-        msg = "Added executable permisison."
-    end
-
-    print(mode_and_user_execute)
-    -- local command = 'chmod +x ' .. file_path
-    -- os.execute(command)
-    -- print(msg)
 end)
 
 -----------------------------------PLUGINS--------------------------------------
