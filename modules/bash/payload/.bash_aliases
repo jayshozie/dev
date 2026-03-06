@@ -15,6 +15,8 @@ alias vid='mpv'
 alias yay='paru'
 alias calc='qalc --exrates --color --interactive'
 alias gem='gemini'
+alias crosscc='x86_64-elf-gcc'
+alias crossld='x86_64-elf-ld'
 
 # i like it this way
 alias ll='eza -liah --git --total-size'
