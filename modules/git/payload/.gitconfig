@@ -17,6 +17,7 @@
 	pr = pull --rebase
     ss = status -s
     stag = tag -s
+    stash-all = stash --all
 [commit]
 	gpgsign = true
 [tag]
