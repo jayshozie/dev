@@ -1,6 +1,4 @@
-
--------------------------------------SETS--------------------------------------
-
+-------------------------------------SETS---------------------------------------
 
 -- I hate the slim cursor, this looks much better.
 vim.opt.guicursor = ''
@@ -14,6 +12,31 @@ vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
+
+-- whitespace stuff
+vim.api.nvim_create_augroup('WhitespaceGroup', {
+    clear = true
+})
+vim.api.nvim_set_hl(0, 'WhitespaceHL', {
+    bg = '#f7768e', -- background color will be tokyonight's red
+})
+vim.api.nvim_create_autocmd({ 'WinEnter', 'BufEnter', 'InsertLeave' }, {
+    group = 'WhitespaceGroup',
+    pattern = '*',
+    callback = function()
+        local exists = false
+        local matches = vim.fn.getmatches()
+        for _, match_dict in ipairs(matches) do
+            if match_dict.group == 'WhitespaceHL' then
+                exists = true
+                break
+            end
+        end
+        if not exists then
+            vim.fn.matchadd('WhitespaceHL', [[\s\+$\| \+\ze\t]])
+        end
+    end,
+})
 
 vim.opt.smartindent = true
 vim.opt.wrap = false
@@ -63,14 +86,10 @@ vim.g.netrw_liststyle = 0
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 
-vim.o.clipboard = 'unnamedplus'
+vim.opt.clipboard = 'unnamedplus'
 vim.opt.winborder = 'rounded'
 
-
-
-
--------------------------------------REMAPS------------------------------------
-
+-------------------------------------REMAPS-------------------------------------
 
 -- <space> is the superior leader.
 vim.g.mapleader = ' '
@@ -108,9 +127,9 @@ vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
 
 -- Highlight when yanking, thanks TJ.
 vim.api.nvim_create_autocmd('TextYankPost', {
-    desc = 'Highlight when yanking (copying) text',
-    group = vim.api.nvim_create_augroup('kicstart-hightlight-yank', { clear = true }),
-    callback  = function()
+    desc     = 'Highlight when yanking (copying) text',
+    group    = vim.api.nvim_create_augroup('kicstart-hightlight-yank', { clear = true }),
+    callback = function()
         vim.hl.on_yank()
     end,
 })
@@ -151,7 +170,7 @@ vim.keymap.set('n', '<leader>s', [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><
 --     "oif err != nil {<CR>}<Esc>Oreturn err<Esc>"
 -- )
 
--- Opens ~/.config/nvim 
+-- Opens ~/.config/nvim
 vim.keymap.set('n', '<leader>vpp', '<cmd>e ~/dotfiles/nvim/.config/nvim/<CR>');
 -- I use this more than I'd like to admit.
 
@@ -189,10 +208,7 @@ vim.keymap.set('n', '<C-x>', function()
     -- print(msg)
 end)
 
-
-
------------------------------------PLUGINS-------------------------------------
--- And all that good stuff.
+-----------------------------------PLUGINS--------------------------------------
 
 -- Load Lazy
 require('jaysh.lazy_init')
