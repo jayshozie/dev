@@ -72,8 +72,8 @@ for m in modules/*; do
     # If DEST is HOME, we definitely just want to copy files INTO it (Merge).
     # If DEST is a config folder (e.g., ~/.config/alacritty), maybe we WANT to clean it?
 
-    # Current Decision: STRICT MERGE everywhere. 
-    # If you want to delete old configs, use the --delete flag cautiously, 
+    # Current Decision: STRICT MERGE everywhere.
+    # If you want to delete old configs, use the --delete flag cautiously,
     # but NEVER use --delete if DEST is HOME.
 
     RSYNC_FLAGS="-avu"
@@ -87,7 +87,7 @@ for m in modules/*; do
 
        # Uncomment the next line if you WANT 'alacritty' to be wiped of unknown
        # files
-       # RSYNC_FLAGS="-av --delete" 
+       # RSYNC_FLAGS="-av --delete"
        :
     fi
 

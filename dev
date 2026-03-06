@@ -43,13 +43,13 @@ build_neovim() {
     sudo pacman -S base-devel cmake ninja curl git --noconfirm
 
     # build
-    git clean -dfx 
+    git clean -dfx
     make distclean 2>/dev/null || true
     make CMAKE_BUILD_TYPE=RelWithDebInfo
     sudo make install
 
     # why waste space
-    git clean -dfx 
+    git clean -dfx
     make distclean 2>/dev/null || true
 
     popd
