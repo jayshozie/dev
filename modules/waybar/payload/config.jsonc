@@ -111,6 +111,7 @@
         "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
         /* That doesn't work for some reason, crashes waybar. Need to check. */
         /* "format-icons": ["", "", "", "", ""] */
+        /* crusher anc 2 : 8C:0D:D9:19:43:B3 */
         "on-click": "alacritty -e bluetoothctl",
         "on-click-middle": "bluetoothctl power off",
         "on-click-right": "bluetoothctl power on",
