@@ -118,7 +118,7 @@ tooltip {
 /* Animation Definition */
 @keyframes blink {
     to {
-        background-color: #ffffff;
+        background-color: #7aa2f7;
         color: #000000;
     }
 }

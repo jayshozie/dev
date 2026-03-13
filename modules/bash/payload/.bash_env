@@ -49,6 +49,9 @@ path_prepend "$HOME/.local/bin/scripts/weather"
 path_prepend "$HOME/.local/bin/scripts/tmux-sessionizer"
 path_prepend "$HOME/.local/bin/scripts"
 
+# .local/bin
+path_prepend "$HOME/.local/bin"
+
 # -------------- #
 #  4. Linuxbrew  #
 # -------------- #

@@ -17,6 +17,9 @@ alias calc='qalc --exrates --color --interactive'
 alias gem='gemini'
 alias crosscc='x86_64-elf-gcc'
 alias crossld='x86_64-elf-ld'
+alias linux-sync='git fetch && git reset --hard origin/master'
+alias project-tracker='systemctl enable postgresql.service || systemctl start postgresql.service && pgcli project_tracker'
+alias mans="man -k . | fzf | awk '{print \$2 \$1}' | sed 's/(/ /' | sed 's/)/ /' | xargs -r man"
 
 # i like it this way
 alias ll='eza -liah --git --total-size'
@@ -39,7 +42,7 @@ alias clera='clear'
 
 # easier readability
 alias df='df -h'
-alias tree='tree -aC'
+alias tree='tree -aC -I ".git"'
 
 # sometimes it feels better to look at diffs, logs, and status in a text editor
 alias utils='./utils.sh'

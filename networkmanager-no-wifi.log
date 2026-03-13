@@ -1,0 +1,11 @@
+GENERAL.DEVICE:                         wlan0
+GENERAL.TYPE:                           wifi
+GENERAL.HWADDR:                         5C:B4:7E:79:A7:F2
+GENERAL.MTU:                            1500
+GENERAL.STATE:                          20 (unavailable)
+GENERAL.CONNECTION:                     --
+GENERAL.CON-PATH:                       --
+IP4.GATEWAY:                            --
+IP6.GATEWAY:                            --
+
+
