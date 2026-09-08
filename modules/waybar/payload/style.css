@@ -44,7 +44,6 @@ tooltip {
 #bluetooth,
 #battery,
 #custom-net,
-#tray,
 #bluetooth.off,
 #custom-stopped,
 #custom-rec {
@@ -58,6 +57,16 @@ tooltip {
     margin-left: 4px;
 
     /* Vertical alignment */
+    margin-top: 4px;
+    margin-bottom: 4px;
+    border-radius: 6px;
+}
+
+#tray {
+    background-color: #24283b;
+    color: #c0caf5;
+    padding: 0 10px;
+    margin-right: 4px;
     margin-top: 4px;
     margin-bottom: 4px;
     border-radius: 6px;
