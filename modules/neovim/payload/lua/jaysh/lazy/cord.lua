@@ -12,9 +12,7 @@ return {
     },
     idle = {
       enabled = true,
-      timeout = 60000,
-      show_status = false,
-      ignore_focus = false,
+      timeout = 30000,
     },
     text = {
       editing = function(opts)
