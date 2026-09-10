@@ -59,9 +59,9 @@ return {
     }
 
     local endash = {
-        ls.snippet("endash", {
-            ls.text_node("–"),
-        }),
+      ls.snippet("endash", {
+        ls.text_node("–"),
+      }),
     }
 
     local today = {
@@ -98,9 +98,9 @@ return {
     }
 
     local turkey = {
-        ls.snippet("turkey", {
-            ls.text_node({ "Türkiye" }),
-        }),
+      ls.snippet("turkey", {
+        ls.text_node({ "Türkiye" }),
+      }),
     }
 
     ls.add_snippets("c", debug_c_cpp)
