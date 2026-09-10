@@ -11,7 +11,10 @@ return {
       flavor = "dark",
     },
     idle = {
+      enabled = true,
       timeout = 60000,
+      show_status = false,
+      ignore_focus = false,
     },
     text = {
       editing = function(opts)
