@@ -16,6 +16,7 @@
 return {
   "MeanderingProgrammer/render-markdown.nvim",
   tag = "v8.11.0",
+  lazy = false,
   -- if you use the mini.nvim suite
   dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-mini/mini.nvim" },
   -- if you use standalone mini plugins
@@ -34,6 +35,13 @@ return {
     max_file_size = 50.0,
     completions = {
       lps = { enabled = true },
+    },
+  },
+  keys = {
+    {
+      "<leader>sr",
+      "<cmd>RenderMarkdown toggle<cr>",
+      "Toggle Markdown rendering",
     },
   },
 }
