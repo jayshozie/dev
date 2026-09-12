@@ -36,8 +36,14 @@ else
 fi
 
 if [[ "$curr_unread" -gt "$prev_unread" ]]; then
-    notify-send --urgency=normal --app-name='RSS Feeds' --icon='󰑫' \
-        '󰑫 RSS Feeds' "You have $curr_unread unread articles."
+    new_count=$(( curr_unread - prev_unread ))
+    if (( new_count == 1)); then
+        notify-send --urgency=normal --app-name='RSS Feeds' --icon='󰑫' \
+            '󰑫 RSS Feeds' "You have a new article."
+    else
+        notify-send --urgency=normal --app-name='RSS Feeds' --icon='󰑫' \
+            '󰑫 RSS Feeds' "You have $new_count new articles."
+    fi
 fi
 
 echo "$curr_unread" > "$STATE_FILE"
