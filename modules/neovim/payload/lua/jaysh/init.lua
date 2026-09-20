@@ -32,6 +32,15 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
     vim.bo.filetype = "c"
   end,
 })
+vim.api.nvim_create_user_command("WrapToggle", function()
+  if vim.o.wrap == true then
+    vim.notify("'wrap' off.", vim.log.levels.INFO)
+    vim.o.wrap = false
+  else
+    vim.notify("'wrap' on.", vim.log.levels.INFO)
+    vim.o.wrap = true
+  end
+end, { desc = "Toggle 'wrap'" })
 
 -- FIXME: scratch buffer implementation
 --local function create_new_buf(bufname)
@@ -100,6 +109,8 @@ vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
 
+vim.opt.completeopt = "fuzzy"
+vim.opt.ignorecase = true
 vim.opt.smartindent = true
 vim.opt.wrap = false
 
@@ -178,7 +189,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave", "TermOpen" }, {
   end,
 })
 
--------------------------------------REMAPS-------------------------------------
+------------------------------------KEYMAPS-------------------------------------
 
 -- <space> is the superior leader.
 vim.g.mapleader = " "
@@ -190,6 +201,9 @@ vim.keymap.set("n", "<leader>pv", "<CMD>Oil<CR>")
 vim.keymap.set("n", "<leader>w", "<C-w>")
 
 vim.keymap.set("n", "<leader>g", ":Git<CR>")
+
+-- God I hate C++.
+vim.keymap.set("n", "<leader>tw", "<cmd>WrapToggle<CR>")
 
 -- Thanks a lot Primeagen. These are amazing.
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
@@ -222,16 +236,16 @@ vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
 --                "<M-s>", "<cmd>silent !tmux neww tmux-sessionizer -s 3<CR>")
 
 -- Highlight when yanking, thanks TJ.
--- vim.api.nvim_create_autocmd("TextYankPost", {
---   desc = "Highlight when yanking (copying) text",
---   group = vim.api.nvim_create_augroup(
---     "kicstart-hightlight-yank",
---     { clear = true }
---   ),
---   callback = function()
---     vim.hl.on_yank()
---   end,
--- })
+vim.api.nvim_create_autocmd("TextYankPost", {
+  desc = "Highlight when yanking (copying) text",
+  group = vim.api.nvim_create_augroup(
+    "kicstart-hightlight-yank",
+    { clear = true }
+  ),
+  callback = function()
+    vim.hl.on_yank()
+  end,
+})
 
 -- To get out of terminal mode in a terminal window, thanks again TJ.
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>")
@@ -251,8 +265,8 @@ vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
 
 -- vim.keymap.set("n", "<C-k>", "<cmd>cprev<CR>zz")
 -- vim.keymap.set("n", "<C-j>", "<cmd>cnext<CR>zz")
-vim.keymap.set("n", "<leader>k", "<cmd>lprev<CR>zz")
-vim.keymap.set("n", "<leader>j", "<cmd>lnext<CR>zz")
+-- vim.keymap.set("n", "<leader>k", "<cmd>lprev<CR>zz")
+-- vim.keymap.set("n", "<leader>j", "<cmd>lnext<CR>zz")
 
 -- Change the word under the cursor in the entire file.
 vim.keymap.set(
