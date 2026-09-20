@@ -20,27 +20,28 @@ local function Color(color)
   vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 end
 
-return {
-  {
-    "folke/tokyonight.nvim",
-    config = function()
-      require("tokyonight").setup({
-        -- The theme comes in three styles, `storm`, `moon`, a darker variant
-        -- `night` and `day`
-        style = "moon",
-        transparent = true,
-        terminal_colors = true,
-        styles = {
-          -- i hate italic fonts
-          comments = { italic = false },
-          keywords = { italic = false },
+Style = "moon"
 
-          -- background styles: 'dark', 'transparent', or 'normal'
-          sidebars = "dark",
-          floats = "dark",
-        },
-      })
-      Color()
-    end,
-  },
+return {
+  "folke/tokyonight.nvim",
+  lazy = false,
+  priority = 1000,
+  config = function()
+    require("tokyonight").setup({
+      -- The theme comes in three styles, `storm`, `moon`, a darker variant
+      -- `night` and `day`
+      style = Style,
+      transparent = true,
+      terminal_colors = true,
+      styles = {
+        -- i hate italic fonts
+        comments = { italic = false },
+        keywords = { italic = false },
+        -- background styles: 'dark', 'transparent', or 'normal'
+        sidebars = "dark",
+        floats = "dark",
+      },
+    })
+    Color("tokyonight-" .. Style)
+  end,
 }

@@ -101,6 +101,7 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
   pattern = "gitcommit",
   callback = function()
     vim.opt.colorcolumn = "73"
+    vim.opt.textwidth = "72"
   end,
 })
 
@@ -108,11 +109,17 @@ vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
+vim.opt.breakindent = true
+vim.opt.showmode = false
 
-vim.opt.completeopt = "fuzzy"
+-- vim.opt.completeopt = "fuzzy"
 vim.opt.ignorecase = true
 vim.opt.smartindent = true
 vim.opt.wrap = false
+
+vim.opt.pumblend = 10
+vim.opt.pumheight = 10
+vim.opt.winblend = 10
 
 vim.opt.swapfile = false
 vim.opt.backup = false
