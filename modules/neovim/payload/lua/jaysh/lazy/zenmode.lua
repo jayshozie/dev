@@ -5,14 +5,16 @@ return {
   cmd = "ZenMode",
   -- "folke/zen-mode.nvim",
   opts = {
+    border = 'none',
+    zindex = 40,
     window = {
       backdrop = 1,
       width = 0.5,
       height = 1,
       options = {
         signcolumn = "yes",
-        number = false,
-        relativenumber = false,
+        number = true,
+        relativenumber = true,
         cursorline = true,
         cursorcolumn = false,
         foldcolumn = "0",
