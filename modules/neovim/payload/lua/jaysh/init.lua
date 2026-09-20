@@ -162,15 +162,17 @@ vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave", "TermOpen" }, {
   group = "WhitespaceGroup",
   pattern = "*",
   callback = function()
-    local filetype = vim.bo.filetype
-    local buftype = vim.bo.buftype
+    -- local filetype = vim.bo.filetype
+    -- local buftype = vim.bo.buftype
     local matches = vim.fn.getmatches()
     for _, match_dict in ipairs(matches) do
       if match_dict.group == "WhitespaceHL" then
         vim.fn.matchdelete(match_dict.id)
       end
     end
-    if filetype ~= "diff" and filetype ~= "lazy" and buftype ~= "terminal" then
+    local bufid = vim.api.nvim_get_current_buf()
+    -- if filetype ~= "diff" and filetype ~= "lazy" and buftype ~= "terminal" then
+    if vim.bo[bufid or 0].buftype == '' then
       vim.fn.matchadd("WhitespaceHL", [[\s\+$\| \+\ze\t]])
     end
   end,
@@ -220,16 +222,16 @@ vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
 --                "<M-s>", "<cmd>silent !tmux neww tmux-sessionizer -s 3<CR>")
 
 -- Highlight when yanking, thanks TJ.
-vim.api.nvim_create_autocmd("TextYankPost", {
-  desc = "Highlight when yanking (copying) text",
-  group = vim.api.nvim_create_augroup(
-    "kicstart-hightlight-yank",
-    { clear = true }
-  ),
-  callback = function()
-    vim.hl.on_yank()
-  end,
-})
+-- vim.api.nvim_create_autocmd("TextYankPost", {
+--   desc = "Highlight when yanking (copying) text",
+--   group = vim.api.nvim_create_augroup(
+--     "kicstart-hightlight-yank",
+--     { clear = true }
+--   ),
+--   callback = function()
+--     vim.hl.on_yank()
+--   end,
+-- })
 
 -- To get out of terminal mode in a terminal window, thanks again TJ.
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>")
