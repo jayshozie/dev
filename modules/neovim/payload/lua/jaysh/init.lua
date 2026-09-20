@@ -172,7 +172,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave", "TermOpen" }, {
     end
     local bufid = vim.api.nvim_get_current_buf()
     -- if filetype ~= "diff" and filetype ~= "lazy" and buftype ~= "terminal" then
-    if vim.bo[bufid or 0].buftype == '' then
+    if vim.bo[bufid or 0].buftype == "" then
       vim.fn.matchadd("WhitespaceHL", [[\s\+$\| \+\ze\t]])
     end
   end,

@@ -93,15 +93,17 @@ return {
       show_hidden = false,
       -- This function defines what is considered a "hidden" file
       is_hidden_file = function(name, bufnr)
-          if name:match("^.git") or
-             name:match("^.bash") or
-             name:match("^.clang") or
-             name:match("^.[n]*vim") or
-             name:match("^.editorconfig") then
-              return false
-          elseif name:match("^%.") then
-              return true
-          end
+        if
+          name:match("^.git")
+          or name:match("^.bash")
+          or name:match("^.clang")
+          or name:match("^.[n]*vim")
+          or name:match("^.editorconfig")
+        then
+          return false
+        elseif name:match("^%.") then
+          return true
+        end
       end,
       -- This function defines what will never be shown, even when `show_hidden` is set
       is_always_hidden = function(name, bufnr)
