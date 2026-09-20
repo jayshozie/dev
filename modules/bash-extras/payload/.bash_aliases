@@ -82,7 +82,7 @@ alias aliases='nvim ~/dev/modules/bash/payload/.bash_aliases'
 alias gitconfig='nvim ~/dev/modules/git/payload/.gitconfig'
 
 # easier access to stuff i'm constantly working on
-alias jayshell='pushd ~/projects/c-mastery-projects/jayshell && nv'
+alias jayshell='pushd ~/projects/c-projects/jayshell && nv'
 alias scripts='pushd ~/dev/modules/scripts && nv && popd'
 # alias docs='pushd ~/Documents' # became irrelevant when i switched to arch
 alias downs='pushd ~/Downloads'

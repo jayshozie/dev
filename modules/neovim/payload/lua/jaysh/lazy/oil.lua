@@ -7,10 +7,10 @@ return {
     -- Id is automatically added at the beginning, and name at the end
     -- See :help oil-columns
     columns = {
-      -- "icon",
       "permissions",
       "size",
       "mtime",
+      "icon",
     },
     -- Buffer-local options to use for oil buffers
     buf_options = {
@@ -20,7 +20,7 @@ return {
     -- Window-local options to use for oil buffers
     win_options = {
       wrap = false,
-      signcolumn = "yes",
+      signcolumn = "no",
       cursorcolumn = false,
       foldcolumn = "0",
       spell = false,
@@ -50,7 +50,7 @@ return {
     },
     -- Constrain the cursor to the editable parts of the oil buffer
     -- Set to `false` to disable, or "name" to keep it on the file names
-    constrain_cursor = "editable",
+    constrain_cursor = false,
     -- Set to true to watch the filesystem for changes and reload oil
     watch_for_changes = false,
     -- Keymaps in oil buffer. Can be any value that `vim.keymap.set` accepts OR a table of keymap
@@ -62,13 +62,13 @@ return {
     keymaps = {
       ["g?"] = { "actions.show_help", mode = "n" },
       ["<CR>"] = "actions.select",
-      ["<C-s>"] = { "actions.select", opts = { vertical = true } },
-      ["<C-h>"] = { "actions.select", opts = { horizontal = true } },
-      ["<C-t>"] = { "actions.select", opts = { tab = true } },
+      -- ["<C-s>"] = { "actions.select", opts = { vertical = true } },
+      -- ["<C-h>"] = { "actions.select", opts = { horizontal = true } },
+      -- ["<C-t>"] = { "actions.select", opts = { tab = true } },
       -- ["<leader><leader>"] = {
       -- },
       -- ["<C-p>"] = "actions.preview",
-      ["<C-c>"] = { "actions.close", mode = "n" },
+      -- ["<C-c>"] = { "actions.close", mode = "n" },
       ["<C-l>"] = "actions.refresh",
       ["-"] = { "actions.parent", mode = "n" },
       ["_"] = { "actions.open_cwd", mode = "n" },
@@ -83,7 +83,6 @@ return {
         end,
         desc = "Run the entry under the cursor (no sudo support)",
       },
-
       ["g."] = { "actions.toggle_hidden", mode = "n" },
       ["g\\"] = { "actions.toggle_trash", mode = "n" },
     },
@@ -91,11 +90,18 @@ return {
     use_default_keymaps = false,
     view_options = {
       -- Show files and directories that start with "."
-      show_hidden = true,
+      show_hidden = false,
       -- This function defines what is considered a "hidden" file
       is_hidden_file = function(name, bufnr)
-        local m = name:match("^%.")
-        return m ~= nil
+          if name:match("^.git") or
+             name:match("^.bash") or
+             name:match("^.clang") or
+             name:match("^.[n]*vim") or
+             name:match("^.editorconfig") then
+              return false
+          elseif name:match("^%.") then
+              return true
+          end
       end,
       -- This function defines what will never be shown, even when `show_hidden` is set
       is_always_hidden = function(name, bufnr)
