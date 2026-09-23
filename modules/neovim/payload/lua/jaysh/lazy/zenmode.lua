@@ -5,7 +5,7 @@ return {
   cmd = "ZenMode",
   -- "folke/zen-mode.nvim",
   opts = {
-    border = 'none',
+    border = "none",
     zindex = 40,
     window = {
       backdrop = 1,
@@ -23,6 +23,7 @@ return {
         textwidth = 80,
         wrapmargin = 0,
         linebreak = true,
+        showmode = true,
       },
     },
     plugins = {

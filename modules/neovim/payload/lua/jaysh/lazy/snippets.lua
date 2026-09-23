@@ -23,6 +23,8 @@ return {
   config = function()
     local ls = require("luasnip")
 
+    ls.setup({ enable_autosnippets = true })
+
     local function prepend_include()
       local header = "#include <stdio.h>"
       local lines = vim.api.nvim_buf_get_lines(0, 0, 50, false)
@@ -41,7 +43,13 @@ return {
     -- Snippets --
     -----------------
     local debug_c_cpp = {
-      ls.snippet("dberr", {
+      ls.snippet({
+        trig = ":dberr",
+        regTrig = true,
+        wordTrig = false,
+        hidden = true,
+        snippetType = "autosnippet",
+      }, {
         ls.function_node(prepend_include, {}),
         ls.text_node('fprintf(stderr, "[DEBUG] '),
         ls.insert_node(1, ""),
@@ -53,27 +61,53 @@ return {
     }
 
     local emdash = {
-      ls.snippet("emdash", {
+      ls.snippet({
+        trig = ":emdash",
+        regTrig = true,
+        wordTrig = false,
+        hidden = true,
+        snippetType = "autosnippet",
+      }, {
         ls.text_node("—"),
       }),
     }
 
     local endash = {
-      ls.snippet("endash", {
+      ls.snippet({
+        trig = ":endash",
+        regTrig = true,
+        wordTrig = false,
+        hidden = true,
+        snippetType = "autosnippet",
+      }, {
         ls.text_node("–"),
       }),
     }
 
     local today = {
-      ls.snippet("today", {
+      ls.snippet({
+        trig = ":today",
+        regTrig = true,
+        wordTrig = false,
+        hidden = true,
+        snippetType = "autosnippet",
+      }, {
         ls.text_node(os.date("%Y-%m-%d")),
       }),
     }
 
     local gpl3 = {
-      ls.snippet("gpl3", {
+      ls.snippet({
+        trig = ":gpl3",
+        regTrig = true,
+        wordTrig = false,
+        hidden = true,
+        snippetType = "autosnippet",
+      }, {
         ls.text_node({
-          "Copyright (C)  2026  Emir Baha YILDIRIM <jayshozie@gmail.com>",
+          "Copyright (C)  "
+            .. os.date("%Y")
+            .. "  Emir Baha Yıldırım <jayshozie@gmail.com>",
           "",
           "This program is free software: you can redistribute it and/or modify",
           "it under the terms of the GNU General Public License as published by",
@@ -91,14 +125,59 @@ return {
       }),
     }
 
+    local mit = {
+      ls.snippet({
+        trig = ":mit",
+        regTrig = true,
+        wordTrig = false,
+        hidden = true,
+        snippetType = "autosnippet",
+      }, {
+        ls.text_node({
+          "Created",
+          "Author: Emir Baha Yıldırım <jayshozie@gmail.com>",
+          "Date: " .. os.date("%B %d, %Y"),
+          "License: MIT",
+        }),
+      }),
+    }
+
+    local sl = {
+      ls.snippet({
+        trig = ":sl",
+        regTrig = true,
+        wordTrig = false,
+        hidden = true,
+        snippetType = "autosnippet",
+      }, {
+        ls.text_node({
+          "Copyright (C)  "
+            .. os.date("%Y")
+            .. "  Emir Baha Yıldırım <jayshozie@gmail.com>",
+        }),
+      }),
+    }
+
     local blog_more = {
-      ls.snippet("blog_more", {
+      ls.snippet({
+        trig = ":more",
+        regTrig = true,
+        wordTrig = false,
+        hidden = true,
+        snippetType = "autosnippet",
+      }, {
         ls.text_node({ "<!-- more -->" }),
       }),
     }
 
     local turkey = {
-      ls.snippet("turkey", {
+      ls.snippet({
+        trig = ":turkey",
+        regTrig = true,
+        wordTrig = false,
+        hidden = true,
+        snippetType = "autosnippet",
+      }, {
         ls.text_node({ "Türkiye" }),
       }),
     }
@@ -109,6 +188,8 @@ return {
     ls.add_snippets("markdown", endash)
     ls.add_snippets("all", today)
     ls.add_snippets("all", gpl3)
+    ls.add_snippets("all", mit)
+    ls.add_snippets("all", sl)
     ls.add_snippets("markdown", blog_more)
     ls.add_snippets("markdown", turkey)
 
