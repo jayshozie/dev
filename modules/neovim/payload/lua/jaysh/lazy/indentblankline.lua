@@ -22,11 +22,23 @@ return {
 
   config = function()
     require("ibl").setup({
+      indent = {
+        smart_indent_cap = true,
+        char = "▏",
+        tab_char = { "▏" },
+      },
+      scope = {
+        enabled = true,
+        show_start = false,
+        show_end = false,
+        show_exact_scope = true,
+        injected_languages = true,
+      },
       whitespace = {
-        highlight = {
-          "Whitespace",
-          "NonText",
-        },
+        -- highlight = {
+        --   "Whitespace",
+        --   "NonText",
+        -- },
       },
     })
   end,

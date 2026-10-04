@@ -29,4 +29,4 @@ export BASH_CONFIG="${XDG_CONFIG_HOME}/bash"
 [[ -f "${BASH_CONFIG}/.bash_source" ]] && source "${BASH_CONFIG}/.bash_source"
 
 # tmux-sessionizer thanks to ThePrimeagen
-bind '"\C-f":"tmux neww tmux-sessionizer\n"'
+bind '"\C-y":"tmux neww tmux-sessionizer\n"'

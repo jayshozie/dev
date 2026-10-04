@@ -105,6 +105,15 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
   end,
 })
 
+vim.opt.list = false
+vim.opt.listchars = {
+  tab = " ≫ ",
+  eol = "$",
+  space = "⋅",
+  multispace = "⋅",
+  -- leadmultispace = '⋅',
+}
+
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
@@ -117,9 +126,9 @@ vim.opt.ignorecase = true
 vim.opt.smartindent = true
 vim.opt.wrap = false
 
-vim.opt.pumblend = 10
-vim.opt.pumheight = 10
-vim.opt.winblend = 10
+vim.opt.pumblend = 20
+vim.opt.pumheight = 20
+vim.opt.winblend = 20
 
 vim.opt.swapfile = false
 vim.opt.backup = false
@@ -232,7 +241,7 @@ vim.keymap.set("n", "<M-t>", "<c-w>5+")
 vim.keymap.set("n", "<M-s>", "<c-w>5-")
 
 -- tmux-sessionizer thanks to ThePrimeagen
-vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
+vim.keymap.set("n", "<C-y>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
 -- vim.keymap.set("n",
 --                "<M-h>", "<cmd>silent !tmux neww tmux-sessionizer -s 0<CR>")
 -- vim.keymap.set("n",

@@ -47,10 +47,11 @@ alias restart-waybar='pkill waybar; /home/jaysh/src/upstream/waybar/build/waybar
 # i like it this way
 alias ll='eza -liah --git'
 alias sd='eza -liah --git --total-size' # size + dir = sd
+alias gerp='\grep'
 alias grep='grep --color=auto -C 2'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
-alias fd='fd -uic always'
+alias fd='fd -ui'
 alias find='fd -ui'
 alias clear='clear -x'
 alias cal='cal -m'

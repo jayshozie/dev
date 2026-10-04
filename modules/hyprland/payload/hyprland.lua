@@ -28,16 +28,18 @@ local src = home .. "/src"
 --------------
 -- Monitors --
 --------------
+local builtin_monitor = "eDP-1"
+local external_monitor = "HDMI-A-1"
 -- Built-In Display
 hl.monitor({
-  output = "eDP-1",
+  output = builtin_monitor,
   mode = "2560x1600@240",
   position = "auto",
   scale = 1.6,
   transform = 0,
 })
 hl.monitor({
-  output = "HDMI-A-1",
+  output = external_monitor,
   mode = "1920x1080@60",
   position = "auto-left",
   scale = 1,
@@ -250,8 +252,8 @@ hl.bind(
   hl.dsp.window.close()
 )
 -- hl.bind(
---     mainMod .. ' + M',
---     hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'")
+--   mainMod .. ' + M',
+--   hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'")
 -- )
 hl.bind(
   mainMod .. " + E",
@@ -299,8 +301,8 @@ hl.bind(
 )
 -- Free Keybind to Use
 -- hl.bind(
---     mainMod .. ' + SHIFT + Z',
---     hl.dsp.exec_cmd('')
+--   mainMod .. ' + SHIFT + Z',
+--   hl.dsp.exec_cmd('')
 -- )
 hl.bind(
   mainMod .. " + SHIFT + L",
@@ -334,7 +336,7 @@ for workspace = 1, 10 do
   hl.bind(
     mainMod .. " + " .. key,
     hl.dsp.focus({
-        workspace = workspace,
+      workspace = workspace,
     })
   )
   hl.bind(
@@ -344,19 +346,44 @@ for workspace = 1, 10 do
       follow = false,
     })
   )
+
+  -- oh my god thank god this exists
+  -- send workspace to builtin_monitor
+  hl.bind(
+    mainMod .. " + CTRL + " .. key,
+    hl.dsp.workspace.move({
+      workspace = workspace,
+      monitor = builtin_monitor
+    })
+  )
+  -- send workspace to external monitor
+  hl.bind(
+    mainMod .. " + CTRL + SHIFT + " .. key,
+    hl.dsp.workspace.move({
+      workspace = workspace,
+      monitor = external_monitor
+    })
+  )
 end
+hl.bind(
+  mainMod .. " + SHIFT + W",
+  hl.dsp.workspace.swap_monitors({
+    monitor1 = builtin_monitor,
+    monitor2 = external_monitor
+  })
+)
 hl.bind(
   mainMod .. " + mouse:272", -- LMB
   hl.dsp.window.drag(),
   { -- options
-      mouse = true,
+    mouse = true,
   }
 )
 hl.bind(
   mainMod .. " + mouse:273", -- RMB
   hl.dsp.window.resize(),
   { -- options
-      mouse = true,
+    mouse = true,
   }
 )
 hl.bind(
