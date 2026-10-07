@@ -2,7 +2,8 @@
 
 main () {
     if [[ $1 == 'auto' ]]; then
-        sudo omen-fan-control fan-control --mode auto
+        echo '[ERROR] "auto" has a bug, so it is disabled until a bugfix.'
+        # sudo omen-fan-control fan-control --mode auto
     elif [[ $1 == 'curve' ]]; then
         sudo omen-fan-control fan-control --mode curve
     else
