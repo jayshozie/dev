@@ -153,7 +153,7 @@ return {
             end
           end)
         end,
-        desc = "Open the entry under the cursor with mpv (no sudo support)",
+        desc = "Open the entry under the cursor with celluloid (no sudo support)",
       },
     },
     -- Set to false to disable all of the above keymaps

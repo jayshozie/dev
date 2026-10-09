@@ -6,6 +6,8 @@ main () {
         # sudo omen-fan-control fan-control --mode auto
     elif [[ $1 == 'curve' ]]; then
         sudo omen-fan-control fan-control --mode curve
+    elif [[ $1 == 'max' ]]; then
+        sudo omen-fan-control fan-control --mode max
     else
         sudo omen-fan-control fan-control --mode manual --value "$1"%
     fi
