@@ -40,6 +40,8 @@ api_call() {
                 fold -s -c -w 34 | \
                 pr -t -T -c2 -w 71 -l 100 -S' | ' > "$tmp_file"
             mv -f "$tmp_file" "$lyrics_file"
+        elif [[ "$http_code" == "503" ]]; then
+            echo -e "503 - Server overloaded.\n" > "$lyrics_file"
         else
             echo -e "No lyrics found.\n${uri}" > "$lyrics_file"
         fi

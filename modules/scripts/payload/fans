@@ -8,6 +8,10 @@ main () {
         sudo omen-fan-control fan-control --mode curve
     elif [[ $1 == 'max' ]]; then
         sudo omen-fan-control fan-control --mode max
+    elif [[ $1 == 'status' || $1 == 'stat' ]]; then
+        sudo omen-fan-control status
+    elif [[ $1 == 'help' ]]; then
+        omen-fan-control --help
     else
         sudo omen-fan-control fan-control --mode manual --value "$1"%
     fi

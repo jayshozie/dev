@@ -96,6 +96,9 @@ while true; do
 
     lyrics_file="${LYRICS_D}/${artist_url}-${album_url}-${track_url}.lyrics"
     lyrics=$(cat "$lyrics_file")
+    if [[ "$lyrics_file" == "503" ]]; then
+        get_lyrics "$artist" "$track" "$album" "$dur"
+    fi
 
     if [[ "$dur" -gt 0 ]] && [[ "$dur" -lt 3600 ]]; then
         time="[$(date -d@$pos -u +%M:%S) / $(date -d@$dur -u +%M:%S)]"
