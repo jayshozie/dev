@@ -16,7 +16,10 @@
 return {
   "ManuLinares/nvim-c3",
   ft = {
-    "c3", "c3i", "c3t", "c3l"
+    "c3",
+    "c3i",
+    "c3t",
+    "c3l",
   },
   build = function()
     require("c3").update()
@@ -35,6 +38,6 @@ return {
     },
     highlighting = {
       enable_treesitter = true,
-    }
+    },
   },
 }

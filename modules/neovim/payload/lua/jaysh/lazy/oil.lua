@@ -22,10 +22,10 @@ return {
     -- Id is automatically added at the beginning, and name at the end
     -- See :help oil-columns
     columns = {
+      "permissions",
       "size",
       "mtime",
       "icon",
-      "permissions",
     },
     -- Buffer-local options to use for oil buffers
     buf_options = {
@@ -40,7 +40,7 @@ return {
       foldcolumn = "0",
       spell = false,
       list = false,
-      conceallevel = 0, ---@TODO: May change this and the bottom line.
+      conceallevel = 2, ---@TODO: May change this and the bottom line.
       concealcursor = "nvic",
     },
     -- Send deleted files to the trash instead of permanently deleting them (:help oil-trash)
@@ -115,43 +115,51 @@ return {
       },
       ["g."] = { "actions.toggle_hidden", mode = "n" },
       ["g\\"] = { "actions.toggle_trash", mode = "n" },
-      ["gm"] = {
+      ["<leader>m"] = {
         callback = function()
           local o = require("oil")
           local entry = o.get_current_dir() .. o.get_cursor_entry().name
-          vim.system({ "mpv", entry }, { text = true }, function(obj)
-            if obj.code == 1 then
-              vim.schedule(function()
-                print("Success: " .. obj.stdout)
-              end)
-            else
-              vim.schedule(function()
-                print(
-                  "Error [" .. obj.code .. "]: " .. obj.stdout .. obj.stderr
-                )
-              end)
+          vim.system(
+            { "mpv", entry },
+            { detach = true, text = true },
+            function(obj)
+              if obj.code == 1 then
+                vim.schedule(function()
+                  print("Success: " .. obj.stdout)
+                end)
+              else
+                vim.schedule(function()
+                  print(
+                    "Error [" .. obj.code .. "]: " .. obj.stdout .. obj.stderr
+                  )
+                end)
+              end
             end
-          end)
+          )
         end,
         desc = "Open the entry under the cursor with mpv (no sudo support)",
       },
-      ["gc"] = {
+      ["<leader>c"] = {
         callback = function()
           local o = require("oil")
           local entry = o.get_current_dir() .. o.get_cursor_entry().name
-          vim.system({ "celluloid", entry }, { text = true }, function(obj)
-            if obj.code == 1 then
-              vim.schedule(function()
-                print("Success: " .. obj.stdout)
-              end)
-            else
-              vim.schedule(function()
-                print(
-                  "Error [" .. obj.code .. "]: " .. obj.stdout .. obj.stderr
-                )
-              end)
+          vim.system(
+            { "celluloid", entry },
+            { detach = true, text = true },
+            function(obj)
+              if obj.code == 1 then
+                vim.schedule(function()
+                  print("Success: " .. obj.stdout)
+                end)
+              else
+                vim.schedule(function()
+                  print(
+                    "Error [" .. obj.code .. "]: " .. obj.stdout .. obj.stderr
+                  )
+                end)
+              end
             end
-          end)
+          )
         end,
         desc = "Open the entry under the cursor with celluloid (no sudo support)",
       },
