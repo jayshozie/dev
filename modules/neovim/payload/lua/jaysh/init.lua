@@ -126,9 +126,9 @@ vim.opt.ignorecase = true
 vim.opt.smartindent = true
 vim.opt.wrap = false
 
-vim.opt.pumblend = 20
-vim.opt.pumheight = 20
-vim.opt.winblend = 20
+-- vim.opt.pumblend = 20
+-- vim.opt.pumheight = 20
+-- vim.opt.winblend = 20
 
 vim.opt.swapfile = false
 vim.opt.backup = false

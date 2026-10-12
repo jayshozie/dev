@@ -35,7 +35,7 @@ hl.monitor({
   output = builtin_monitor,
   mode = "2560x1600@240",
   position = "auto",
-  scale = 1.6,
+  scale = 1.33,
   transform = 0,
 })
 hl.monitor({
