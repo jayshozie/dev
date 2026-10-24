@@ -111,19 +111,19 @@ while true; do
                 ;;
             "$rj45_back")
                 if [[ iface_count -eq 0 ]]; then
-                    ethernet_text='󰈀  RJ45'
+                    ethernet_text='󰈀'
                     tooltip="Ethernet: RJ45 Back"
                 else
-                    ethernet_text+=' | 󰈀  RJ45'
+                    ethernet_text+=' | 󰈀'
                     tooltip+="\nEthernet: RJ45 Back"
                 fi
                 ;;
             *)
                 if [[ iface_count -eq 0 ]]; then
-                    ethernet_text='󰈀  Ext'
+                    ethernet_text='󰈀'
                     tooltip="Ethernet: External ($iface)"
                 else
-                    ethernet_text+=' | 󰈀  Ext'
+                    ethernet_text+=' | 󰈀'
                     tooltip+="\nEthernet: External ($iface)"
                 fi
                 ;;
