@@ -14,34 +14,34 @@
 -- along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 return {
-  -- "MeanderingProgrammer/render-markdown.nvim",
-  -- tag = "v8.11.0",
-  -- lazy = false,
-  -- -- if you use the mini.nvim suite
-  -- -- dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-mini/mini.nvim" },
-  -- -- if you use standalone mini plugins
-  -- -- dependencies = {
-  -- --   'nvim-treesitter/nvim-treesitter',
-  -- --   'nvim-mini/mini.icons'
-  -- -- },
-  -- -- if you prefer nvim-web-devicons
+  "MeanderingProgrammer/render-markdown.nvim",
+  tag = "v8.11.0",
+  lazy = false,
+  -- if you use the mini.nvim suite
+  -- dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-mini/mini.nvim" },
+  -- if you use standalone mini plugins
   -- dependencies = {
-  --   "nvim-treesitter/nvim-treesitter",
-  --   "nvim-tree/nvim-web-devicons",
+  --   'nvim-treesitter/nvim-treesitter',
+  --   'nvim-mini/mini.icons'
   -- },
-  -- ---@module 'render-markdown'
-  -- ---@type render.md.UserConfig
-  -- opts = {
-  --   max_file_size = 50.0,
-  --   completions = {
-  --     lps = { enabled = true },
-  --   },
-  -- },
-  -- keys = {
-  --   {
-  --     "<leader>sr",
-  --     "<cmd>RenderMarkdown toggle<cr>",
-  --     "Toggle Markdown rendering",
-  --   },
-  -- },
+  -- if you prefer nvim-web-devicons
+  dependencies = {
+    "nvim-treesitter/nvim-treesitter",
+    "nvim-tree/nvim-web-devicons",
+  },
+  ---@module 'render-markdown'
+  ---@type render.md.UserConfig
+  opts = {
+    max_file_size = 50.0,
+    completions = {
+      lps = { enabled = true },
+    },
+  },
+  keys = {
+    {
+      "<leader>rt",
+      "<cmd>RenderMarkdown toggle<cr>",
+      "Toggle Markdown rendering",
+    },
+  },
 }
