@@ -74,7 +74,7 @@
     */
     "clock": {
         // "format": "{:%d/%m  󰣇  %H:%M}",
-        "format": "󰣇  {:%R | %d %b, %a}",
+        "format": "󰣇  {:%R | %b %d, %a}",
         "locale": "en_GB.UTF-8",
         "tooltip-format": "<tt>{calendar}</tt>",
         "calendar": {
