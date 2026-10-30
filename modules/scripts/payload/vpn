@@ -1,0 +1,186 @@
+#!/usr/bin/env bash
+# Copyright (C)  2026  Emir Baha Yıldırım <jayshozie@gmail.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+export DEV_ENV='/home/jaysh/dev'
+source "${DEV_ENV}/lib/log" && export -f logp
+source "${DEV_ENV}/lib/ansi-escapes"
+export VPN_DEBUG=0
+export PROG_NAME='VPN'
+
+all_active_vpn_conns() {
+    local nmcli_output conn
+    local active_vpn_conns=()
+    nmcli_output=$(nmcli -t -f NAME,TYPE connection show --active)
+    IFS=$'\n'
+    local i=0
+    for conn in $nmcli_output; do
+        if [[ $conn == *:wireguard ]]; then
+            active_vpn_conns[i]="${conn%%:*}"
+            (( i++ ))
+        fi
+    done
+    if [[ ${#active_vpn_conns[@]} == 0 ]]; then
+        REPLY=''
+        return 1
+    fi
+    IFS=';'
+    REPLY="${active_vpn_conns[*]}"
+}
+
+activate_iface() {
+    local return_val iface
+    iface=$1
+    (( VPN_DEBUG == 1 )) && logp "$PROG_NAME" \
+        "${FG_L_YELLOW}[DEBUG] Activating $iface...${COLOR_RESET}"
+    nmcli connection up "$iface" &> /dev/null
+    return_val=$?
+    case "$return_val" in
+        '0') return 0;;
+        '1') logp "$PROG_NAME" \
+            "${FG_L_RED}[ERROR] [nmcli | iface: $iface] Unknown error!${COLOR_RESET}"
+            return 1;;
+        '2') logp "$PROG_NAME" \
+            "${FG_L_RED}[ERROR] [nmcli | iface: $iface] Invalid user input or wrong \`nmcli\` invocation!${COLOR_RESET}"
+            return 2;;
+        '3') logp "$PROG_NAME" \
+            "${FG_L_RED}[ERROR] [nmcli | iface: $iface] Timeout!${COLOR_RESET}"
+            return 3;;
+        '4') logp "$PROG_NAME" \
+            "${FG_L_RED}[ERROR] [nmcli | iface: $iface] Connection activation failed (e.g. DHCP failure, authentication failure, etc.)!${COLOR_RESET}"
+            return 4;;
+        '8') logp "$PROG_NAME" \
+            "${FG_L_RED}[ERROR] [nmcli | iface: $iface] NetworkManager is not running!${COLOR_RESET}"
+            return 8;;
+        '10') logp "$PROG_NAME" \
+            "${FG_L_RED}[ERROR] [nmcli | iface: $iface] Interface doesn't exist!${COLOR_RESET}"
+            return 10;;
+        *) logp "$PROG_NAME" \
+            "${FG_L_RED}[ERROR] [nmcli | iface: $iface] Unknown error!${COLOR_RESET}"
+            return 255;;
+    esac
+}
+
+activate_ifaces() {
+    local return_val
+    local -n ref="$1"
+    for iface in "${ref[@]}"; do
+        activate_iface "$iface"
+        return_val=$?
+        if (( return_val == 0 )); then
+            REPLY="$iface"
+            return 0
+        fi
+    done
+    return $return_val
+}
+
+deactivate_iface() {
+    local return_val iface
+    iface=$1
+    nmcli connection down "$iface" &> /dev/null
+    return_val=$?
+    case "$return_val" in
+        '0') return 0;;
+        '1') logp "$PROG_NAME" \
+            "${FG_L_RED}[ERROR] [nmcli | iface: $iface] Unknown error!${COLOR_RESET}"
+            return 1;;
+        '2') logp "$PROG_NAME" \
+            "${FG_L_RED}[ERROR] [nmcli | iface: $iface] Invalid user input or wrong \`nmcli\` invocation!${COLOR_RESET}"
+            return 2;;
+        '3') logp "$PROG_NAME" \
+            "${FG_L_RED}[ERROR] [nmcli | iface: $iface] Timeout!${COLOR_RESET}"
+            return 3;;
+        '5') logp "$PROG_NAME" \
+            "${FG_L_RED}[ERROR] [nmcli | iface: $iface] Connection deactivation failed!${COLOR_RESET}"
+            return 5;;
+        '8') logp "$PROG_NAME" \
+            "${FG_L_RED}[ERROR] [nmcli | iface: $iface] NetworkManager is not running!${COLOR_RESET}"
+            return 8;;
+        '10') logp "$PROG_NAME" \
+            "${FG_L_RED}[ERROR] [nmcli | iface: $iface] Interface doesn't exist!${COLOR_RESET}"
+            return 10;;
+        *) logp "$PROG_NAME" \
+            "${FG_L_RED}[ERROR] [nmcli | iface: $iface] Unknown error!${COLOR_RESET}"
+            return 255;;
+    esac
+}
+
+deactivate_ifaces() {
+    local return_val
+    local -n ref="$1"
+    for iface in "${ref[@]}"; do
+        deactivate_iface "$iface"
+        return_val=$?
+        if (( return_val != 0 )); then
+            logp "$PROG_NAME" \
+                "${FG_L_RED}[ERROR] Something went wrong while deactivating interface $iface.${COLOR_RESET}"
+        else
+            logp "$PROG_NAME" \
+                "${FG_L_BLUE}[INFO] Deactivated interface $iface.${COLOR_RESET}"
+        fi
+    done
+}
+
+main() {
+    local return_val active_iface arg iface_count iface
+    local -A ifaces_servers
+    local -a active_vpn_conns ifaces
+    for arg in "$@"; do
+        [[ $arg == '--debug' || $arg == '-d' ]] && export VPN_DEBUG=1
+    done
+
+    # TODO: This will be done by sysconf/update-ifaces.sh in the future.
+    iface_count=2
+    for (( i=0; i < iface_count; i++ )); do
+        ifaces[i]="wg${i}"
+    done
+    ifaces_servers["${ifaces[0]}"]='CH#409'
+    ifaces_servers["${ifaces[1]}"]='NL#871'
+    # TODO ^
+
+    all_active_vpn_conns
+    return_val=$?
+    if (( return_val != 0 )); then
+        (( VPN_DEBUG == 1 )) && logp "$PROG_NAME" \
+            "${FG_L_BLUE}[INFO] No active VPN connections.${COLOR_RESET}"
+
+        activate_ifaces ifaces
+        return_val=$?
+        if (( return_val != 0 )); then
+            logp "$PROG_NAME" \
+                "${FG_L_RED}[ERROR] Couldn't activate any interfaces!${COLOR_RESET}"
+            exit $return_val
+        fi
+        active_iface=$REPLY
+        logp "$PROG_NAME" \
+            "${FG_L_BLUE}[INFO] Activated interface '$active_iface'!${COLOR_RESET}" \
+            "[Server: ${ifaces_servers[$active_iface]}]"
+        exit 0
+    else
+        IFS=';' read -r -a active_vpn_conns <<< "$REPLY"
+        (( VPN_DEBUG == 1 )) && logp "$PROG_NAME" \
+            "${FG_L_BLUE}[INFO] Active VPN connections exist. Deactivating all...${COLOR_RESET}"
+        deactivate_ifaces active_vpn_conns
+        return_val=$?
+        if (( return_val != 0 )); then
+            logp "$PROG_NAME" \
+                "${FG_L_RED}[ERROR] Something went wrong while deactivating interfaces!${COLOR_RESET}"
+            exit $return_val
+        fi
+    fi
+}
+
+main "$@"
