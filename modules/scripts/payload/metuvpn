@@ -14,31 +14,69 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-sudo systemctl start --now via-vpn-srv.service via-vpn.service
+export DEV_ENV='/home/jaysh/dev'
+source "${DEV_ENV}/lib/log" && export -f logp
+source "${DEV_ENV}/lib/ansi-escapes"
 
-via-cli session info 2>/dev/null | grep -q "active" || via-cli session start 2>/dev/null
-
-if via-cli vpn status 2>/dev/null | grep -iq "not connected"; then
-
-    via-cli vpn connect --username e267561@metu.edu.tr --userpass "$(pass metu)" > /dev/null 2>&1
-
-    exit_code=$?
-    if [[ $exit_code -eq 0 ]]; then
-        notify-send "VPN" "Connected to METU"
-    else
-        notify-send "VPN" "Connection Failed"
+# blocking quickfix, has to be switched to the one below after 3.0.5-{1,2} which have `--background`
+# disconnect by `<C-c>` (aka `^C`), blocking
+main() {
+    local username server opts progname err
+    progname='METUVPN'
+    username='e267561'
+    server='https://duvar.metu.edu.tr'
+    # opts='--passwd-on-stdin -v'
+    opts='--passwd-on-stdin -q'
+    # opts='--passwd-on-stdin'
+    # word splitting is intentional in `$opts`, safe to ignore SC2086
+    logp "$progname" \
+        "${FG_L_BLUE}[INFO] Starting connection...${COLOR_RESET}" >&2
+    logp "$progname" \
+        "${FG_L_BLUE}[INFO] Don't forget to disconnect on ProtonVPN in Librewolf and nmtui.${COLOR_RESET}" >&2
+    pass metu | sudo gpclient connect -u "$username" $opts -- "$server"
+    err=$?
+    if (( err != 0 )); then
+        logp "$progname" \
+            "${FG_L_RED}[ERROR] Connection failed for some reason.${COLOR_RESET} [$err]"
     fi
-else
-    via-cli vpn disconnect > /dev/null 2>&1
+}
 
-    # mask it first so it CANNOT restart even if it wants to
-    sudo systemctl mask via-vpn-srv.service via-vpn.service
-    # kill them hard
-    sudo systemctl kill -s SIGKILL via-vpn-srv.service via-vpn.service
-    # reset the "failed" state so systemd doesn't keep tracking them
-    sudo systemctl reset-failed via-vpn-srv.service via-vpn.service
-    # unmask for next time (optional, or just unmask in the 'start' section)
-    sudo systemctl unmask via-vpn-srv.service via-vpn.service
+# non-blocking main function (>= 3.0.5-1)
+# if exits with 69, touching /tmp/.connected failed
+# bottom main is for when `--background` is added (3.0.5-{1,2}, in a few days or so)
+# main() {
+#     local username server opts err progname
+#     progname='METUVPN'
+#     username='e267561'
+#     server='https://duvar.metu.edu.tr'
+#     opts='--background --passwd-on-stdin -q'
+#     is_connected='/tmp/.metuvpn.connected'
+#
+#     if [[ -f "$is_connected" ]]; then
+#         sudo gpclient disconnect &>/dev/null || err=$?
+#         if (( err != 0 )); then
+#             logp "$progname" \
+#                 "${FG_L_RED}[ERROR] Couldn't disconnect safely!${COLOR_RESET} [$err]"
+#             exit $err
+#         else
+#             logp "$progname" \
+#                 "${FG_L_BLUE}[INFO] Disconnected safely!${COLOR_RESET}"
+#         fi
+#         rm -f "$is_connected"
+#         exit 0
+#     else
+#         # word splitting is intentional in `$opts`, safe to ignore SC2086
+#         if pass metu | sudo gpclient connect -u "$username" $opts -- "$server" &>/dev/null; then
+#             logp "$progname" \
+#                 "${FG_L_BLUE}[INFO] Successfully connected to METUVPN!${COLOR_RESET}"
+#             touch "$is_connected" || exit 69
+#         else
+#             err=$?
+#             logp "$progname" \
+#                 "${FG_L_RED}[ERROR] Couldn't connect to METUVPN!${COLOR_RESET} [$err]"
+#         fi
+#     fi
+#
+# }
 
-    notify-send "VPN" "Disconnected from METU"
-fi
+main "$@"
