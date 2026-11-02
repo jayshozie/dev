@@ -24,7 +24,7 @@ DATADIR="${XDG_DATA_HOME:-$HOME/.local/share}/bulletty/categories"
 STATE_FILE='/tmp/rss-unread-count'
 
 if [[ -d "$DATADIR" ]]; then
-    curr_unread=$(grep -r 'seen = false' "$DATADIR" 2>/dev/null | wc -l)
+    curr_unread=$(\grep -r 'seen = false' "$DATADIR" 2>/dev/null | wc -l)
 else
     curr_unread=0
 fi
@@ -46,7 +46,7 @@ if [[ "$curr_unread" -gt "$prev_unread" ]]; then
     fi
 fi
 
-echo "$curr_unread" > "$STATE_FILE"
+echo -n "$curr_unread" > "$STATE_FILE"
 
 if [[ "$curr_unread" -gt 0 ]]; then
     css_class='unread'
@@ -67,25 +67,25 @@ printf '{"text": "%s", "class": "%s", "tooltip": "%s"}\n' \
 
 # # strip everything but the number (returns <number> unread articles by default)
 # raw_output=$(newsboat -x print-unread 2>/dev/null | grep -o '[0-9]*' | head -n1)
-# 
+#
 # # if newsboat fails or returns empty, default to 0
 # curr_unread=${raw_output:-0}
-# 
+#
 # state_file="/tmp/rss-state"
-# 
+#
 # if [[ -f "$state_file" ]]; then
 #     prev_unread=$(cat "$state_file")
 # else
 #     prev_unread=0
 # fi
-# 
+#
 # if [[ "$curr_unread" -gt "$prev_unread" ]]; then
 #     notify-send --urgency=normal --app-name='RSS Feeds' --icon='󰑫' \
 #         '󰑫 RSS Feeds' "You have $curr_unread unread articles."
 # fi
-# 
+#
 # echo "$curr_unread" > "$state_file"
-# 
+#
 # if [[ "$curr_unread" -gt 0 ]]; then
 #     css_class="unread"
 #     tooltip="You have $curr_unread unread articles."
@@ -93,6 +93,6 @@ printf '{"text": "%s", "class": "%s", "tooltip": "%s"}\n' \
 #     css_class="read"
 #     tooltip="All caught up."
 # fi
-# 
+#
 # printf '{"text": "%s", "class": "%s", "tooltip": "%s"}\n' \
 #     "$curr_unread" "$css_class" "$tooltip"
