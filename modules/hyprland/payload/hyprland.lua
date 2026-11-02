@@ -304,10 +304,13 @@ hl.bind(
 --   mainMod .. ' + SHIFT + Z',
 --   hl.dsp.exec_cmd('')
 -- )
-hl.bind(
-  mainMod .. " + SHIFT + L",
-  hl.dsp.exec_cmd("hyprlock")
-)
+
+---@TODO: hyprlock crashes. wait until FIX
+-- hl.bind(
+--   mainMod .. " + SHIFT + L",
+--   hl.dsp.exec_cmd("hyprlock")
+-- )
+
 hl.bind(
   "switch:on:Lid Switch",
   hl.dsp.exec_cmd("hyprlock"),
