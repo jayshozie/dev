@@ -31,6 +31,7 @@ alias gd='git diff'
 alias gds='git diff --staged'
 
 # programs
+alias copy='wl-copy'
 alias img='imv'
 alias vid='mpv'
 alias yay='paru'
@@ -46,6 +47,7 @@ alias restart-waybar='pkill waybar; /home/jaysh/src/upstream/waybar/build/waybar
 
 # i like it this way
 alias ll='eza -liah --git'
+alias less='less -R'
 alias sd='eza -liah --git --total-size' # size + dir = sd
 alias gerp='\grep'
 alias grep='grep --color=auto -C 2'
