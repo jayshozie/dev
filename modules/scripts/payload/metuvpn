@@ -28,14 +28,12 @@ main() {
     # opts='--passwd-on-stdin -v'
     opts='--passwd-on-stdin -q'
     # opts='--passwd-on-stdin'
-    # word splitting is intentional in `$opts`, safe to ignore SC2086
     logp "$progname" \
         "${FG_L_BLUE}[INFO] Starting connection...${COLOR_RESET}" >&2
     logp "$progname" \
         "${FG_L_BLUE}[INFO] Don't forget to disconnect on ProtonVPN in Librewolf and nmtui.${COLOR_RESET}" >&2
-    pass metu | sudo gpclient connect -u "$username" $opts -- "$server"
-    err=$?
-    if (( err != 0 )); then
+    # word splitting is intentional regarding `$opts`, safe to ignore SC2086
+    if ! (pass metu | sudo gpclient connect -u "$username" $opts -- "$server"); then
         logp "$progname" \
             "${FG_L_RED}[ERROR] Connection failed for some reason.${COLOR_RESET} [$err]"
     fi
