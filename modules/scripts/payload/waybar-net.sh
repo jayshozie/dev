@@ -25,6 +25,7 @@ tb_front='enp128s20f0u3'
 rj45_back='enp129s0'
 css_class='net'
 secret='FiberHGW_TP8998'
+a56='Jayshozie A56 Hotspot'
 
 while true; do
     wifi_text=''
@@ -60,6 +61,8 @@ while true; do
 
         if [[ $wifi_ssid == "$secret" ]]; then
             wifi_text="󰖩  $wifi_bars"
+        elif [[ $wifi_ssid == "$a56" ]]; then
+            wifi_text="󰖩  A56  $wifi_bars"
         elif [[ $wifi_ssid == '' ]]; then
             wifi_text=''
         else
