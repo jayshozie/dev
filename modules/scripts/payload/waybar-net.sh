@@ -60,7 +60,7 @@ while true; do
         # echo $nmcli_output > ${HOME}/waybar-net-debug.log
 
         if [[ $wifi_ssid == "$arabica" ]]; then
-            wifi_text="󰖩  Arabica  $wifi_bars"
+            wifi_text="󰖩  $wifi_bars"
         elif [[ $wifi_ssid == "$a56" ]]; then
             wifi_text="󰖩  A56  $wifi_bars"
         elif [[ $wifi_ssid == '' ]]; then
