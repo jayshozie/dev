@@ -31,6 +31,7 @@ alias gd='git diff'
 alias gds='git diff --staged'
 
 # programs
+alias ..='cd ..'
 alias copy='wl-copy'
 alias img='imv'
 alias vid='mpv'

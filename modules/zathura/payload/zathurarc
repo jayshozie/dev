@@ -31,7 +31,7 @@ set statusbar-fg                "#787c99"
 
 # Input Bar (The ':' command prompt)
 set inputbar-bg                 "#08080b"
-set inputbar-fg                 "#bb9af7" 
+set inputbar-fg                 "#bb9af7"
 
 # Notification colors (matches your waybar warnings/criticals)
 set notification-error-bg       "#f7768e"
@@ -67,3 +67,7 @@ set recolor-darkcolor           "#787c99"
 
 # Keybinding to toggle the dark mode (Recolor)
 map r recolor
+
+# Keybindings for prev/next pages
+map p navigate previous
+map n navigate next
